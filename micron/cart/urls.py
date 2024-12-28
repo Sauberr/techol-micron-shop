@@ -1,7 +1,7 @@
 from cart.views import cart_add, cart_clear, cart_remove, cart_summary
 from django.urls import path
 
-app_name = "cart"
+app_name: str = "cart"
 
 urlpatterns = [
     path("", cart_summary, name="cart_summary"),

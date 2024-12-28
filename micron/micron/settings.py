@@ -46,10 +46,10 @@ environ.Env.read_env(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY: str = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG: bool = env("DEBUG")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -116,7 +116,7 @@ MIDDLEWARE: Tuple[str, ...] = (
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 )
 
-ROOT_URLCONF = "micron.urls"
+ROOT_URLCONF: str = "micron.urls"
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -143,7 +143,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "micron.wsgi.application"
+WSGI_APPLICATION: str = "micron.wsgi.application"
 
 
 # Database
@@ -188,25 +188,25 @@ LANGUAGES = [
     ("uk", _("Ukrainian")),
 ]
 
-LANGUAGE_CODE = "en"
+LANGUAGE_CODE: str = "en"
 
-TIME_ZONE = "UTC"
+TIME_ZONE: str = "UTC"
 
-USE_I18N = True
+USE_I18N: bool = True
 
-USE_TZ = True
+USE_TZ: bool = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_TEMPLATE_PACK: str = "bootstrap5"
 
-STATIC_URL = "/static/"
+STATIC_URL: str = "/static/"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-MEDIA_URL = "/images/"
+MEDIA_URL: str = "/images/"
 MEDIA_ROOT = os.path.join(BASE_DIR / "static/images")
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
@@ -236,20 +236,20 @@ CACHES = {
 }
 
 # User
-AUTH_USER_MODEL = "user_account.User"
-LOGIN_URL = "/user_account/login/"
-LOGOUT_URL = "/user_account/logout/"
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+AUTH_USER_MODEL: str = "user_account.User"
+LOGIN_URL: str = "/user_account/login/"
+LOGOUT_URL: str = "/user_account/logout/"
+LOGIN_REDIRECT_URL: str = "/"
+LOGOUT_REDIRECT_URL: str = "/"
 
-EMAIL_BACKEND = env("EMAIL_BACKEND")
-EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_BACKEND: str = env("EMAIL_BACKEND")
+EMAIL_HOST: str = env("EMAIL_HOST")
 EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_USE_TLS = env("EMAIL_USE_TLS")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
-CART_SESSION_ID = "cart"
+CART_SESSION_ID: str = "cart"
 
 AUTHENTICATION_BACKENDS: List[str] = [
     "django.contrib.auth.backends.ModelBackend",

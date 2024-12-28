@@ -77,5 +77,12 @@ class Review(models.Model):
     text = CKEditor5Field(config_name='extends')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "review"
+        verbose_name_plural = "reviews"
+        indexes = [
+            models.Index(fields=["-created_at"]),
+        ]
+
     def __str__(self):
         return f"{self.user}"

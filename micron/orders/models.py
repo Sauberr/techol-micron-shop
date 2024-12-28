@@ -72,6 +72,10 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
+    class Meta:
+        verbose_name = "order item"
+        verbose_name_plural = "order items"
+
     def __str__(self):
         return str(self.id)
 

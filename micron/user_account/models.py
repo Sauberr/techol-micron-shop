@@ -13,6 +13,13 @@ class User(AbstractUser):
     is_verified_email = models.BooleanField(default=False)
     favorite_products = models.ManyToManyField("products.Product", blank=True)
 
+    class Meta:
+        verbose_name: str = "User"
+        verbose_name_plural: str = "Users"
+
+    def __str__(self):
+        return self.username
+
 
 class Profile(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE, null=True, blank=True)
@@ -24,6 +31,10 @@ class Profile(models.Model):
     is_email_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        verbose_name: str = "Profile"
+        verbose_name_plural: str = "Profiles"
+
     def __str__(self):
         return self.user.username
 
@@ -33,6 +44,10 @@ class EmailVerification(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     expiration = models.DateTimeField()
+
+    class Meta:
+        verbose_name: str = "Email Verification"
+        verbose_name_plural: str = "Email Verifications"
 
     def __str__(self):
         return f"EmailVerification object for {self.user.email}"
@@ -63,6 +78,10 @@ class Contact(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     message = CKEditor5Field(config_name='extends')
+
+    class Meta:
+        verbose_name: str = "Contact"
+        verbose_name_plural: str = "Contacts"
 
     def __str__(self):
         return self.name
