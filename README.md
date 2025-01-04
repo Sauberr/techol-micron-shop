@@ -52,9 +52,20 @@ All actions should be executed from the source directory of the project and only
    
 6. Docker :
    ```bash
-   docker-compose up
+   docker run -it --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management
+   
+   docker run -it --rm --name redis -p 6379:6379 redis
+   ```
+
+7. Stripe :
+   ```bash
+   stripe listen --forward-to localhost:8000/payment/webhook/
    ```
 
 ## License
 
 This project uses the [MIT] license(https://github.com/Sauberr/techol-micron-shop/blob/master/LICENSE)
+
+## Contact 
+
+sauberr10@gmail.com
