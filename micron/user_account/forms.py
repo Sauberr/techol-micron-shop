@@ -67,11 +67,10 @@ class UserProfileForm(UserChangeForm):
     )
 
     is_email_verified = forms.BooleanField(
-        widget=forms.TextInput(
+        widget=forms.CheckboxInput(
             attrs={
-                "class": "form-control py-2",
-                "placeholder": "Verified email",
-                "readonly": True,
+                "class": "form-check-input",
+                "disabled": True,
             }
         ),
         required=False,
@@ -81,7 +80,6 @@ class UserProfileForm(UserChangeForm):
         widget=forms.DateTimeInput(
             attrs={
                 "class": "form-control py-2",
-                "placeholder": "Enter date",
                 "readonly": True,
             }
         ),

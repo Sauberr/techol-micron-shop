@@ -12,5 +12,9 @@ class Coupon(models.Model):
     )
     active = models.BooleanField()
 
+    class Meta:
+        verbose_name: str = "coupon"
+        verbose_name_plural: str = "coupons"
+
     def __str__(self):
         return self.code

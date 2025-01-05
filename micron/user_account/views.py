@@ -35,16 +35,19 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
         return super(UserLoginView, self).form_valid(form)
 
 
-@login_required()
+@login_required
 def profile(request, profile_id):
     profile = get_object_or_404(Profile, id=profile_id)
+    user = profile.user
+
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             return redirect('user_account:profile', request.user.profile.id)
     else:
-        form = UserProfileForm(instance=profile)
+        form = UserProfileForm(instance=user)
+
     context = {"title": "| Profile", "form": form}
     return render(request, "user_account/profile.html", context)
 
@@ -67,6 +70,7 @@ def manage_shipping(request):
             shipping_user.user = request.user
             shipping_user.save()
             return redirect("user_account:profile", request.user.profile.id)
+
     context = {"title": "| Manage Shipping", "form": form}
     return render(request, "user_account/manage_shipping.html", context)
 

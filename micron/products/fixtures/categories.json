@@ -1,50 +1,92 @@
 [
    {
-      "model":"products.category",
-      "pk":1,
-      "fields":{
-         "name":"iphone",
-         "slug":"iphone"
+      "model": "products.category",
+      "pk": 1,
+      "fields": {}
+   },
+   {
+      "model": "products.categorytranslation",
+      "pk": 1,
+      "fields": {
+         "language_code": "en",
+         "name": "iphone",
+         "slug": "iphone",
+         "master": 1
       }
    },
    {
-      "model":"products.category",
-      "pk":2,
-      "fields":{
-         "name":"ipad",
-         "slug":"ipad"
+      "model": "products.category",
+      "pk": 2,
+      "fields": {}
+   },
+   {
+      "model": "products.categorytranslation",
+      "pk": 2,
+      "fields": {
+         "language_code": "en",
+         "name": "ipad",
+         "slug": "ipad",
+         "master": 2
       }
    },
    {
-      "model":"products.category",
-      "pk":3,
-      "fields":{
-         "name":"macbook",
-         "slug":"macbook"
+      "model": "products.category",
+      "pk": 3,
+      "fields": {}
+   },
+   {
+      "model": "products.categorytranslation",
+      "pk": 3,
+      "fields": {
+         "language_code": "en",
+         "name": "macbook",
+         "slug": "macbook",
+         "master": 3
       }
    },
    {
-      "model":"products.category",
-      "pk":4,
-      "fields":{
-         "name":"watch",
-         "slug":"watch"
+      "model": "products.category",
+      "pk": 4,
+      "fields": {}
+   },
+   {
+      "model": "products.categorytranslation",
+      "pk": 4,
+      "fields": {
+         "language_code": "en",
+         "name": "watch",
+         "slug": "watch",
+         "master": 4
       }
    },
    {
-      "model":"products.category",
-      "pk":5,
-      "fields":{
-         "name":"airpods",
-         "slug":"airpods"
+      "model": "products.category",
+      "pk": 5,
+      "fields": {}
+   },
+   {
+      "model": "products.categorytranslation",
+      "pk": 5,
+      "fields": {
+         "language_code": "en",
+         "name": "airpods",
+         "slug": "airpods",
+         "master": 5
       }
    },
    {
-      "model":"products.category",
-      "pk":6,
-      "fields":{
-         "name":"console",
-         "slug":"console"
+      "model": "products.category",
+      "pk": 6,
+      "fields": {}
+   },
+   {
+      "model": "products.categorytranslation",
+      "pk": 6,
+      "fields": {
+         "language_code": "en",
+         "name": "console",
+         "slug": "console",
+         "master": 6
       }
    }
 ]

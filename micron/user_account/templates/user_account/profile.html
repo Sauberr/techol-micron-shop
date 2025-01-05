@@ -98,69 +98,73 @@
         <div class="col-lg-8">
             <form action="{% url 'user_account:profile' user.profile.id  %}" method="POST" class="profile-form" enctype="multipart/form-data">
                 {% csrf_token %}
-                        {% csrf_token %}
-        <div class="form-row">
-          <div class="col-lg-12">
-            <div class="form-group">
-              <label class="small mb-1" for="{{ form.first_name.id_for_label }}">First name</label>
-              {{ form.first_name }}
-            </div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="col-lg-12">
-            <div class="form-group">
-              <label class="small mb-1" for="{{ form.last_name.id_for_label }}">Last name</label>
-              {{ form.last_name }}
-                <br>
-            </div>
-          </div>
-        </div>
-        <div class="form-row mb-2">
-          <div class="col-lg-12">
-              <div class="custom-file-upload">
-                  <label for="{{ form.image.id_for_label }}" class="custom-file-label">
-                  {{ form.image }}
-            </div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="col-lg-12">
-            <div class="form-group">
-              <label class="small mb-1" for="{{ form.username.id_for_label }}">Username</label>
-              {{ form.username }}
-            </div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="col-lg-12">
-            <label class="small mb-1" for="{{ form.email.id_for_label }}">Email</label>
-            {{ form.email }}
-          </div>
-        </div>
-          <div class="form-row">
-          <div class="col-lg-12">
-            <label class="small mb-1" for="{{ form.is_email_verified.id_for_label }}">Email Verified</label>
-            {{ form.is_email_verified }}
-              <br>
-          </div>
-        </div>
-         <div class="form-row">
-          <div class="col-lg-12">
-            <label class="small mb-1" for="{{ form.created_at.id_for_label }}">Joined</label>
-              <br>
-            {{ form.created_at.value|date:"F j, Y" }}
-          </div>
-        </div>
-        <hr>
-        <div class="form-row">
-          <div class="col-lg-12 text-center" style="margin-top: 12px;">
-            <button type="submit" class="btn btn-outline-dark">Save</button>
-          </div>
-        </div>
-      </form>
+                <div class="form-row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="small mb-1" for="{{ form.first_name.id_for_label }}">First name</label>
+                            {{ form.first_name }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="small mb-1" for="{{ form.last_name.id_for_label }}">Last name</label>
+                            {{ form.last_name }}
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row mb-2">
+                    <div class="col-lg-12">
+                        <div class="custom-file-upload">
+                            <label for="{{ form.image.id_for_label }}" class="custom-file-label">
+                                {{ form.image }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="small mb-1" for="{{ form.username.id_for_label }}">Username</label>
+                            {{ form.username }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-12">
+                        <label class="small mb-1" for="{{ form.email.id_for_label }}">Email</label>
+                        {{ form.email }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-12">
+                        <label class="small mb-1" for="{{ form.is_email_verified.id_for_label }}">Email Verified</label>
+                        <div style="font-size: 18px;">
+                            {{ user.profile.is_email_verified|yesno:"Yes,No" }}
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-lg-12" style="font-size: 18px;">
+                        <label class="small mb-1" for="{{ form.created_at.id_for_label }}">Joined</label>
+                        <br>
+                        {{ user.profile.created_at|date:"F j, Y" }}
+                    </div>
+                </div>
+                <hr>
+                <div class="form-row">
+                    <div class="col-lg-12 text-center" style="margin-top: 12px;">
+                        <button type="submit" class="btn btn-outline-dark">Save</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+{% include 'footer.html' %}
 
 {% endblock %}

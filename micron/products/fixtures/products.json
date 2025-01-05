@@ -1,223 +1,327 @@
 [
    {
-      "model":"products.product",
-      "pk":1,
-      "fields":{
-         "name":"IPhone 15",
-         "slug":"iphone-15",
-         "description":"iPhone 15 Pro Max is the top solution in the Pro line from Apple, introduced in mid-Spring 2023, which is the evolution of the latest 14th generation. The heart of the iPhone 15 Pro Max is the powerful Apple A17 Pro processor (3 nm), which guarantees unprecedented productivity and the speed of a Hexa-core CPU and 6-core GPU. You will be able to satisfy yourself with any kind of administration or additional aid without limitation. The display of the iPhone 15 Pro Max is a 6.7-inch LTPO Super Retina XDR OLED screen with HDR10 and Dolby Vision support, which reflects its image brightness. You can clearly see a separate image size of 2796x1290 pixels and a refresh rate of 120 Hz, so your videos and games will look even more realistic. New to the iPhone 15 Pro Max is a unique 5x zoom camera, which allows you to capture details at an unprecedented level.\"",
-         "category":1,
-         "image":"products/iphone_15.jpg",
-         "price":"799.00",
-         "price_with_discount":"749.00",
-         "available":true,
-         "discount":true,
-         "created":"2023-12-27T20:22:00.114Z",
-         "updated":"2023-12-27T20:52:48.349Z"
+      "model": "products.product",
+      "pk": 1,
+      "fields": {
+         "category": 1,
+         "image": "products/iphone_15.jpg",
+         "price": "799.00",
+         "price_with_discount": "749.00",
+         "available": true,
+         "discount": true,
+         "created": "2023-12-27T20:22:00.114Z",
+         "updated": "2023-12-27T20:52:48.349Z"
       }
    },
    {
-      "model":"products.product",
-      "pk":2,
-      "fields":{
-         "name":"IPhone 12",
-         "slug":"iphone-12",
-         "description":"Apple iPhone 12 - the latest update of the 2020 line from the Californian giant. The smartphone has a design with strict sharp edges and bright color schemes to the body, which will help enhance its style. It has also become thinner, lighter and smaller, while maintaining the diagonal of the display. The Apple iPhone 12 is equipped with the new Apple A14 processor, which significantly increases productivity. The 6.1-inch OLED screen is covered with a specially crushed ceramic glass, which protects against impacts 4 times more effectively than lower fronts.\"",
-         "category":1,
-         "image":"products/iphone_12.webp",
-         "price":"600.00",
-         "price_with_discount":null,
-         "available":true,
-         "discount":false,
-         "created":"2023-12-27T20:23:34.880Z",
-         "updated":"2023-12-27T20:23:34.880Z"
+      "model": "products.producttranslation",
+      "pk": 1,
+      "fields": {
+         "language_code": "en",
+         "name": "IPhone 15",
+         "slug": "iphone-15",
+         "description": "iPhone 15 Pro Max is the top solution in the Pro line from Apple, introduced in mid-Spring 2023, which is the evolution of the latest 14th generation. The heart of the iPhone 15 Pro Max is the powerful Apple A17 Pro processor (3 nm), which guarantees unprecedented productivity and the speed of a Hexa-core CPU and 6-core GPU. You will be able to satisfy yourself with any kind of administration or additional aid without limitation. The display of the iPhone 15 Pro Max is a 6.7-inch LTPO Super Retina XDR OLED screen with HDR10 and Dolby Vision support, which reflects its image brightness. You can clearly see a separate image size of 2796x1290 pixels and a refresh rate of 120 Hz, so your videos and games will look even more realistic. New to the iPhone 15 Pro Max is a unique 5x zoom camera, which allows you to capture details at an unprecedented level.",
+         "master": 1
       }
    },
    {
-      "model":"products.product",
-      "pk":3,
-      "fields":{
-         "name":"AirPods 2",
-         "slug":"airpods-2",
-         "description":"Apple took things in an unusual direction and released two versions of updated AirPods headphones. For people who dont care about wireless charging, but who care about functionality, AirPods with Charging Case (MV7N2) are a good choice. The headphones feature a new, more energy-efficient H1 processor, which is superior to its predecessor W1. Another great feature of AirPods with Charging Case (MV7N2) in the latest version is the voice call of Siri. Now to call the assistant you just need to type Hello, Siri. In terms of autonomy, everything was lost as before - up to 5 years of listening to music and up to 3 years of music.\"",
-         "category":5,
-         "image":"products/airpods_2.webp",
-         "price":"199.00",
-         "price_with_discount":null,
-         "available":true,
-         "discount":false,
-         "created":"2023-12-27T20:25:15.480Z",
-         "updated":"2023-12-27T20:57:21.104Z"
+      "model": "products.product",
+      "pk": 2,
+      "fields": {
+         "category": 1,
+         "image": "products/iphone_12.webp",
+         "price": "600.00",
+         "price_with_discount": null,
+         "available": true,
+         "discount": false,
+         "created": "2023-12-27T20:23:34.880Z",
+         "updated": "2023-12-27T20:23:34.880Z"
       }
    },
    {
-      "model":"products.product",
-      "pk":4,
-      "fields":{
-         "name":"AirPods 2 Pro",
-         "slug":"airpods-2-pro",
-         "description":"Apple AirPods Pro 2nd generation (MQD83) is another generation of drone-free headphones with active noise canceling, developed by Apple. The new H2 chip provides more effective noise reduction and brighter sound. Adaptive Audio technology automatically adapts the sound to the desired level. Headphone microphones feature beamforming technology to capture your voice clearly when the phone rings. Apple AirPods Pro 2nd generation (MQD83) support MagSafe support and wireless charging. And the last hour of autonomous work is approaching up to 6 years on a single charge.\"",
-         "category":5,
-         "image":"products/airpods2pro.webp",
-         "price":"299.00",
-         "price_with_discount":"249.00",
-         "available":true,
-         "discount":true,
-         "created":"2023-12-27T20:26:56.193Z",
-         "updated":"2023-12-27T20:26:56.193Z"
+      "model": "products.producttranslation",
+      "pk": 2,
+      "fields": {
+         "language_code": "en",
+         "name": "IPhone 12",
+         "slug": "iphone-12",
+         "description": "Apple iPhone 12 - the latest update of the 2020 line from the Californian giant. The smartphone has a design with strict sharp edges and bright color schemes to the body, which will help enhance its style. It has also become thinner, lighter and smaller, while maintaining the diagonal of the display. The Apple iPhone 12 is equipped with the new Apple A14 processor, which significantly increases productivity. The 6.1-inch OLED screen is covered with a specially crushed ceramic glass, which protects against impacts 4 times more effectively than lower fronts.",
+         "master": 2
       }
    },
    {
-      "model":"products.product",
-      "pk":5,
-      "fields":{
-         "name":"Macbook Air 13",
-         "slug":"macbook-air-13",
-         "description":"Apple MacBook Air 13\" Late 2020 is not just another update of the popular compact and affordable laptop, but rather a new era of Apple laptops. The laptop processor is SoC (System-on-a-Chip) Apple M1, which is based on ARM architecture (as smartphones).Now the laptop has become even more similar to your favorite iPhone or iPad. Powered by an Apple M1 processor, which consists of 8 cores (4 highly productive and 4 energy efficient), as well as 7 or 8 core graphics processors. The 16-core Neural Engine system allows the laptop to perform faster and more smoothly, while being quiet (all-day fans).\"",
-         "category":3,
-         "image":"products/macbookair.png",
-         "price":"1499.00",
-         "price_with_discount":"1299.00",
-         "available":true,
-         "discount":true,
-         "created":"2023-12-27T20:28:28.549Z",
-         "updated":"2023-12-27T20:28:28.549Z"
+      "model": "products.product",
+      "pk": 3,
+      "fields": {
+         "category": 5,
+         "image": "products/airpods_2.webp",
+         "price": "199.00",
+         "price_with_discount": null,
+         "available": true,
+         "discount": false,
+         "created": "2023-12-27T20:25:15.480Z",
+         "updated": "2023-12-27T20:57:21.104Z"
       }
    },
    {
-      "model":"products.product",
-      "pk":6,
-      "fields":{
-         "name":"Apple Watch SE",
-         "slug":"apple-watch-se",
-         "description":"Apple Watch SE - the more affordable version of smart watches from Apple. The smells had the same design as in the older model, and the difference was limited to the materials of the body - only aluminum. The Apple Watch SE is equipped with double the processor of the lower Series 3, and also has a larger screen. Years allow you to comfortably view all notifications from your smartphone, receive calls, notifications, manage the music you listen to, and keep track of physical activity during exercise. Years will be equipped with a built-in optical heart rate monitor, and will also be able to record sleep. Add more individuality to Apple Watch SE with a large selection of watches.\"",
-         "category":4,
-         "image":"products/applewatchse.jpg",
-         "price":"299.00",
-         "price_with_discount":null,
-         "available":true,
-         "discount":false,
-         "created":"2023-12-27T20:29:16.680Z",
-         "updated":"2023-12-27T20:29:16.680Z"
+      "model": "products.producttranslation",
+      "pk": 3,
+      "fields": {
+         "language_code": "en",
+         "name": "AirPods 2",
+         "slug": "airpods-2",
+         "description": "Apple took things in an unusual direction and released two versions of updated AirPods headphones. For people who dont care about wireless charging, but who care about functionality, AirPods with Charging Case (MV7N2) are a good choice. The headphones feature a new, more energy-efficient H1 processor, which is superior to its predecessor W1. Another great feature of AirPods with Charging Case (MV7N2) in the latest version is the voice call of Siri. Now to call the assistant you just need to type Hello, Siri. In terms of autonomy, everything was lost as before - up to 5 years of listening to music and up to 3 years of music.",
+         "master": 3
       }
    },
    {
-      "model":"products.product",
-      "pk":7,
-      "fields":{
-         "name":"Iphone 14 Pro",
-         "slug":"iphone-14-pro",
-         "description":"Phone 14 Pro is a logical continuation of the basic line of Apple smartphones, combining all the best features of previous generations. Visual features in the design are minimal, but in the middle of the body, this model has seen significant changes and mainly focused on the new arrangement of interiors to facilitate repairs and replacement of parts, including by the owner himself. The display also does not recognize changes, it has a bright IPS matrix with a maximum brightness of 1200 nits.\"",
-         "category":1,
-         "image":"products/iphne14_pro.webp",
-         "price":"1100.00",
-         "price_with_discount":"999.00",
-         "available":true,
-         "discount":true,
-         "created":"2023-12-27T20:30:12.605Z",
-         "updated":"2023-12-27T20:30:12.605Z"
+      "model": "products.product",
+      "pk": 4,
+      "fields": {
+         "category": 5,
+         "image": "products/airpods2pro.webp",
+         "price": "299.00",
+         "price_with_discount": "249.00",
+         "available": true,
+         "discount": true,
+         "created": "2023-12-27T20:26:56.193Z",
+         "updated": "2023-12-27T20:26:56.193Z"
       }
    },
    {
-      "model":"products.product",
-      "pk":8,
-      "fields":{
-         "name":"IPad 10",
-         "slug":"ipad-10",
-         "description":"Apple iPad 10.2 2021 - updated version of the largest available tablet in the Apple line. The device has retained its classic, strict, modern look, but has refused to achieve a wide variety of polish. The tablet is equipped with an A13 Bionic processor, which ensures a significant increase in the speed of the robot. IPS screen with a diagonal of 10.2 inches has a separate size of 2160x1620 pixels. Additionally, it supports the branded Apple Pencil, which allows you to draw, make handwritten notes, and much more. The basic amount of internal memory will increase to 64 GB, and the maximum value will become 256 GB.\"",
-         "category":2,
-         "image":"products/ipad10.jpg",
-         "price":"500.00",
-         "price_with_discount":null,
-         "available":true,
-         "discount":false,
-         "created":"2023-12-27T20:30:58.467Z",
-         "updated":"2023-12-27T20:30:58.467Z"
+      "model": "products.producttranslation",
+      "pk": 4,
+      "fields": {
+         "language_code": "en",
+         "name": "AirPods 2 Pro",
+         "slug": "airpods-2-pro",
+         "description": "Apple AirPods Pro 2nd generation (MQD83) is another generation of drone-free headphones with active noise canceling, developed by Apple. The new H2 chip provides more effective noise reduction and brighter sound. Adaptive Audio technology automatically adapts the sound to the desired level. Headphone microphones feature beamforming technology to capture your voice clearly when the phone rings. Apple AirPods Pro 2nd generation (MQD83) support MagSafe support and wireless charging. And the last hour of autonomous work is approaching up to 6 years on a single charge.",
+         "master": 4
       }
    },
    {
-      "model":"products.product",
-      "pk":9,
-      "fields":{
-         "name":"sumsung-galaxy-watch-4",
-         "slug":"sumsung-galaxy-watch-4",
-         "description":"Discover a new dimension of style and functionality with the Samsung Galaxy Watch 4. This smartwatch is the perfect combination of elegant design and advanced technology, designed to make your daily life more convenient and efficient.",
-         "category":4,
-         "image":"products/sumsung-watch.jpg",
-         "price":"399.00",
-         "price_with_discount":null,
-         "available":true,
-         "discount":false,
-         "created":"2024-01-24T18:49:27.079Z",
-         "updated":"2024-01-24T18:52:27.094Z"
+      "model": "products.product",
+      "pk": 5,
+      "fields": {
+         "category": 3,
+         "image": "products/macbookair.png",
+         "price": "1499.00",
+         "price_with_discount": "1299.00",
+         "available": true,
+         "discount": true,
+         "created": "2023-12-27T20:28:28.549Z",
+         "updated": "2023-12-27T20:28:28.549Z"
       }
    },
    {
-      "model":"products.product",
-      "pk":10,
-      "fields":{
-         "name":"apple-watch-1",
-         "slug":"apple-watch-1",
-         "description":"Apple Watch Series 1 is an innovative smartwatch that delivers unique features and stylish design.\r\n\r\nSeries 1 features a steel case that not only ensures durability, but also gives the watch an elegant look. It is also available with a high-quality aluminum body, allowing you to choose the right style for each user. The ceramic back cover provides a secure fit and improves the efficiency of the built-in sensors.\r\nThe watch face features a vibrant Retina display with Force Touch for high clarity and excellent visibility. The screen is protected from scratches and shocks, which ensures a long service life of the device.",
-         "category":4,
-         "image":"products/apple-watch-1.jpg",
-         "price":"199.00",
-         "price_with_discount":null,
-         "available":true,
-         "discount":false,
-         "created":"2024-01-24T18:50:38.236Z",
-         "updated":"2024-01-24T18:52:49.597Z"
+      "model": "products.producttranslation",
+      "pk": 5,
+      "fields": {
+         "language_code": "en",
+         "name": "Macbook Air 13",
+         "slug": "macbook-air-13",
+         "description": "Apple MacBook Air 13\" Late 2020 is not just another update of the popular compact and affordable laptop, but rather a new era of Apple laptops. The laptop processor is SoC (System-on-a-Chip) Apple M1, which is based on ARM architecture (as smartphones).Now the laptop has become even more similar to your favorite iPhone or iPad. Powered by an Apple M1 processor, which consists of 8 cores (4 highly productive and 4 energy efficient), as well as 7 or 8 core graphics processors. The 16-core Neural Engine system allows the laptop to perform faster and more smoothly, while being quiet (all-day fans).",
+         "master": 5
       }
    },
    {
-      "model":"products.product",
-      "pk":11,
-      "fields":{
-         "name":"X Box Series",
-         "slug":"x-box-series",
-         "description":"Xbox Series X is a powerful next-generation gaming console designed for those who value outstanding graphics, fast loading times, and rich functionality.",
-         "category":6,
-         "image":"products/xbox.jpg",
-         "price":"1999.00",
-         "price_with_discount":null,
-         "available":true,
-         "discount":false,
-         "created":"2024-01-24T18:52:11.899Z",
-         "updated":"2024-01-24T18:52:11.900Z"
+      "model": "products.product",
+      "pk": 6,
+      "fields": {
+         "category": 4,
+         "image": "products/applewatchse.jpg",
+         "price": "299.00",
+         "price_with_discount": null,
+         "available": true,
+         "discount": false,
+         "created": "2023-12-27T20:29:16.680Z",
+         "updated": "2023-12-27T20:29:16.680Z"
       }
    },
    {
-      "model":"products.product",
-      "pk":12,
-      "fields":{
-         "name":"microsoft-watch",
-         "slug":"microsoft-watch",
-         "description":"Microsoft introduces its smartwatches under the Microsoft Surface Watch brand, combining stylish design with advanced technologies to provide convenience and functionality in everyday life.",
-         "category":4,
-         "image":"products/microsoft-watch.jpg",
-         "price":"299.00",
-         "price_with_discount":null,
-         "available":true,
-         "discount":false,
-         "created":"2024-01-24T18:53:48.273Z",
-         "updated":"2024-01-24T18:53:48.273Z"
+      "model": "products.producttranslation",
+      "pk": 6,
+      "fields": {
+         "language_code": "en",
+         "name": "Apple Watch SE",
+         "slug": "apple-watch-se",
+         "description": "Apple Watch SE - the more affordable version of smart watches from Apple. The smells had the same design as in the older model, and the difference was limited to the materials of the body - only aluminum. The Apple Watch SE is equipped with double the processor of the lower Series 3, and also has a larger screen. Years allow you to comfortably view all notifications from your smartphone, receive calls, notifications, manage the music you listen to, and keep track of physical activity during exercise. Years will be equipped with a built-in optical heart rate monitor, and will also be able to record sleep. Add more individuality to Apple Watch SE with a large selection of watches.",
+         "master": 6
       }
    },
    {
-      "model":"products.product",
-      "pk":13,
-      "fields":{
-         "name":"custom-watch",
-         "slug":"custom-watch",
-         "description":"Smartwatches are an outstanding combination of style and technology, designed to enrich your daily lifestyle. This smartwatch from Xiaomi comes with a modern design, advanced features and an affordable price range.",
-         "category":4,
-         "image":"products/custon-watch.jpg",
-         "price":"499.00",
-         "price_with_discount":null,
-         "available":true,
-         "discount":false,
-         "created":"2024-01-24T19:01:19.307Z",
-         "updated":"2024-01-24T19:01:19.307Z"
+      "model": "products.product",
+      "pk": 7,
+      "fields": {
+         "category": 1,
+         "image": "products/iphne14_pro.webp",
+         "price": "1100.00",
+         "price_with_discount": "999.00",
+         "available": true,
+         "discount": true,
+         "created": "2023-12-27T20:30:12.605Z",
+         "updated": "2023-12-27T20:30:12.605Z"
+      }
+   },
+   {
+      "model": "products.producttranslation",
+      "pk": 7,
+      "fields": {
+         "language_code": "en",
+         "name": "Iphone 14 Pro",
+         "slug": "iphone-14-pro",
+         "description": "Phone 14 Pro is a logical continuation of the basic line of Apple smartphones, combining all the best features of previous generations. Visual features in the design are minimal, but in the middle of the body, this model has seen significant changes and mainly focused on the new arrangement of interiors to facilitate repairs and replacement of parts, including by the owner himself. The display also does not recognize changes, it has a bright IPS matrix with a maximum brightness of 1200 nits.",
+         "master": 7
+      }
+   },
+   {
+      "model": "products.product",
+      "pk": 8,
+      "fields": {
+         "category": 2,
+         "image": "products/ipad10.jpg",
+         "price": "500.00",
+         "price_with_discount": null,
+         "available": true,
+         "discount": false,
+         "created": "2023-12-27T20:30:58.467Z",
+         "updated": "2023-12-27T20:30:58.467Z"
+      }
+   },
+   {
+      "model": "products.producttranslation",
+      "pk": 8,
+      "fields": {
+         "language_code": "en",
+         "name": "IPad 10",
+         "slug": "ipad-10",
+         "description": "Apple iPad 10.2 2021 - updated version of the largest available tablet in the Apple line. The device has retained its classic, strict, modern look, but has refused to achieve a wide variety of polish. The tablet is equipped with an A13 Bionic processor, which ensures a significant increase in the speed of the robot. IPS screen with a diagonal of 10.2 inches has a separate size of 2160x1620 pixels. Additionally, it supports the branded Apple Pencil, which allows you to draw, make handwritten notes, and much more. The basic amount of internal memory will increase to 64 GB, and the maximum value will become 256 GB.",
+         "master": 8
+      }
+   },
+   {
+      "model": "products.product",
+      "pk": 9,
+      "fields": {
+         "category": 4,
+         "image": "products/sumsung-watch.jpg",
+         "price": "399.00",
+         "price_with_discount": null,
+         "available": true,
+         "discount": false,
+         "created": "2024-01-24T18:49:27.079Z",
+         "updated": "2024-01-24T18:52:27.094Z"
+      }
+   },
+   {
+      "model": "products.producttranslation",
+      "pk": 9,
+      "fields": {
+         "language_code": "en",
+         "name": "Samsung Galaxy Watch 4",
+         "slug": "samsung-galaxy-watch-4",
+         "description": "Discover a new dimension of style and functionality with the Samsung Galaxy Watch 4. This smartwatch is the perfect combination of elegant design and advanced technology, designed to make your daily life more convenient and efficient.",
+         "master": 9
+      }
+   },
+   {
+      "model": "products.product",
+      "pk": 10,
+      "fields": {
+         "category": 4,
+         "image": "products/apple-watch-1.jpg",
+         "price": "199.00",
+         "price_with_discount": null,
+         "available": true,
+         "discount": false,
+         "created": "2024-01-24T18:50:38.236Z",
+         "updated": "2024-01-24T18:52:49.597Z"
+      }
+   },
+   {
+      "model": "products.producttranslation",
+      "pk": 10,
+      "fields": {
+         "language_code": "en",
+         "name": "Apple Watch 1",
+         "slug": "apple-watch-1",
+         "description": "Apple Watch Series 1 is an innovative smartwatch that delivers unique features and stylish design.\r\n\r\nSeries 1 features a steel case that not only ensures durability, but also gives the watch an elegant look. It is also available with a high-quality aluminum body, allowing you to choose the right style for each user. The ceramic back cover provides a secure fit and improves the efficiency of the built-in sensors.\r\nThe watch face features a vibrant Retina display with Force Touch for high clarity and excellent visibility. The screen is protected from scratches and shocks, which ensures a long service life of the device.",
+         "master": 10
+      }
+   },
+   {
+      "model": "products.product",
+      "pk": 11,
+      "fields": {
+         "category": 6,
+         "image": "products/xbox.jpg",
+         "price": "1999.00",
+         "price_with_discount": null,
+         "available": true,
+         "discount": false,
+         "created": "2024-01-24T18:52:11.899Z",
+         "updated": "2024-01-24T18:52:11.900Z"
+      }
+   },
+   {
+      "model": "products.producttranslation",
+      "pk": 11,
+      "fields": {
+         "language_code": "en",
+         "name": "X Box Series",
+         "slug": "x-box-series",
+         "description": "Xbox Series X is a powerful next-generation gaming console designed for those who value outstanding graphics, fast loading times, and rich functionality.",
+         "master": 11
+      }
+   },
+   {
+      "model": "products.product",
+      "pk": 12,
+      "fields": {
+         "category": 4,
+         "image": "products/microsoft-watch.jpg",
+         "price": "299.00",
+         "price_with_discount": null,
+         "available": true,
+         "discount": false,
+         "created": "2024-01-24T18:53:48.273Z",
+         "updated": "2024-01-24T18:53:48.273Z"
+      }
+   },
+   {
+      "model": "products.producttranslation",
+      "pk": 12,
+      "fields": {
+         "language_code": "en",
+         "name": "Microsoft Watch",
+         "slug": "microsoft-watch",
+         "description": "Microsoft introduces its smartwatches under the Microsoft Surface Watch brand, combining stylish design with advanced technologies to provide convenience and functionality in everyday life.",
+         "master": 12
+      }
+   },
+   {
+      "model": "products.product",
+      "pk": 13,
+      "fields": {
+         "category": 4,
+         "image": "products/custon-watch.jpg",
+         "price": "499.00",
+         "price_with_discount": null,
+         "available": true,
+         "discount": false,
+         "created": "2024-01-24T19:01:19.307Z",
+         "updated": "2024-01-24T19:01:19.307Z"
+      }
+   },
+   {
+      "model": "products.producttranslation",
+      "pk": 13,
+      "fields": {
+         "language_code": "en",
+         "name": "Custom Watch",
+         "slug": "custom-watch",
+         "description": "Smartwatches are an outstanding combination of style and technology, designed to enrich your daily lifestyle. This smartwatch from Xiaomi comes with a modern design, advanced features and an affordable price range.",
+         "master": 13
       }
    }
 ]

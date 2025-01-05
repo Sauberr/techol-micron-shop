@@ -14,6 +14,15 @@
 
 {% include 'navbar.html' %}
 
+<style>
+    p {
+    color: black;
+}
+.my-text {
+    color: black;
+}
+</style>
+
 
  <section class="py-5">
             <div class="container px-4 px-lg-5 my-5">
@@ -38,10 +47,10 @@
                             {% with reviews.count as total_reviews %} {{ total_reviews }} review{{ total_reviews|pluralize }} {% endwith %}
                         </h6>
                         {% else %}
-                        <h6>{% trans 'No reviews yet' %}.</h6>
+                        <h6>{% trans 'No reviews yet' %}</h6>
                         {% endif %}
                         </h6>
-                        <h6 class="lead">{{ product.description }}</h6>
+                        <p class="my-text" >{{ product.description|safe }}</p>
                         <div class="d-flex">
                             <form class="text-center" id="inputQuantity" type="num" value="1" style="max-width: 3rem"  action="{% url 'cart:cart_add' product.id %}" method='post'>
                                 {{ cart_product_form }}
@@ -68,15 +77,15 @@
                             {% with reviews.count as total_reviews %} {{ total_reviews }} review{{ total_reviews|pluralize }} {% endwith %}
                         </h6>
                         {% else %}
-                        <h6>No reviews yet.</h6>
+                        <h6>{% trans 'No reviews yet' %}</h6>
                          {% endif %}
-                        <h6 class="lead">{{ product.description }}</h6>
+                        <p class="my-text" >{{ product.description|safe }}</p>
                         <div class="d-flex">
                             <form class="text-center" id="inputQuantity" type="num" value="1" style="max-width: 3rem"  action="{% url 'cart:cart_add' product.id %}" method='post'>
                                 {{ cart_product_form }}
                                 <br>
                                 {% csrf_token %}
-                                <input class="btn btn-outline-dark flex-shrink-0" type="submit" value="Add to cart" >
+                                <input class="btn btn-outline-dark flex-shrink-0" type="submit" value="{% trans 'Add to cart' %}" >
                             </form>
 
                         </div>
@@ -127,7 +136,7 @@
             {% endfor %}
         {% else %}
             <div class="col-md-12">
-                <h6>{% trans 'No reviews yet.' %}</h6>
+                <h6>{% trans 'No reviews yet' %}</h6>
             </div>
         {% endif %}
     </div>
@@ -162,7 +171,7 @@
                                 <!-- Product actions-->
                                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                     <div class="text-center">
-                                        <a class="btn btn-outline-dark mt-auto" href="{{ p.get_absolute_url }}">View options</a>
+                                        <a class="btn btn-outline-dark mt-auto" href="{{ p.get_absolute_url }}">{% trans 'View options' %}</a>
                                     </div>
                                 </div>
                             </div>
@@ -189,10 +198,9 @@
                                         {{ p.price|intcomma }}
                                     </div>
                                 </div>
-                                <!-- Product actions-->
                                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                     <div class="text-center">
-                                        <a class="btn btn-outline-dark mt-auto" href="{{ p.get_absolute_url }}">View options</a>
+                                        <a class="btn btn-outline-dark mt-auto" href="{{ p.get_absolute_url }}">{% trans 'View options' %}</a>
                                     </div>
                                 </div>
                             </div>
