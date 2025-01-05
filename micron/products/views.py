@@ -1,5 +1,7 @@
 import logging
 
+from django.db.models import F, Case, When, DecimalField
+
 from cart.forms import CartAddProductForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -30,26 +32,34 @@ def products(request):
     logger.info("products")
     products, search_query = searchproducts(request)
 
-    # Get selected options
     discount = request.GET.get("discount")
     order = request.GET.get("order")
 
-    # Filter products based on selected options
     if discount in ["true", "false"]:
         products = products.filter(discount=(discount == "true"))
-    else:
-        pass
 
-    # Order products based on selected options
     order_fields = {
         "price": "price",
         "-price": "-price",
         "date": "created",
         "-date": "-created",
     }
+
     if order in order_fields:
-        if all(hasattr(product, 'price_with_discount') for product in products):
-            products = products.order_by(order_fields[order].replace('price', 'price_with_discount'))
+        if 'price' in order_fields[order]:
+            products = products.annotate(
+                effective_price=Case(
+                    When(discount=True, price_with_discount__isnull=False,
+                         then=F('price_with_discount')),
+                    default=F('price'),
+                    output_field=DecimalField()
+                )
+            )
+
+            if order == '-price':
+                products = products.order_by('-effective_price')
+            else:
+                products = products.order_by('effective_price')
         else:
             products = products.order_by(order_fields[order])
 
@@ -72,13 +82,11 @@ def product_detail(request, product_slug: str):
             available=True,
         )
     except Product.DoesNotExist:
-        # Try to find the product in a different language
         product_in_other_language = get_object_or_404(
             Product,
             translations__slug=product_slug,
             available=True,
         )
-        # Get the corresponding slug in the current language
         product_slug_in_current_language = product_in_other_language.translations.filter(language_code=language).first().slug
         product = get_object_or_404(
             Product,
