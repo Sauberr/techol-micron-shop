@@ -62,10 +62,17 @@ All actions should be executed from the source directory of the project and only
    stripe listen --forward-to localhost:8000/payment/webhook/
    ```
 
+## Docker 
+   ```bash
+   docker build .
+
+   docker-compose up
+   ```
+
 ## License
 
 This project uses the [MIT] license(https://github.com/Sauberr/techol-micron-shop/blob/master/LICENSE)
 
 ## Contact 
 
-sauberr10@gmail.com
+To contact the author of the project, write to email 𝚍𝚖𝚒𝚝𝚛𝚒𝚢𝚋𝚒𝚛𝚒𝚕𝚔𝚘@𝚐𝚖𝚊𝚒𝚕.𝚌𝚘𝚖.
