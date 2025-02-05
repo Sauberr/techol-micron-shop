@@ -68,15 +68,21 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "debug_toolbar",
+    "django_extensions",
+    "django.contrib.humanize",
+    "social_django",
+
+
     "rest_framework",
     "rest_framework.authtoken",
     "captcha",
     "crispy_forms",
-    "django_extensions",
-    "django.contrib.humanize",
     "crispy_bootstrap5",
-    "social_django",
     "djoser",
+    "rosetta",
+    "parler",
+    "taggit",
+
     "products.apps.ProductsConfig",
     "user_account.apps.UserAccountConfig",
     "cart.apps.CartConfig",
@@ -84,8 +90,6 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "coupons.apps.CouponsConfig",
     "payment.apps.PaymentConfig",
     "api.apps.ApiConfig",
-    "rosetta",
-    "parler",
 )
 
 LOCALE_PATHS = [

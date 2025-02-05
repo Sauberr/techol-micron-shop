@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from parler.models import TranslatableModel, TranslatedFields
+from taggit.managers import TaggableManager
+
 from user_account.models import User
 from django_ckeditor_5.fields import CKEditor5Field
 
@@ -42,6 +44,7 @@ class Product(TranslatableModel):
     )
     available = models.BooleanField(default=True)
     discount = models.BooleanField(default=False)
+    tags = TaggableManager(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

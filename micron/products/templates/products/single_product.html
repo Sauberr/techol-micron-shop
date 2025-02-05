@@ -21,10 +21,11 @@
 .my-text {
     color: black;
 }
+
 </style>
 
 
- <section class="py-5">
+<section class="py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="row gx-4 gx-lg-5 align-items-center">
                     {% if product.discount %}
@@ -36,9 +37,14 @@
                     <div class="col-md-6">
                         <div class="small mb-1">SKU: {{ product.id }}</div>
                         <h1 class="display-5 fw-bolder">{{ product.name }}</h1>
-                        <div class="fs-5 mb-5">
+                        <div class="fs-3 mb-3">
                             <span>${{ product.price_with_discount|intcomma }}</span>
                         </div>
+                        {% if product.tags.all %}
+                             <h6>{% for tag in product.tags.all %}#{{ tag.name }} {% endfor %}</h6>
+                        {% else %}
+                             <h6>{% trans 'No tags available' %}</h6>
+                        {% endif %}
                         <h6>
                          {% if average_stars %}
                              {% for i in "x"|rjust:average_stars %}
@@ -66,9 +72,14 @@
                     <div class="col-md-6">
                         <div class="small mb-1">SKU: {{ product.id }}</div>
                         <h1 class="display-5 fw-bolder">{{ product.name }}</h1>
-                        <div class="fs-5 mb-5">
+                        <div class="fs-3 mb-3">
                             <span class="">${{ product.price|intcomma }}</span>
                         </div>
+                        {% if product.tags.all %}
+                             <h6>{% for tag in product.tags.all %}#{{ tag.name }} {% endfor %}</h6>
+                        {% else %}
+                             <h6>{% trans 'No tags available' %}</h6>
+                        {% endif %}
                         <h6>
                         {% if average_stars %}
                              {% for i in "x"|rjust:average_stars %}
