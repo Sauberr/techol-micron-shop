@@ -8,38 +8,38 @@
 
 
 {% block title %}
- Checkout
+Checkout
 {% endblock %}
 {% block content %}
-  <div class="container mt-4">
+<div class="container mt-4">
     <h1 class="text-center"> Checkout</h1>
     <hr>
 
     <div class="order-info mt-4">
-      <h3>Your order</h3>
-      <ul class="list-group">
-        {% for item in cart %}
-          <li class="list-group-item">
-            {{ item.quantity }}x {{ item.product.name }}
-            <span class="float-right">${{ item.total_price|intcomma }}</span>
-          </li>
-        {% endfor %}
-         {% if cart.coupon %}
-           <li>
-           "{{ cart.coupon.code }}" ({{ cart.coupon.discount }}% off)
-           <span class="neg">- ${{ cart.get_discount|floatformat:2 }}</span>
-           </li>
-        {% endif %}
-      </ul>
+        <h3>Your order</h3>
+        <ul class="list-group">
+            {% for item in cart %}
+            <li class="list-group-item">
+                {{ item.quantity }}x {{ item.product.name }}
+                <span class="float-right">${{ item.total_price|intcomma }}</span>
+            </li>
+            {% endfor %}
+            {% if cart.coupon %}
+            <li>
+                "{{ cart.coupon.code }}" ({{ cart.coupon.discount }}% off)
+                <span class="neg">- ${{ cart.get_discount|floatformat:2 }}</span>
+            </li>
+            {% endif %}
+        </ul>
 
-      <p class="mt-3">Total: ${{ cart.get_total_price_after_discount|floatformat:2 }}</p>
+        <p class="mt-3">Total: ${{ cart.get_total_price_after_discount|floatformat:2 }}</p>
     </div>
 
     <form method="post" class="order-form mt-4">
-      {% csrf_token %}
-      {{ form|crispy }}
+        {% csrf_token %}
+        {{ form|crispy }}
 
-      <p><input type="submit" class="btn btn-primary" value="Place order"></p>
+        <p><input type="submit" class="btn btn-primary" value="Place order"></p>
     </form>
-  </div>
+</div>
 {% endblock %}

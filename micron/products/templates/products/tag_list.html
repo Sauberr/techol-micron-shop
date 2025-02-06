@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static humanize %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<div class="container mt-4 mb-5">
+    <h2 class="text-center">
+        {% if tag %}
+        {% trans "Products tagged with" %}
+        <span class="text-primary">#{{ tag.name }}</span>
+        {% else %}
+        {% trans "All Products" %}
+        {% endif %}
+    </h2>
+
+
+    <div class="row mt-4">
+        {% if products %}
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="my-text">
+                        {{ product.description|safe|truncatewords:15 }}
+                    </p>
+                    <a href="{{ product.get_absolute_url }}" class="btn btn-primary">
+                        {% trans "View Details" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="col-12 text-center">
+            <h5 class="text-muted">{% trans "No products found for this tag." %}</h5>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% include 'footer.html' %}
+
+{% endblock %}

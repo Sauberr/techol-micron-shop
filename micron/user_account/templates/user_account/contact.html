@@ -11,54 +11,53 @@
 
 <style>
     .contact-us span {
-    color: #0dcaf0;
-}
+        color: #0dcaf0;
+    }
 
-h1 span {
-    color: #0d6efd;
-}
+    h1 span {
+        color: #0d6efd;
+    }
 
-.btn:hover {
-    background-color: #0d6efd;
-}
+    .btn:hover {
+        background-color: #0d6efd;
+    }
 
-.contact-2 .contact-info-2 .ci-box i {
-    width: 45px;
-    line-height: 50px;
-    margin-right: 5px;
-    font-size: 33px;
-}
+    .contact-2 .contact-info-2 .ci-box i {
+        width: 45px;
+        line-height: 50px;
+        margin-right: 5px;
+        font-size: 33px;
+    }
 
-.contact-2 .contact-info-2 .ci-box h5 {
-    font-weight: 500;
-    font-size: 16px;
-    margin: 0 0 5px;
-}
+    .contact-2 .contact-info-2 .ci-box h5 {
+        font-weight: 500;
+        font-size: 16px;
+        margin: 0 0 5px;
+    }
 
-.contact-2 .contact-info-2 .ci-box p {
-    font-size: 15px;
-    font-weight: 400;
-    margin-bottom: 0;
-}
+    .contact-2 .contact-info-2 .ci-box p {
+        font-size: 15px;
+        font-weight: 400;
+        margin-bottom: 0;
+    }
 
-.contact-2 .contact-info-2 .ci-box {
-    margin: 0 0 30px 0;
-    position: relative;
-    width: 100%;
-}
+    .contact-2 .contact-info-2 .ci-box {
+        margin: 0 0 30px 0;
+        position: relative;
+        width: 100%;
+    }
 
-.contact-2 .ci-box .icon {
-    position: absolute;
-}
+    .contact-2 .ci-box .icon {
+        position: absolute;
+    }
 
-.contact-2 .ci-box .detail {
-    margin-left: 50px;
-}
+    .contact-2 .ci-box .detail {
+        margin-left: 50px;
+    }
 
 </style>
 
 {% endblock %}
-
 
 
 {% include 'navbar.html' %}
@@ -66,23 +65,24 @@ h1 span {
 
 <div class="contact-2 content-area-5">
     <div class="container">
-         {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags %} alert-{{ message.tags }} {% endif %} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if message.tags %} alert-{{ message.tags }} {% endif %} alert-dismissible fade show"
+             role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
         {% endif %}
         {% if form.errors %}
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ error }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endfor %}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endfor %}
         {% endif %}
         <!-- Main title -->
         <div class="main-title text-center">

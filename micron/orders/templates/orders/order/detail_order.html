@@ -3,34 +3,34 @@
 {% load static humanize %}
 
 {% block title %}
-    {{ title }}
+{{ title }}
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static 'css/product.css' %}">
-    <style>
-        .table {
-            box-shadow: 0 4px 8px rgba(1, 2, 0, 0.4);
-        }
+<link rel="stylesheet" href="{% static 'css/product.css' %}">
+<style>
+    .table {
+        box-shadow: 0 4px 8px rgba(1, 2, 0, 0.4);
+    }
 
-        .orders {
-            margin-top: 20px;
-        }
+    .orders {
+        margin-top: 20px;
+    }
 
-                .table {
-            box-shadow: 0 4px 8px rgba(1, 2, 0, 0.4);
-        }
+    .table {
+        box-shadow: 0 4px 8px rgba(1, 2, 0, 0.4);
+    }
 
-        .no-hover:hover {
-            background-color: inherit;
-        }
+    .no-hover:hover {
+        background-color: inherit;
+    }
 
-        .underline {
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-        }
-    </style>
+    .underline {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 5px;
+        margin-bottom: 20px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -41,38 +41,38 @@
 
 {% endblock %}
 
-    <section>
-        <div class="container pt-5">
-            <div class="text-center mt-5">
-                <h1 class="text-center my-4">{% trans 'Your goods' %}</h1>
-                <div class="orders mt-5">
-                    <h2 class="underline" >Order # {{ order.id }}</h2>
-                    <table class="table table-bordered">
-                        <thead class="table-dark">
-                            <tr>
-                                <th scope="col">{% trans 'Product' %}</th>
-                                <th scope="col">{% trans 'Quantity' %}</th>
-                                <th scope="col">{% trans 'Price per Unit' %}</th>
-                                <th scope="col">{% trans 'User' %}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in detail_order %}
-                                <tr>
-                                    <td>{{ item.product.name }}</td>
-                                    <td>{{ item.quantity }}</td>
-                                    <td>${{ item.price|intcomma }}</td>
-                                    <td>{{ item.user }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+<section>
+    <div class="container pt-5">
+        <div class="text-center mt-5">
+            <h1 class="text-center my-4">{% trans 'Your goods' %}</h1>
+            <div class="orders mt-5">
+                <h2 class="underline">Order # {{ order.id }}</h2>
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col">{% trans 'Product' %}</th>
+                        <th scope="col">{% trans 'Quantity' %}</th>
+                        <th scope="col">{% trans 'Price per Unit' %}</th>
+                        <th scope="col">{% trans 'User' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in detail_order %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price|intcomma }}</td>
+                        <td>{{ item.user }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <a href="{% url 'orders:orders' %}" class="btn btn-dark">
-                <i class="fas fa-arrow-left"></i> {% trans 'Return to back' %}
-            </a>
         </div>
-    </section>
+        <a href="{% url 'orders:orders' %}" class="btn btn-dark">
+            <i class="fas fa-arrow-left"></i> {% trans 'Return to back' %}
+        </a>
+    </div>
+</section>
 {% endblock %}
 

@@ -2,21 +2,21 @@
 {% load static humanize %}
 
 {% block title %}
-    {{ title }}
+{{ title }}
 {% endblock %}
 
 {% block css %}
-    <style>
-        .table {
-            box-shadow: 0 4px 8px rgba(1, 2, 0, 0.4);
-        }
+<style>
+    .table {
+        box-shadow: 0 4px 8px rgba(1, 2, 0, 0.4);
+    }
 
-        .underline {
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-        }
-    </style>
+    .underline {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 5px;
+        margin-bottom: 20px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -28,55 +28,56 @@
 {% endblock %}
 
 
-    <section>
-        <div class="container pt-5">
-            <div class="text-center mt-5">
-                <h1 class="underline">Orders</h1>
-                <div class="orders mt-5">
-                    {% if orders %}
-                        <table class="table table-bordered">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Full Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">City</th>
-                                    <th scope="col">Postal Code</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Detail Order</th>
-                                    <th scope="col">Delete Order</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for order in orders %}
-                                    <tr>
-                                        <th scope="row">{{ order.id }}</th>
-                                        <td class="">{{ order.first_name }} {{ order.last_name }}</td>
-                                        <td class="">{{ order.email }}</td>
-                                        <td>{{ order.city }}</td>
-                                        <td>{{ order.postal_code }}</td>
-                                        <td>{{ order.created }}</td>
-                                        <td>
-                                            <a href="{% url 'orders:detail_order' order.id %}" class="btn btn-outline-primary">Detail</a>
-                                        </td>
-                                        <td>
-                                            <a href="{% url 'orders:delete_order' order.id %}" class="btn btn-outline-danger">Delete</a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <h2>No orders</h2>
-                    {% endif %}
-                </div>
-
+<section>
+    <div class="container pt-5">
+        <div class="text-center mt-5">
+            <h1 class="underline">Orders</h1>
+            <div class="orders mt-5">
+                {% if orders %}
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Full Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Postal Code</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Detail Order</th>
+                        <th scope="col">Delete Order</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <th scope="row">{{ order.id }}</th>
+                        <td class="">{{ order.first_name }} {{ order.last_name }}</td>
+                        <td class="">{{ order.email }}</td>
+                        <td>{{ order.city }}</td>
+                        <td>{{ order.postal_code }}</td>
+                        <td>{{ order.created }}</td>
+                        <td>
+                            <a href="{% url 'orders:detail_order' order.id %}"
+                               class="btn btn-outline-primary">Detail</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'orders:delete_order' order.id %}" class="btn btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <h2>No orders</h2>
+                {% endif %}
             </div>
-            <a href="{% url 'products:products' %}" class="btn btn-dark">
-                <i class="fas fa-arrow-left"></i> Return to back
-            </a>
+
         </div>
-    </section>
+        <a href="{% url 'products:products' %}" class="btn btn-dark">
+            <i class="fas fa-arrow-left"></i> Return to back
+        </a>
+    </div>
+</section>
 {% endblock %}
 
 

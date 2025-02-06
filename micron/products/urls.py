@@ -10,9 +10,10 @@ from products.views import (
     product_detail,
     products,
     update_review,
+    tag_list,
 )
 
-app_name = "products"
+app_name: str = "products"
 
 urlpatterns = [
 
@@ -23,6 +24,10 @@ urlpatterns = [
     path("products/", products, name="products"),
     # Detail product page
     path("product-detail/<slug:product_slug>/", product_detail, name="product_detail"),
+
+    # Tags
+    path("products/tag/<slug:tag_slug>/", tag_list, name="tag_products"),
+
     # Individual category
     path("category/<slug:category_slug>/", list_category, name="list_category"),
 

@@ -1,22 +1,27 @@
 {% load static %}
 
- <div class="search-popup">
-        <div class="search-popup-container">
+<div class="search-popup">
+    <div class="search-popup-container">
 
-          <form role="search" method="get" class="search-form" action="{% url 'products:products' %}">
-            <input type="search" id="searchform" class="search-field" placeholder="Type and press enter" value="{{ search_query }}" name="search_query" />
-            <button type="submit" class="search-submit"><svg class="search"><use xlink:href="#search"></use></svg></button>
-          </form>
+        <form role="search" method="get" class="search-form" action="{% url 'products:products' %}">
+            <input type="search" id="searchform" class="search-field" placeholder="Type and press enter"
+                   value="{{ search_query }}" name="search_query"/>
+            <button type="submit" class="search-submit">
+                <svg class="search">
+                    <use xlink:href="#search"></use>
+                </svg>
+            </button>
+        </form>
 
-          <h5 class="cat-list-title">Browse Categories</h5>
+        <h5 class="cat-list-title">Browse Categories</h5>
 
-          <ul class="cat-list">
+        <ul class="cat-list">
             {% for category in all_categories %}
             <li class="cat-list-item">
-              <a href="{{ category.get_absolute_url }}" >{{ category.name|capfirst }}</a>
+                <a href="{{ category.get_absolute_url }}">{{ category.name|capfirst }}</a>
             </li>
             {% endfor %}
-          </ul>
+        </ul>
 
-        </div>
     </div>
+</div>

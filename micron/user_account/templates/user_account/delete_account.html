@@ -3,63 +3,65 @@
 {% load static %}
 
 {% block css %}
-  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-  <style>
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<style>
     .card {
-      margin-top: 250px;
+        margin-top: 250px;
     }
 
     .card-title {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
     }
 
     .card-text {
-      margin-top: 1rem;
+        margin-top: 1rem;
     }
 
     .btn-sm {
-      padding: 0.5rem 1rem;
+        padding: 0.5rem 1rem;
     }
 
     .btn-cancel {
-      margin-top: 1rem;
+        margin-top: 1rem;
     }
 
     .icon-trash {
-      color: #dc3545; /* Adjust color as needed */
+        color: #dc3545; /* Adjust color as needed */
     }
-  </style>
+</style>
 {% endblock %}
 
 {% block title %}
-  {{ title }}
+{{ title }}
 {% endblock %}
 
 {% block content %}
-  <div class="container mt-4">
+<div class="container mt-4">
     <div class="row justify-content-center align-items-center">
-      <div class="col-lg-6">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="mb-0">Delete your account</h3>
-            <p class="mb-0">Delete your account permanently.</p>
-          </div>
-          <div class="card-body p-4">
-            <span class="text-danger h4">Warning</span>
-            <p>
-              If you delete your account, you will lose all your products, coupons, orders, and other data.
-            </p>
-            <form method="POST">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-danger btn-sm w-100">Delete Account <i class="fas fa-trash icon-trash"></i></button>
-              <a href="{% url 'user_account:profile' user.profile.id %}" class="btn btn-primary btn-sm w-100 btn-cancel">Cancel</a>
-            </form>
-          </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Delete your account</h3>
+                    <p class="mb-0">Delete your account permanently.</p>
+                </div>
+                <div class="card-body p-4">
+                    <span class="text-danger h4">Warning</span>
+                    <p>
+                        If you delete your account, you will lose all your products, coupons, orders, and other data.
+                    </p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm w-100">Delete Account <i
+                                class="fas fa-trash icon-trash"></i></button>
+                        <a href="{% url 'user_account:profile' user.profile.id %}"
+                           class="btn btn-primary btn-sm w-100 btn-cancel">Cancel</a>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 {% endblock %}
 
 

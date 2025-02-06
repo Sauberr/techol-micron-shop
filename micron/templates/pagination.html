@@ -45,7 +45,10 @@
 
         {% if queryset.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ queryset.previous_page_number }}&discount={{ request.GET.discount }}&order={{ request.GET.order }}" data-page="{{ queryset.previous_page_number }}" tabindex="-1" aria-disabled="true">&#10094; {% trans 'Previous' %}</a>
+            <a class="page-link"
+               href="?page={{ queryset.previous_page_number }}&discount={{ request.GET.discount }}&order={{ request.GET.order }}"
+               data-page="{{ queryset.previous_page_number }}" tabindex="-1" aria-disabled="true">&#10094; {% trans
+                'Previous' %}</a>
         </li>
         {% endif %}
 
@@ -56,14 +59,18 @@
         </li>
         {% else %}
         <li class="page-item">
-            <a class="btn page-link" href="?page={{ page }}&discount={{ request.GET.discount }}&order={{ request.GET.order }}" data-page="{{ page }}">{{ page }}</a>
+            <a class="btn page-link"
+               href="?page={{ page }}&discount={{ request.GET.discount }}&order={{ request.GET.order }}"
+               data-page="{{ page }}">{{ page }}</a>
         </li>
         {% endif %}
         {% endfor %}
 
         {% if queryset.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ queryset.next_page_number }}&discount={{ request.GET.discount }}&order={{ request.GET.order }}" data-page="{{ queryset.next_page_number }}">{% trans 'Next' %} &#10095;</a>
+            <a class="page-link"
+               href="?page={{ queryset.next_page_number }}&discount={{ request.GET.discount }}&order={{ request.GET.order }}"
+               data-page="{{ queryset.next_page_number }}">{% trans 'Next' %} &#10095;</a>
         </li>
         {% endif %}
 

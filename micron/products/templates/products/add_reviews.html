@@ -10,15 +10,15 @@
 
 {% block content %}
 <div class="container">
-  <br>
-  <br>
-  <h2>{% trans 'Add Review for' %} {{ product.name }}</h2>
-  <hr>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.stars|as_crispy_field }}
-    {{ form.text|as_crispy_field }}
-    <button type="submit" class="btn btn-dark"> {% trans 'Send' %} </button>
-  </form>
+    <br>
+    <br>
+    <h2>{% trans 'Add Review for' %} {{ product.name }}</h2>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.stars|as_crispy_field }}
+        {{ form.text|as_crispy_field }}
+        <button type="submit" class="btn btn-dark"> {% trans 'Send' %}</button>
+    </form>
 </div>
 {% endblock %}

@@ -17,39 +17,41 @@
 {% block content %}
 
 
-
 {% include 'navbar.html' %}
-
 
 
 <main>
 
-  <div class="album py-5 bg-light">
-    <div class="container">
+    <div class="album py-5 bg-light">
+        <div class="container">
 
-      <div class="pb-3 h5"> {{ category.name|capfirst }} </div>
-
-
-      <hr>
-
-      <br>
+            <div class="pb-3 h5"> {{ category.name|capfirst }}</div>
 
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+            <hr>
 
-        {% for product in products %}
+            <br>
 
-        {% if product.discount %}
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+
+                {% for product in products %}
+
+                {% if product.discount %}
                 <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{% trans 'Sale' %}</div>
-                            <!-- Product image-->
-                            <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt="Product Image" width="650" height="350"/><a/>
+                    <div class="card h-100">
+                        <!-- Sale badge-->
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{%
+                            trans 'Sale' %}
+                        </div>
+                        <!-- Product image-->
+                        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}"
+                                                                      alt="Product Image" width="650" height="350"/><a/>
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                    <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5 class="fw-bolder">{{ product.name|capfirst }}</h5></a>
+                                    <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5
+                                            class="fw-bolder">{{ product.name|capfirst }}</h5></a>
                                     <!-- Product reviews-->
                                     <!-- Product price-->
                                     <span class="text-muted text-decoration-line-through">${{ product.price|intcomma }}</span>
@@ -58,52 +60,60 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                              <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ product.get_absolute_url }}">{% trans 'More detail' %}</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto"
+                                                            href="{{ product.get_absolute_url }}">{% trans 'More detail'
+                                    %}</a></div>
                             </div>
-                        </div>
+                    </div>
                 </div>
                 {% else %}
                 <div class="col mb-5">
                     <div class="card h-100">
                         <!-- Product image-->
-                        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt="Product Image" width="650" height="350"/></a>
+                        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}"
+                                                                      alt="Product Image" width="650" height="350"/></a>
                         <!-- Product details-->
                         <div class="card-body p-4">
                             <div class="text-center">
                                 <!-- Product name-->
-                                <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5 class="fw-bolder">{{ product.name|capfirst }}</h5></a>
+                                <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5
+                                        class="fw-bolder">{{ product.name|capfirst }}</h5></a>
                                 <!-- Product price-->
                                 ${{ product.price|intcomma }}
                             </div>
                         </div>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                           <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ product.get_absolute_url }}">{% trans 'More detail' %}</a></div>
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto"
+                                                        href="{{ product.get_absolute_url }}">{% trans 'More detail'
+                                %}</a></div>
                         </div>
                     </div>
                 </div>
-            {% endif %}
+                {% endif %}
 
-        {% empty %}
-         <h2 class="text-center" style="white-space: nowrap;"> {% trans 'Sorry, but this session is empty now' %} </h2>
+                {% empty %}
+                <h2 class="text-center" style="white-space: nowrap;"> {% trans 'Sorry, but this session is empty now'
+                    %} </h2>
 
-        {% endfor %}
+                {% endfor %}
 
-      </div>
-      <a href="{% url 'products:products' %}"><button type="button" class="btn btn-dark"><i class="fa fa-sign-out" aria-hidden="true"></i> Back</button></a>
+            </div>
+            <a href="{% url 'products:products' %}">
+                <button type="button" class="btn btn-dark"><i class="fa fa-sign-out" aria-hidden="true"></i> Back
+                </button>
+            </a>
+        </div>
     </div>
-  </div>
-
-
 
 
 </main>
 <hr>
 
-        {% block footer %}
+{% block footer %}
 
-            {% include 'footer.html' %}
+{% include 'footer.html' %}
 
-        {% endblock %}
+{% endblock %}
 
 
 {% endblock %}

@@ -7,79 +7,92 @@
 
 <style>
     .user-profile {
-    font-size: 14px;
-}
+        font-size: 14px;
+    }
 
-.dropdown-menu a {
-    font-size: 16px;
-}
+    .dropdown-menu a {
+        font-size: 16px;
+    }
 
-.dropdown-toggle::after {
-    content: "";
-    display: inline-block;
-    width: 0;
-    height: 0;
-    vertical-align: middle;
-    margin-left: 0.255em;
-    margin-top: -0.6em;
-    border-top: 0.3em solid;
-    border-right: 0.3em solid transparent;
-    border-bottom: 0;
-    border-left: 0.3em solid transparent;
-    transition: transform 0.2s ease-in-out;
-}
+    .dropdown-toggle::after {
+        content: "";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        vertical-align: middle;
+        margin-left: 0.255em;
+        margin-top: -0.6em;
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+        transition: transform 0.2s ease-in-out;
+    }
 
-.dropdown-toggle[aria-expanded="true"]::after {
-    transform: rotate(180deg);
-}
+    .dropdown-toggle[aria-expanded="true"]::after {
+        transform: rotate(180deg);
+    }
 
 </style>
 
 
 <header id="header" class="site-header header-scrolled position-fixed text-black bg-light">
-      <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3">
+    <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            <img src="{% static 'images/logo.png' %}" style="width: 143px; height: 48px;" class="logo">
-          </a>
-          <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
-            <svg class="navbar-icon">
-              <use xlink:href="#navbar-icon"></use>
-            </svg>
-          </button>
-          <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
-            <div class="offcanvas-header px-4 pb-0">
-              <a class="navbar-brand" href="/">
-                <img src="{% static 'images/logo' %}" class="logo">
-              </a>
-              <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdNavbar"></button>
-            </div>
-            <div class="offcanvas-body">
-              <ul id="navbar" class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
-                <li class="nav-item">
-                  <a {% if request.path == '/en/' %} class="nav-link me-4 active" href="{% url 'products:index' %}"{% else %} class="nav-link me-4" href="{% url 'products:index' %}"{% endif %}>Home</a>
-                </li>
-                <li class="nav-item">
-                  <a {% if 'products/' in request.path %} class="nav-link me-4 active" href="{% url 'products:products' %}">Products {% else %}  class="nav-link me-4" href="{% url 'products:products' %}">Products {% endif %}</a>
-                </li>
-                <li class="nav-item">
-                   <a {% if 'orders/' in request.path %} class="nav-link me-4 active" href="{% url 'orders:orders' %}">Orders {% else %}  class="nav-link me-4" href="{% url 'orders:orders' %}">Orders {% endif %}</a>
-                </li>
-                  <li class="nav-item">
-                  <a {% if 'contact/' in request.path %} class="nav-link me-4 active" href="{% url 'user_account:contact' %}">Contact {% else %}  class="nav-link me-4" href="{% url 'user_account:contact' %}">Contact {% endif %}</a>
-                </li>
-                 <li class="nav-item dropdown">
-                  <a class="nav-link me-4 dropdown-toggle link-dark" data-bs-toggle="dropdown" role="button" aria-expanded="false">Categories</a>
-                  <ul class="dropdown-menu">
-                    {% for category in all_categories %}
-                    <li>
-                      <a href="{{ category.get_absolute_url }}" class="dropdown-item">{{ category.name|capfirst }}</a>
-                    </li>
-                  {% endfor %}
-                 </ul>
-                 </li>
-                <li class="nav-item">
-                   <div class="d-flex align-items-center">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/logo.png' %}" style="width: 143px; height: 48px;" class="logo">
+            </a>
+            <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <svg class="navbar-icon">
+                    <use xlink:href="#navbar-icon"></use>
+                </svg>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
+                <div class="offcanvas-header px-4 pb-0">
+                    <a class="navbar-brand" href="/">
+                        <img src="{% static 'images/logo' %}" class="logo">
+                    </a>
+                    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas"
+                            aria-label="Close" data-bs-target="#bdNavbar"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul id="navbar"
+                        class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a {% if request.path== '/en/' %} class="nav-link me-4 active" href="{% url 'products:index'
+                            %}"{% else %} class="nav-link me-4" href="{% url 'products:index' %}"{% endif %}>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a {% if 'products/' in request.path %} class="nav-link me-4 active" href="{% url
+                            'products:products' %}">Products {% else %} class="nav-link me-4" href="{% url
+                            'products:products' %}">Products {% endif %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a {% if 'orders/' in request.path %} class="nav-link me-4 active" href="{% url
+                            'orders:orders' %}">Orders {% else %} class="nav-link me-4" href="{% url 'orders:orders'
+                            %}">Orders {% endif %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a {% if 'contact/' in request.path %} class="nav-link me-4 active" href="{% url
+                            'user_account:contact' %}">Contact {% else %} class="nav-link me-4" href="{% url
+                            'user_account:contact' %}">Contact {% endif %}</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link me-4 dropdown-toggle link-dark" data-bs-toggle="dropdown" role="button"
+                               aria-expanded="false">Categories</a>
+                            <ul class="dropdown-menu">
+                                {% for category in all_categories %}
+                                <li>
+                                    <a href="{{ category.get_absolute_url }}" class="dropdown-item">{{
+                                        category.name|capfirst }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <div class="d-flex align-items-center">
                                 <form action="{% url 'set_language' %}" method="post" class="nav-link d-inline">
                                     {% csrf_token %}
                                     <input name="next" type="hidden" value="{{ request.get_full_path }}">
@@ -88,59 +101,78 @@
                                         {% get_available_languages as LANGUAGES %}
                                         {% get_language_info_list for LANGUAGES as languages %}
                                         {% for language in languages %}
-                                            <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
-                                                {{ language.name_local }}
-                                            </option>
+                                        <option value="{{ language.code }}" {% if language.code== LANGUAGE_CODE
+                                                %}selected{% endif %}>
+                                            {{ language.name_local }}
+                                        </option>
                                         {% endfor %}
                                     </select>
                                 </form>
                             </div>
-                </li>
-                <li class="nav-item">
-                  <div class="user-items ps-5">
-                    <ul class="d-flex justify-content-end list-unstyled">
-                       <li class="pe-3">
-                        {% if user.is_authenticated %}
-                            <div class="dropdown">
-                                <a class="dropdown-toggle" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <svg class="user">
-                                        <use xlink:href="#user"></use>
-                                    </svg>
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                    <li><p class="dropdown-item user-profile">{{ user }}'s Profile</p></li>
-                                    <li><hr class="dropdown-divider"/></li>
-                                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'user_account:profile' user.profile.id %}"><i class="fa-solid fa-user"></i> {% trans 'Profile' %}</a></li>
-                                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'products:favorite_products' %}"> <i class="fa-solid fa-heart"></i> {% trans 'Favourite Products' %}</a></li>
-                                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'user_account:password_change' %}"><i class="fa-solid fa-unlock"></i> {% trans 'Change Password' %}</a></li>
-                                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'user_account:logout' %}"> <i class="fa fa-sign-out" aria-hidden="true"></i> {% trans 'Logout' %}</a></li>
-                                    {% if user.is_superuser or user.is_staff %}
-                                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'admin:index' %}"><i class="fa-solid fa-user-tie"></i> {% trans 'Admin Panel' %}</a></li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                        {% else %}
-                            <a href="{% url 'user_account:login' %}">
-                                <svg class="user">
-                                    <use xlink:href="#user"></use>
-                                </svg>
-                            </a>
-                        {% endif %}
-                      </li>
-                      <li class="search-item pe-3">
-                        <a href="#" class="search-button">
-                          <svg class="search">
-                            <use xlink:href="#search"></use>
-                          </svg>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="{% url 'cart:cart_summary' %}">
-                          <svg class="cart">
-                            <use xlink:href="#cart"></use>
-                             <form action="{% url 'cart:cart_summary' %}" method="POST" class="d-flex">
-                                {% csrf_token %}
-                                <button class="btn btn-outline-dark" type="submit">
+                        </li>
+                        <li class="nav-item">
+                            <div class="user-items ps-5">
+                                <ul class="d-flex justify-content-end list-unstyled">
+                                    <li class="pe-3">
+                                        {% if user.is_authenticated %}
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle" id="userDropdown" href="#" role="button"
+                                               data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg class="user">
+                                                    <use xlink:href="#user"></use>
+                                                </svg>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                                <li><p class="dropdown-item user-profile">{{ user }}'s Profile</p></li>
+                                                <li>
+                                                    <hr class="dropdown-divider"/>
+                                                </li>
+                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
+                                                                        href="{% url 'user_account:profile' user.profile.id %}"><i
+                                                        class="fa-solid fa-user"></i> {% trans 'Profile' %}</a></li>
+                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
+                                                                        href="{% url 'products:favorite_products' %}">
+                                                    <i class="fa-solid fa-heart"></i> {% trans 'Favourite Products'
+                                                    %}</a></li>
+                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
+                                                                        href="{% url 'user_account:password_change' %}"><i
+                                                        class="fa-solid fa-unlock"></i> {% trans 'Change Password'
+                                                    %}</a></li>
+                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
+                                                                        href="{% url 'user_account:logout' %}"> <i
+                                                        class="fa fa-sign-out" aria-hidden="true"></i> {% trans 'Logout'
+                                                    %}</a></li>
+                                                {% if user.is_superuser or user.is_staff %}
+                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
+                                                                        href="{% url 'admin:index' %}"><i
+                                                        class="fa-solid fa-user-tie"></i> {% trans 'Admin Panel' %}</a>
+                                                </li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>
+                                        {% else %}
+                                        <a href="{% url 'user_account:login' %}">
+                                            <svg class="user">
+                                                <use xlink:href="#user"></use>
+                                            </svg>
+                                        </a>
+                                        {% endif %}
+                                    </li>
+                                    <li class="search-item pe-3">
+                                        <a href="#" class="search-button">
+                                            <svg class="search">
+                                                <use xlink:href="#search"></use>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cart:cart_summary' %}">
+                                            <svg class="cart">
+                                                <use xlink:href="#cart"></use>
+                                                <form action="{% url 'cart:cart_summary' %}" method="POST"
+                                                      class="d-flex">
+                                                    {% csrf_token %}
+                                                    <button class="btn btn-outline-dark" type="submit">
                                   <span class="badge bg-dark text-white ms-1 rounded-pill">
                                         {% with qty_amount=cart|length %}
 
@@ -155,46 +187,49 @@
                                             {% endif %}
 
                                 {% endwith %}</span>
-                                </button>
-                            </form>
-                          </svg>
-                        </a>
-                      </li>
+                                                    </button>
+                                                </form>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
                     </ul>
-                  </div>
-                </li>
-              </ul>
+                </div>
             </div>
-          </div>
         </div>
-      </nav>
-    </header>
+    </nav>
+</header>
 <body>
-    <div class="container" style="padding-top: 90px;">
-        {% for message in messages %}
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-            <h6 id="message-timer" class="alert alert-success text-center"><i class="fa fa-sign-out" aria-hidden="true"></i> &nbsp; {{ message }}</h6>
-        {% endif %}
+<div class="container" style="padding-top: 90px;">
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <h6 id="message-timer" class="alert alert-success text-center"><i class="fa fa-sign-out" aria-hidden="true"></i>
+        &nbsp; {{ message }}</h6>
+    {% endif %}
 
-         {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
 
-            <h6 id="message-timer" class="alert alert-danger text-center"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>  &nbsp; {{ message }}</h6>
+    <h6 id="message-timer" class="alert alert-danger text-center"><i class="fa fa-exclamation-triangle"
+                                                                     aria-hidden="true"></i> &nbsp; {{ message }}</h6>
 
-        {% endif %}
+    {% endif %}
 
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
 
-            <h6 id="message-timer" class="alert alert-info text-center"><i class="fa fa-check-circle" aria-hidden="true"></i>  &nbsp; {{ message }}</h6>
-        {% endif %}
+    <h6 id="message-timer" class="alert alert-info text-center"><i class="fa fa-check-circle" aria-hidden="true"></i>
+        &nbsp; {{ message }}</h6>
+    {% endif %}
 
     {% endfor %}
-    </div>
+</div>
 </body>
 
 <script src="{% static 'js/app.js' %}"></script>
 
 <script>
-window.onbeforeunload = function() {
-    navigator.sendBeacon('/decrement-counter/');
-};
+    window.onbeforeunload = function () {
+        navigator.sendBeacon('/decrement-counter/');
+    };
 </script>

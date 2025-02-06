@@ -1,6 +1,7 @@
 import logging
 
 from django.db.models import F, Case, When, DecimalField
+from taggit.models import Tag
 
 from cart.forms import CartAddProductForm
 from django.contrib import messages
@@ -112,6 +113,19 @@ def product_detail(request, product_slug: str):
         "average_stars": average_stars,
     }
     return render(request, "products/single_product.html", context)
+
+
+def tag_list(request, tag_slug=None):
+    products = Product.objects.all().order_by("-id")
+
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        products = products.filter(tags__in=[tag])
+
+    context = {"products": products, "tag": tag,  "title": "| Tags"}
+
+    return render(request, "products/tag_list.html", context)
 
 
 def list_category(request, category_slug=None):

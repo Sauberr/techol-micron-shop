@@ -8,116 +8,120 @@
 {% block content %}
 
 
-
 {% include 'navbar.html' %}
-
-
-
 
 
 {% include 'search.html' %}
 
 
 <section class="py-5">
-<div class="container px-4 px-lg-5 mt-5">
-<div class="container mt-3">
-    <form method="get" class="d-flex justify-content-end align-items-end p-3">
-        <div class="form-group" style="margin-right: 5px;">
-            <label for="discount" class="mr-2">Discount:</label>
-            <select name="discount" id="discount" class="form-control mr-2">
-                <option value="">All</option>
-                <option value="true">Discounted</option>
-                <option value="false">Not discounted</option>
-            </select>
-        </div>
-
-        <div class="form-group" style="margin-right: 5px;">
-            <label for="order" class="mr-2">Order by:</label>
-            <select name="order" id="order" class="form-control mr-2">
-                <option value="">None</option>
-                <option value="price">Price (Low to High)</option>
-                <option value="-price">Price (High to Low)</option>
-                <option value="date">New to Old</option>
-                <option value="-date">Old to New</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary d-flex align-items-center py-2 px-3">
-                 <i class="fas fa-filter mr-2"></i>  Filter
-            </button>
-        </div>
-    </form>
-</div>
     <div class="container px-4 px-lg-5 mt-5">
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-            {% cache 3 in products %}
+        <div class="container mt-3">
+            <form method="get" class="d-flex justify-content-end align-items-end p-3">
+                <div class="form-group" style="margin-right: 5px;">
+                    <label for="discount" class="mr-2">Discount:</label>
+                    <select name="discount" id="discount" class="form-control mr-2">
+                        <option value="">All</option>
+                        <option value="true">Discounted</option>
+                        <option value="false">Not discounted</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-right: 5px;">
+                    <label for="order" class="mr-2">Order by:</label>
+                    <select name="order" id="order" class="form-control mr-2">
+                        <option value="">None</option>
+                        <option value="price">Price (Low to High)</option>
+                        <option value="-price">Price (High to Low)</option>
+                        <option value="date">New to Old</option>
+                        <option value="-date">Old to New</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary d-flex align-items-center py-2 px-3">
+                        <i class="fas fa-filter mr-2"></i> Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                {% cache 3 in products %}
                 {% for product in products %}
-                    {% if product.discount == True %}
-                    <div class="col mb-5">
-                            <div class="card h-100">
-                                <!-- Sale badge-->
-                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{% trans 'Sale' %}</div>
-                                <!-- Product image-->
-                                <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt="Product Image" width="635" height="250"/><a/>
-                                <div class="card-body p-4">
-                                    <div class="text-center">
-                                        <!-- Product name-->
-                                        <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5 class="fw-bolder">{{ product.name|capfirst }}</h5></a>
-                                        <!-- Product reviews-->
-                                        <!-- Product price-->
-                                        <span class="text-muted text-decoration-line-through">${{ product.price|intcomma }}</span>
-                                        ${{ product.price_with_discount|intcomma }}
-                                        <br>
-                                        <br>
-                                         <form action="{% url 'products:add_to_favorites' product.id %}" method="post">
-                                        {% csrf_token %}
-                                            <button type="submit" class="btn btn-outline-danger">
-                                                <i class="fa-solid fa-heart fa-beat"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                                <!-- Product actions-->
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ product.get_absolute_url }}">{% trans 'More detail' %}</a></div>
-                                </div>
-                            </div>
-                    </div>
-                    {% else %}
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}" alt="Product Image" width="635" height="250"/></a>
-                            <!-- Product details-->
+                {% if product.discount == True %}
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Sale badge-->
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{%
+                            trans 'Sale' %}
+                        </div>
+                        <!-- Product image-->
+                        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}"
+                                                                      alt="Product Image" width="635" height="250"/><a/>
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                    <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5 class="fw-bolder">{{ product.name|capfirst }}</h5></a>
+                                    <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5
+                                            class="fw-bolder">{{ product.name|capfirst }}</h5></a>
+                                    <!-- Product reviews-->
                                     <!-- Product price-->
-                                    ${{ product.price|intcomma }}
+                                    <span class="text-muted text-decoration-line-through">${{ product.price|intcomma }}</span>
+                                    ${{ product.price_with_discount|intcomma }}
                                     <br>
-                                        <br>
-                                         <form action="{% url 'products:add_to_favorites' product.id %}" method="post">
+                                    <br>
+                                    <form action="{% url 'products:add_to_favorites' product.id %}" method="post">
                                         {% csrf_token %}
-                                            <button type="submit" class="btn btn-outline-danger">
-                                                <i class="fa-solid fa-heart fa-beat"></i>
-                                            </button>
-                                        </form>
+                                        <button type="submit" class="btn btn-outline-danger">
+                                            <i class="fa-solid fa-heart fa-beat"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
+                            <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ product.get_absolute_url }}">{% trans 'More detail' %}</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto"
+                                                            href="{{ product.get_absolute_url }}">{% trans 'More detail'
+                                    %}</a></div>
+                            </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <!-- Product image-->
+                        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}"
+                                                                      alt="Product Image" width="635" height="250"/></a>
+                        <!-- Product details-->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <!-- Product name-->
+                                <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5
+                                        class="fw-bolder">{{ product.name|capfirst }}</h5></a>
+                                <!-- Product price-->
+                                ${{ product.price|intcomma }}
+                                <br>
+                                <br>
+                                <form action="{% url 'products:add_to_favorites' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="fa-solid fa-heart fa-beat"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto"
+                                                        href="{{ product.get_absolute_url }}">{% trans 'More detail'
+                                %}</a></div>
+                        </div>
                     </div>
-                    {% endif %}
+                </div>
+                {% endif %}
                 {% endfor %}
-            {% endcache %}
+                {% endcache %}
+            </div>
         </div>
-    </div>
-
-
 
 
         {% include 'pagination.html' with queryset=products custom_range=custom_range %}
@@ -128,10 +132,7 @@
 <hr>
 
 
-
-            {% include 'footer.html' %}
-
-
+{% include 'footer.html' %}
 
 
 {% endblock %}

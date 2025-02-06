@@ -2,43 +2,42 @@
 {% load static crispy_forms_tags %}
 
 {% block title %}
- {{ title }}
+{{ title }}
 {% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
 <style>
 
-input[type="text"], input[type="email"], textarea {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
+    input[type="text"], input[type="email"], textarea {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 
-.btn {
-    font-size: 1.2em;
-    padding: 10px 20px;
-}
+    .btn {
+        font-size: 1.2em;
+        padding: 10px 20px;
+    }
 
-.btn-dark:hover {
-    background-color: #343a40;
-    border-color: #343a40;
-}
+    .btn-dark:hover {
+        background-color: #343a40;
+        border-color: #343a40;
+    }
 
-form {
-   font-family: Arial, sans-serif;
-}
+    form {
+        font-family: Arial, sans-serif;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 
 {% include 'navbar.html' %}
-
 
 
 <div class="container my-5">
