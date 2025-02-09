@@ -1,5 +1,7 @@
+from IPython.core.events import available_events
 from django.db import models
 from django.urls import reverse
+from faker import Faker
 from parler.models import TranslatableModel, TranslatedFields
 from taggit.managers import TaggableManager
 
@@ -14,18 +16,23 @@ class Category(TranslatableModel):
     )
 
     class Meta:
-        # ordering = ['name']
-        # indexes = [
-        # models.Index(fields=['name']),
-        # ]
-        verbose_name = "category"
-        verbose_name_plural = "categories"
+        verbose_name: str = "category"
+        verbose_name_plural: str = "categories"
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse("products:list_category", args=[self.slug])
+
+    @classmethod
+    def generate_instances(cls, count):
+        faker = Faker()
+        for _ in range(count):
+            cls.objects.create(
+                name=faker.name(),
+                slug=faker.slug(),
+            )
 
 
 class Product(TranslatableModel):
@@ -49,10 +56,7 @@ class Product(TranslatableModel):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        # ordering = ['name']
         indexes = [
-            # models.Index(fields=['id', 'slug']),
-            # models.Index(fields=['name']),
             models.Index(fields=["-created"]),
         ]
         verbose_name = "product"
@@ -63,6 +67,19 @@ class Product(TranslatableModel):
 
     def get_absolute_url(self):
         return reverse("products:product_detail", args=[self.slug])
+
+    @classmethod
+    def generate_instances(cls, count):
+        faker = Faker()
+        for _ in range(count):
+            cls.objects.create(
+                name=faker.name(),
+                slug=faker.slug(),
+                description=faker.text(),
+                price=faker.random_int(10, 100),
+                image="products/default.jpg",
+                category=Category.objects.first(),
+            )
 
 
 class Review(models.Model):
@@ -81,11 +98,22 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "review"
-        verbose_name_plural = "reviews"
+        verbose_name: str = "review"
+        verbose_name_plural: str = "reviews"
         indexes = [
             models.Index(fields=["-created_at"]),
         ]
 
     def __str__(self):
         return f"{self.user}"
+
+    @classmethod
+    def generate_instances(cls, count):
+        faker = Faker()
+        for _ in range(count):
+            cls.objects.create(
+                user=User.objects.first(),
+                product=Product.objects.first(),
+                stars=faker.random_int(1, 5),
+                text=faker.text(),
+            )

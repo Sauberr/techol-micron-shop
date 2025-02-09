@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-app_name = "api"
+app_name: str = "api"
 
 
 router = routers.DefaultRouter()

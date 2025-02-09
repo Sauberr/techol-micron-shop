@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from faker import Faker
 
 
 class Coupon(models.Model):
@@ -18,3 +19,15 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code
+
+    @classmethod
+    def generate_instances(cls, count):
+        faker = Faker()
+        for _ in range(count):
+            cls.objects.create(
+                code=faker.name(),
+                valid_from=faker.date_time_this_year(),
+                valid_to=faker.date_time_this_year(),
+                discount=faker.random_int(1, 100),
+                active=faker.boolean(),
+            )
