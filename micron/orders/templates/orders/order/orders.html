@@ -6,81 +6,67 @@
 {% endblock %}
 
 {% block css %}
-<style>
-    .table {
-        box-shadow: 0 4px 8px rgba(1, 2, 0, 0.4);
-    }
-
-    .underline {
-        border-bottom: 1px solid #dee2e6;
-        padding-bottom: 5px;
-        margin-bottom: 20px;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/orders/orders.css' %}">
 {% endblock %}
 
 {% block content %}
 
 {% block header %}
-
 {% include 'navbar.html' %}
-
 {% endblock %}
 
-
 <section>
-    <div class="container pt-5">
-        <div class="text-center mt-5">
-            <h1 class="underline">Orders</h1>
-            <div class="orders mt-5">
+    <div class="container">
+        <div class="text-center">
+            <h1>Orders</h1>
+            <div class="orders mt-3">
                 {% if orders %}
-                <table class="table table-bordered">
-                    <thead class="table-dark">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Full Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">City</th>
-                        <th scope="col">Postal Code</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Detail Order</th>
-                        <th scope="col">Delete Order</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for order in orders %}
-                    <tr>
-                        <th scope="row">{{ order.id }}</th>
-                        <td class="">{{ order.first_name }} {{ order.last_name }}</td>
-                        <td class="">{{ order.email }}</td>
-                        <td>{{ order.city }}</td>
-                        <td>{{ order.postal_code }}</td>
-                        <td>{{ order.created }}</td>
-                        <td>
-                            <a href="{% url 'orders:detail_order' order.id %}"
-                               class="btn btn-outline-primary">Detail</a>
-                        </td>
-                        <td>
-                            <a href="{% url 'orders:delete_order' order.id %}" class="btn btn-outline-danger">Delete</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">City</th>
+                            <th scope="col">Postal Code</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <th scope="row">{{ order.id }}</th>
+                            <td>{{ order.first_name }} {{ order.last_name }}</td>
+                            <td>{{ order.email }}</td>
+                            <td>{{ order.city }}</td>
+                            <td>{{ order.postal_code }}</td>
+                            <td class="date-column">{{ order.created|naturaltime }}</td>
+                            <td class="action-buttons">
+                                <a href="{% url 'orders:detail_order' order.id %}" class="btn btn-detail">
+                                    <i class="fas fa-info-circle"></i> Detail
+                                </a>
+                                <a href="{% url 'orders:delete_order' order.id %}" class="btn btn-delete">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 {% else %}
-                <h2>No orders</h2>
+                <h2 class="no-orders">No orders</h2>
                 {% endif %}
             </div>
-
         </div>
-        <a href="{% url 'products:products' %}" class="btn btn-dark">
+        <a href="{% url 'products:products' %}" class="btn-return">
             <i class="fas fa-arrow-left"></i> Return to back
         </a>
     </div>
 </section>
+
+{% include 'footer.html' %}
+
 {% endblock %}
-
-
-
-
-

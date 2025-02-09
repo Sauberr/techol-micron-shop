@@ -1,153 +1,127 @@
 {% extends 'base.html' %}
-
 {% load static humanize %}
-
-{% block css %}
-<style>
-        .coupon-info {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            padding: 5px;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            display: inline-block;
-        }
-
-        .coupon-code {
-            font-weight: bold;
-            color: #007bff;
-        }
-
-        .num {
-            color: #dc3545; /* Red color for negative values */
-        }
-
-        .total-label {
-            font-weight: bold;
-            margin-right: 5px;
-        }
-    </style>
-{% endblock %}
 
 {% block title %}
 {{ title }}
 {% endblock %}
 
-{% block content %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cart/cart-summary.css' %}">
+{% endblock %}
 
+{% block content %}
 {% include 'navbar.html' %}
 
+<section class="cart-section">
+    <div class="cart-container">
+        <h1 class="page-title">Shopping Cart</h1>
 
-<body>
-    <main class="py-5">
-        <div class="container col-6">
-            <h1 class="text-center">Shopping cart</h1>
-            {% with total_items=cart|length %}
-            {% if total_items == 0 %}
-            <h3 class="text-center">Your cart is empty</h3>
-            {% endif %}
-            {% endwith %}
-            <hr>
+        {% with total_items=cart|length %}
+        {% if total_items == 0 %}
+        <div class="text-center">
+            <h3 class="mb-4">Your cart is empty</h3>
+            <a href="{% url 'products:products' %}" class="action-btn continue-btn">
+                Start Shopping
+            </a>
+        </div>
+        {% else %}
+
+        <div class="cart-items">
             {% for item in cart %}
-                {% with product=item.product %}
-                    <div class="row mb-4 border product-item">
-                        <div class="col-md-3 col-lg-2 order-md-first bg-light">
-                            <a href="{{ product.get_absolute_url }}"><img class="img-fluid mx-auto d-block" width="200px" alt="Responsive image" src="{{ product.image.url }}"></a>
-                        </div>
-                        <div class="col-md-9 col-lg-10 ps-md-3 ps-lg-10">
-                            <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-reset">
-                                <h1 class="h5 pt-2">{{ product.name }}</h1>
+            {% with product=item.product %}
+            <div class="cart-item">
+                <div class="row g-0">
+                    <div class="col-md-3">
+                        <div class="product-image">
+                            <a href="{{ product.get_absolute_url }}">
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
                             </a>
-                            <div class="row p-3">
-                                <div class="col-7">
-                                    <label for="select">Quantity</label>
-                                    &nbsp;
-                                    <div class="d-flex">
-                                        <form class="text-center" id="inputQuantity" action="{% url 'cart:cart_add' product.id %}" method='post'>
-                                            <div style="max-width: 3rem;">
-                                            {{ item.update_quantity_form.quantity }}
-                                            </div>
-                                            {{ item.update_quantity_form.override }}
-                                            <br>
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-outline-dark"><i class="fa-solid fa-arrows-rotate" style="color: #005eff;"></i> Update</button>
-                                        </form>
-                                    </div>
-                                    <br>
-                                    <div class="d-flex">
-                                        <form class="text-center" action="{% url 'cart:cart_remove' product.id %}" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-outline-danger"><i class="fa-solid fa-trash" style="color: #f00a0a;"></i> Delete</button>
-                                        </form>
-                                    </div>
-                                    <br>
-                                </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="product-details">
+                            <a href="{{ product.get_absolute_url }}" class="product-title">
+                                {{ product.name }}
+                            </a>
+                            <div class="quantity-control">
+                                <form id="inputQuantity" action="{% url 'cart:cart_add' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    {{ item.update_quantity_form.quantity }}
+                                    {{ item.update_quantity_form.override }}
+                                    <button type="submit" class="update-btn">
+                                        <i class="fas fa-sync-alt me-2"></i>Update
+                                    </button>
+                                </form>
+                                <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-btn">
+                                        <i class="fas fa-trash me-2"></i>Delete
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
-                {% endwith %}
+                </div>
+            </div>
+            {% endwith %}
             {% endfor %}
-
         </div>
 
-        <div class="container col-6 text-end">
-            <div class="subtotal">
+        <div class="cart-summary">
+            <div class="coupon-section">
                 {% if cart.coupon %}
-                    <div class="coupon-info">
-                        <span class="coupon-code">{{ cart.coupon.code }}</span> coupon ({{ cart.coupon.discount }}% off)
-                    </div>
-                    <div class="num neg">– ${{ cart.get_discount|floatformat:2 }}</div>
-                {% endif %}
-            </div>
-
-            <div class="h6 fw-bold underline">
-                Subtotal: ${{ cart.get_total_price|intcomma }}
-                {% if cart.coupon %}
-                    <div id="total" class="d-inline-flex underline">
-                        <span class="total-label">Total:</span> ${{ cart.get_total_price_after_discount|floatformat:2 }}
-                    </div>
-                {% endif %}
-            </div>
-            <br>
-            {% if cart.coupon %}
+                <div class="coupon-badge">
+                    <span class="coupon-code">{{ cart.coupon.code }}</span>
+                    <span>({{ cart.coupon.discount }}% off)</span>
+                    <div class="discount-amount">– ${{ cart.get_discount|floatformat:2 }}</div>
+                </div>
                 <form method="POST" action="{% url 'coupons:remove' %}">
                     {% csrf_token %}
-                    <input type="hidden" name="action" value="remove_coupon">
-                    <button type="submit" class="btn btn-outline-danger"> Remove Coupon </button>
+                    <button type="submit" class="delete-btn">Remove Coupon</button>
                 </form>
-            {% else %}
-                <form action="{% url 'coupons:apply' %}" method="post">
+                {% else %}
+                <form action="{% url 'coupons:apply' %}" method="post" class="d-flex gap-2">
                     {% csrf_token %}
-                    <div class="d-flex justify-content-end">
-                        <label for="{{ coupon_apply_form.code.id_for_label }}" class="form-label">{{ coupon_apply_form.code.label }}</label>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        {{ coupon_apply_form.code }}
-                    </div>
-                    <br>
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-outline-primary apply-coupon-btn" type="submit">Apply</button>
-                    </div>
+                    {{ coupon_apply_form.code }}
+                    <button class="update-btn" type="submit">Apply Coupon</button>
                 </form>
-            {% endif %}
+                {% endif %}
+            </div>
 
+            <div class="total-section">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal:</span>
+                    <span>${{ cart.get_total_price|intcomma }}</span>
+                </div>
+                {% if cart.coupon %}
+                <div class="d-flex justify-content-between">
+                    <span>Total:</span>
+                    <span class="total-amount">${{ cart.get_total_price_after_discount|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+            </div>
 
+            <div class="action-buttons">
                 <form method="POST" action="{% url 'cart:cart_clear' %}">
                     {% csrf_token %}
-                    <input type="hidden" name="action" value="clear">
-                    <br>
-                    <button type="submit" id="clear-button" class="btn btn-outline-dark underline">Clear Cart</button>
+                    <button type="submit" class="action-btn continue-btn">Clear Cart</button>
                 </form>
-                <a href="{% url 'orders:order_create' %}" class="btn btn-outline-dark my-2 underline">
-                    <i class="fa fa-chevron-circle-right" aria-hidden="true"></i> Proceed to checkout
+
+                <a href="{% url 'orders:order_create' %}" class="action-btn checkout-btn">
+                    <i class="fas fa-shopping-cart me-2"></i>Checkout
                 </a>
-                <br>
-                <a href="{% url 'products:products' %}" class="btn btn-outline-dark my-2 underline">
-                    <i class="fa fa-chevron-circle-right" aria-hidden="true"></i> Continue shopping
+
+                <a href="{% url 'products:products' %}" class="action-btn continue-btn">
+                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
                 </a>
             </div>
         </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</section>
 
-    </main>
+{% include 'footer.html' %}
+
 
 {% endblock %}

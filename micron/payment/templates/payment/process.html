@@ -1,115 +1,83 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Pay your order{% endblock %}
-
-{% block content %}
-<style>
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f8f9fa;
-        margin: 20px;
-    }
-
-    h1 {
-        color: #333;
-        text-align: center;
-    }
-
-    .cart {
-        width: 100%;
-        margin-top: 20px;
-        border-collapse: collapse;
-    }
-
-    .cart th, .cart td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #dee2e6;
-    }
-
-
-    .total td {
-        font-weight: bold;
-    }
-
-    .num {
-        text-align: right;
-    }
-
-    .pay-now-btn {
-        background-color: #343a40;
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    .pay-now-btn:hover {
-        background-color: #555;
-    }
-</style>
-
-<h1>Order summary</h1>
-
-<table class="table table-bordered cart">
-    <thead class="thead-light">
-    <tr>
-        <th>Image</th>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Total</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for item in order.items.all %}
-    <tr class="row{% cycle '1' '2' %}">
-        <td>
-            <img height="100" width="80"
-                 src="{% if item.product.image %}{{ item.product.image.url }}{% else %}{% static " img/no_image.png"
-            %}{% endif %}" alt="{{ item.product.name }}">
-        </td>
-        <td>{{ item.product.name }}</td>
-        <td class="num">${{ item.price }}</td>
-        <td class="num">{{ item.quantity }}</td>
-        <td class="num">${{ item.get_cost }}</td>
-    </tr>
-    {% endfor %}
-    {% if order.coupon %}
-    <tr class="subtotal">
-        <td>Subtotal</td>
-        <td colspan="3"></td>
-        <td class="num">
-            ${{ order.get_total_cost_before_discount|floatformat:2 }}
-        </td>
-    </tr>
-    <tr>
-        <td>
-            "{{ order.coupon.code }}" coupon
-            ({{ order.discount }}% off)
-        </td>
-        <td colspan="3"></td>
-        <td class="num neg">
-            – ${{ order.get_discount|floatformat:2 }}
-        </td>
-    </tr>
-    {% endif %}
-    <tr class="total">
-        <td colspan="4">Total</td>
-        <td class="num">${{ order.get_total_cost|floatformat:2 }}</td>
-    </tr>
-    </tbody>
-</table>
-
-<form action="{% url 'payment:process' %}" method="post">
-    <button type="submit" class="btn btn-dark pay-now-btn">Pay now</button>
-    {% csrf_token %}
-</form>
-
+{% block title %}
+Pay your order
 {% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/payment/process.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<section class="payment-section">
+    <div class="payment-container">
+        <h1 class="page-title">Order Summary</h1>
+
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                <tr>
+                    <td>
+                        <img class="product-image"
+                             src="{% if item.product.image %}{{ item.product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}"
+                             alt="{{ item.product.name }}">
+                    </td>
+                    <td class="product-name">{{ item.product.name }}</td>
+                    <td class="price-column">${{ item.price }}</td>
+                    <td class="quantity-column">{{ item.quantity }}</td>
+                    <td class="price-column">${{ item.get_cost }}</td>
+                </tr>
+                {% endfor %}
+
+                {% if order.coupon %}
+                <tr class="subtotal-row">
+                    <td>Subtotal</td>
+                    <td colspan="3"></td>
+                    <td class="price-column">${{ order.get_total_cost_before_discount|floatformat:2 }}</td>
+                </tr>
+                <tr class="discount-row">
+                    <td>
+                        Coupon "{{ order.coupon.code }}"
+                        <span class="discount-badge">({{ order.discount }}% off)</span>
+                    </td>
+                    <td colspan="3"></td>
+                    <td class="price-column discount-amount">
+                        -${{ order.get_discount|floatformat:2 }}
+                    </td>
+                </tr>
+                {% endif %}
+
+                <tr class="total-row">
+                    <td colspan="4">Total</td>
+                    <td class="price-column total-amount">${{ order.get_total_cost|floatformat:2 }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form action="{% url 'payment:process' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="pay-button">
+                <i class="fas fa-credit-card me-2"></i>
+                Pay Now
+            </button>
+        </form>
+    </div>
+</section>
+
+{% include 'footer.html' %}
 
 
+{% endblock %}

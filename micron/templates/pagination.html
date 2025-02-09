@@ -1,67 +1,39 @@
 {% load static %}
 {% load i18n %}
 
-<style>
-    .pagination {
-        margin-top: 20px;
-    }
+{% block css %}
 
-    .pagination .page-item {
-        display: inline-block;
-        margin-right: 5px;
-    }
+<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
 
-    .pagination .page-link,
-    .pagination .btn {
-        color: #000;
-        background-color: #fff;
-        border: 1px solid grey;
-    }
+{% endblock %}
 
-    .pagination .page-item.active .btn {
-        background-color: grey;
-        color: #fff;
-        border: 1px solid grey;
-    }
 
-    .pagination .page-link:hover,
-    .pagination .btn:hover {
-        background-color: grey;
-        color: #fff;
-        border: 1px solid grey;
-    }
-
-    .pagination .page-link,
-    .pagination .btn,
-    .pagination .page-link:hover,
-    .pagination .btn:hover {
-        transition: background-color 0.3s, color 0.3s, border 0.3s;
-    }
-</style>
 
 {% if queryset.has_other_pages %}
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-
+<nav aria-label="Page navigation">
+    <ul class="pagination">
         {% if queryset.has_previous %}
         <li class="page-item">
             <a class="page-link"
                href="?page={{ queryset.previous_page_number }}&discount={{ request.GET.discount }}&order={{ request.GET.order }}"
-               data-page="{{ queryset.previous_page_number }}" tabindex="-1" aria-disabled="true">&#10094; {% trans
-                'Previous' %}</a>
+               data-page="{{ queryset.previous_page_number }}">
+                &#10094; {% trans 'Previous' %}
+            </a>
         </li>
         {% endif %}
 
         {% for page in custom_range %}
         {% if page == queryset.number %}
         <li class="page-item active">
-            <span class="btn page-link btn--sub">{{ page }}</span>
+            <span class="btn page-link">{{ page }}</span>
         </li>
         {% else %}
         <li class="page-item">
             <a class="btn page-link"
                href="?page={{ page }}&discount={{ request.GET.discount }}&order={{ request.GET.order }}"
-               data-page="{{ page }}">{{ page }}</a>
+               data-page="{{ page }}">
+                {{ page }}
+            </a>
         </li>
         {% endif %}
         {% endfor %}
@@ -70,10 +42,11 @@
         <li class="page-item">
             <a class="page-link"
                href="?page={{ queryset.next_page_number }}&discount={{ request.GET.discount }}&order={{ request.GET.order }}"
-               data-page="{{ queryset.next_page_number }}">{% trans 'Next' %} &#10095;</a>
+               data-page="{{ queryset.next_page_number }}">
+                {% trans 'Next' %} &#10095;
+            </a>
         </li>
         {% endif %}
-
     </ul>
 </nav>
 {% endif %}

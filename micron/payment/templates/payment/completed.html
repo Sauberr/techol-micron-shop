@@ -1,23 +1,34 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} Payment successful {% endblock %}
+
+{% block title %}
+Payment successful
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/payment/completed.css' %}">
+{% endblock %}
 
 {% block content %}
-<section class="dashboard-section body-collapse pay step step-2 step-3 receive-3">
-    <div class="request-submitted pb-120 text-center">
-        <div class="top-area" style="margin-top: 150px;">
-            <div class="icon-area"
-                 style="background-color: green; border-radius: 50%; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
-                <img src="{% static 'images/icon/success.png' %}" alt="icon" style="max-width: 70%; max-height: 70%;">
-            </div>
+
+{% include 'navbar.html' %}
+
+<section class="success-section">
+    <div class="success-container">
+        <div class="success-icon">
+            <img src="{% static 'images/icon/success.png' %}" alt="Success">
         </div>
-        <div class="container mt-4">
-            <h1 class="text-center mb-4">Thank you</h1>
-            <p class="text-center">Your payment has been successfully completed.</p>
-            <a href="{% url 'products:products' %}" class="btn btn-dark mt-3">
-                <i class="fas fa-arrow-left"></i> Return to the site
-            </a>
-        </div>
+        <h1 class="success-title">Thank You!</h1>
+        <p class="success-message">
+            Your payment has been successfully completed.
+        </p>
+        <a href="{% url 'products:products' %}" class="return-btn">
+            <i class="fas fa-arrow-left"></i>
+            Return to the site
+        </a>
     </div>
 </section>
+
+{% include 'footer.html' %}
+
 {% endblock %}

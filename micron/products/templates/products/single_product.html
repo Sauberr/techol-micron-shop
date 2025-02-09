@@ -6,264 +6,177 @@
 {{ title }}
 {% endblock %}
 
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/products/single-product.css' %}">
+
+{% endblock %}
+
+
 {% block content %}
 {% include 'navbar.html' %}
 
-<style>
-    p {
-        color: black;
-    }
 
-    .my-text {
-        color: black;
-    }
 
-    .product-image-container {
-        position: relative;
-        overflow: hidden;
-    }
+<section class="product-section">
+    <div class="container">
+        <div class="product-container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="product-image-container">
+                        {% if product.discount %}
+                        <div class="sale-badge">{% trans 'Sale' %}</div>
+                        {% endif %}
+                        <img class="product-image-zoom"
+                             src="{{ product.image.url }}"
+                             alt="{{ product.name }}"
+                             data-zoom-image="{{ product.image.url }}"/>
+                    </div>
+                </div>
 
-    .product-image-zoom {
-        cursor: zoom-in;
-    }
-</style>
+                <div class="col-md-6">
+                    <div class="product-info">
+                        <div class="product-sku">SKU: {{ product.id }}</div>
+                        <h1 class="product-title">{{ product.name }}</h1>
 
-<section class="py-5">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="row gx-4 gx-lg-5 align-items-center">
-            {% if product.discount %}
-            <div class="col-md-6 position-relative product-image-container">
-                <img class="card-img-top mb-5 mb-md-0 product-image-zoom"
-                     src="{{ product.image.url }}"
-                     alt="product image"
-                     data-zoom-image="{{ product.image.url }}"/>
-                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{% trans
-                    'Sale' %}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="small mb-1">SKU: {{ product.id }}</div>
-                <h1 class="display-5 fw-bolder">{{ product.name }}</h1>
-                <div class="fs-3 mb-3">
-                    <span>${{ product.price_with_discount|intcomma }}</span>
-                </div>
-                <div class="product-tags">
-                    {% for tag in product.tags.all %}
-                    <a href="{% url 'products:tag_products' tag.slug %}" class="product-tag">#{{ tag.name }}</a>
-                    {% empty %}
-                    <h6>No tags available</h6>
-                    {% endfor %}
-                </div>
-                <h6>
-                    {% if average_stars %}
-                    {% for i in "x"|rjust:average_stars %}
-                    <i class="fa-solid fa-star" style="color: #ffa800;"></i>
-                    {% endfor %}
-                    {% with reviews.count as total_reviews %}
-                    {{ total_reviews }} review{{ total_reviews|pluralize }}
-                    {% endwith %}
-                    {% else %}
-                    <h6>{% trans 'No reviews yet' %}</h6>
-                    {% endif %}
-                </h6>
-                <p class="my-text">{{ product.description|safe }}</p>
-                <div class="d-flex">
-                    <form class="text-center" id="inputQuantity" type="num" value="1" style="max-width: 3rem"
-                          action="{% url 'cart:cart_add' product.id %}" method='post'>
-                        {{ cart_product_form }}
-                        <br>
-                        {% csrf_token %}
-                        <input class="btn btn-outline-dark flex-shrink-0" type="submit"
-                               value="{% trans 'Add to cart' %}">
-                    </form>
-                </div>
-            </div>
-            {% else %}
-            <div class="col-md-6 position-relative product-image-container">
-                <img class="card-img-top mb-5 mb-md-0 product-image-zoom"
-                     src="{{ product.image.url }}"
-                     alt="product image"
-                     data-zoom-image="{{ product.image.url }}"/>
-            </div>
-            <div class="col-md-6">
-                <div class="small mb-1">SKU: {{ product.id }}</div>
-                <h1 class="display-5 fw-bolder">{{ product.name }}</h1>
-                <div class="fs-3 mb-3">
-                    <span>${{ product.price|intcomma }}</span>
-                </div>
-                <div class="product-tags">
-                    {% for tag in product.tags.all %}
-                    <a href="{% url 'products:tag_products' tag.slug %}" class="product-tag">#{{ tag.name }}</a>
-                    {% empty %}
-                    <h6>No tags available</h6>
-                    {% endfor %}
-                </div>
-                <h6>
-                    {% if average_stars %}
-                    {% for i in "x"|rjust:average_stars %}
-                    <i class="fa-solid fa-star" style="color: #ffa800;"></i>
-                    {% endfor %}
-                    {% with reviews.count as total_reviews %}
-                    {{ total_reviews }} review{{ total_reviews|pluralize }}
-                    {% endwith %}
-                    {% else %}
-                    <h6>{% trans 'No reviews yet' %}</h6>
-                    {% endif %}
-                </h6>
-                <p class="my-text">{{ product.description|safe }}</p>
-                <div class="d-flex">
-                    <form class="text-center" id="inputQuantity" type="num" value="1" style="max-width: 3rem"
-                          action="{% url 'cart:cart_add' product.id %}" method='post'>
-                        {{ cart_product_form }}
-                        <br>
-                        {% csrf_token %}
-                        <input class="btn btn-outline-dark flex-shrink-0" type="submit"
-                               value="{% trans 'Add to cart' %}">
-                    </form>
+                        <div class="product-price">
+                            {% if product.discount %}
+                            ${{ product.price_with_discount|intcomma }}
+                            {% else %}
+                            ${{ product.price|intcomma }}
+                            {% endif %}
+                        </div>
+
+                        <div class="product-tags">
+                            {% for tag in product.tags.all %}
+                            <a href="{% url 'products:tag_products' tag.slug %}" class="product-tag">
+                                #{{ tag.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+
+                        <div class="product-rating">
+                            {% if average_stars %}
+                            <span class="star-rating">
+                                {% for i in "x"|rjust:average_stars %}
+                                <i class="fa-solid fa-star"></i>
+                                {% endfor %}
+                            </span>
+                            <span class="review-count">
+                                {% with reviews.count as total_reviews %}
+                                {{ total_reviews }} review{{ total_reviews|pluralize }}
+                                {% endwith %}
+                            </span>
+                            {% else %}
+                            <span class="review-count">{% trans 'No reviews yet' %}</span>
+                            {% endif %}
+                        </div>
+
+                        <p class="product-description">{{ product.description|safe }}</p>
+
+                        <form class="add-to-cart-form" action="{% url 'cart:cart_add' product.id %}" method="post">
+                            {% csrf_token %}
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                {{ cart_product_form }}
+                                <button type="submit" class="add-to-cart-btn">
+                                    <i class="fas fa-shopping-cart me-2"></i>{% trans 'Add to cart' %}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-        {% endif %}
-        <section class="reviews-section">
-            {% if user.is_authenticated %}
-            <br>
-            <a href="{% url 'products:add_review' product.id %}">
-                <button type="button" class="btn btn-outline-dark flex-shrink-0">
-                    <i class="fa-solid fa-star"></i> {% trans 'Add review' %}
-                </button>
-            </a>
-            <br><br>
-            {% endif %}
-            <h4 class="mt-4 mb-3">{% trans 'All Reviews' %}</h4>
-            <hr class="mb-4">
+
+        <div class="reviews-section">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="reviews-title">{% trans 'Reviews' %}</h3>
+                {% if user.is_authenticated %}
+                <a href="{% url 'products:add_review' product.id %}" class="add-to-cart-btn">
+                    <i class="fa-solid fa-star me-2"></i>{% trans 'Add Review' %}
+                </a>
+                {% endif %}
+            </div>
+
             <div class="row">
                 {% if reviews %}
                 {% for review in reviews %}
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ review.product.name }}</h5>
-                            <p class="card-text">
+                <div class="col-md-6">
+                    <div class="review-card">
+                        <div class="review-header">
+                            <h5 class="mb-0">{{ review.user }}</h5>
+                            <div class="star-rating">
                                 {% for i in 'x'|rjust:review.stars %}
-                                <i class="fa-solid fa-star" style="color: #ffa800;"></i>
+                                <i class="fa-solid fa-star"></i>
                                 {% endfor %}
-                            </p>
-                            <h6 class="card-text">
-                                <strong>{{ review.user }}:</strong>
-                            </h6>
-                            <h6 class="card-text">{{ review.text }}</h6>
-                            {% if user == review.user %}
-                            <a href="{% url 'products:delete_review' review.id %}" class="btn btn-outline-dark">{% trans
-                                'Delete' %}</a>
-                            <a href="{% url 'products:update_review' review.id %}" class="btn btn-outline-dark">{% trans
-                                'Update' %}</a>
-                            {% endif %}
-                            <p class="card-text">
-                                <small class="text-muted">{{ review.created_at }}</small>
-                            </p>
+                            </div>
                         </div>
+                        <div class="review-content">
+                            <p class="mb-0">{{ review.text }}</p>
+                        </div>
+                        {% if user == review.user %}
+                        <div class="review-actions">
+                            <a href="{% url 'products:update_review' review.id %}" class="review-btn btn-outline-dark">
+                                <i class="fas fa-edit me-2"></i>{% trans 'Update' %}
+                            </a>
+                            <a href="{% url 'products:delete_review' review.id %}" class="review-btn btn-outline-danger">
+                                <i class="fas fa-trash me-2"></i>{% trans 'Delete' %}
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
                 {% else %}
-                <div class="col-md-12">
-                    <h6>{% trans 'No reviews yet' %}</h6>
+                <div class="col-12">
+                    <p class="text-center text-muted">{% trans 'No reviews yet' %}</p>
                 </div>
                 {% endif %}
             </div>
-        </section>
-        <section class="py-5 bg-light">
-            <div class="container px-4 px-lg-5 mt-5">
-                <h2 class="fw-bolder mb-4">{% trans 'Related products' %}</h2>
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    {% if recommended_products %}
-                    {% for p in recommended_products %}
-                    {% if not p.discount %}
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <a href="{{ p.get_absolute_url }}">
-                                <img width="450" height="200" class="card-img-top"
-                                     src="{% if p.image %} {{ p.image.url }} {% else %} {% static 'img/no_image.png' %}{% endif %}"
-                                     alt="...">
+        </div>
+
+        {% if recommended_products %}
+        <section class="related-products">
+            <h2 class="related-title">{% trans 'Related Products' %}</h2>
+            <div class="row">
+                {% for p in recommended_products %}
+                <div class="col-md-3">
+                    <div class="product-card">
+                        {% if p.discount %}
+                        <div class="sale-badge">Sale</div>
+                        {% endif %}
+                        <a href="{{ p.get_absolute_url }}">
+                            <img class="card-img-top" src="{{ p.image.url }}" alt="{{ p.name }}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ p.name|capfirst }}</h5>
+                            <p class="card-text">${{ p.price|intcomma }}</p>
+                            <a href="{{ p.get_absolute_url }}" class="add-to-cart-btn w-100">
+                                {% trans 'View Details' %}
                             </a>
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <h5 class="fw-bolder">{{ p.name|capfirst }}</h5>
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    {{ p.price|intcomma }}
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <a class="btn btn-outline-dark mt-auto" href="{{ p.get_absolute_url }}">{% trans
-                                        'View options' %}</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    {% else %}
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
-                                Sale
-                            </div>
-                            <a href="{{ p.get_absolute_url }}">
-                                <img width="450" height="200" class="card-img-top"
-                                     src="{% if p.image %} {{ p.image.url }} {% else %} {% static 'img/no_image.png' %}{% endif %}"
-                                     alt="...">
-                            </a>
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <h5 class="fw-bolder">{{ p.name|capfirst }}</h5>
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    {{ p.price|intcomma }}
-                                </div>
-                            </div>
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <a class="btn btn-outline-dark mt-auto" href="{{ p.get_absolute_url }}">{% trans
-                                        'View options' %}</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                    {% endif %}
                 </div>
+                {% endfor %}
             </div>
         </section>
+        {% endif %}
+    </div>
+</section>
 
-        <script>
-            (function ($) {
-                $(document).ready(function () {
-                    $('.product-image-container').zoom({
-                        url: $('.product-image-zoom').attr('data-zoom-image'),
-                        touch: false,
-                        onZoomIn: function () {
-                            console.log('Zoom initialized');
-                        }
-                    });
-                });
-            })(jQuery);
-        </script>
+<script>
+    (function($) {
+        $(document).ready(function() {
+            $('.product-image-container').zoom({
+                url: $('.product-image-zoom').attr('data-zoom-image'),
+                touch: false,
+                onZoomIn: function() {
+                    console.log('Zoom initialized');
+                }
+            });
+        });
+    })(jQuery);
+</script>
 
-        {% include 'footer.html' %}
-        {% endblock %}
+{% include 'footer.html' %}
+{% endblock %}

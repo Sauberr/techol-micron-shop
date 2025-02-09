@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static humanize %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/orders/order-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+
+<section class="order-section">
+    <div class="container">
+        <h1 class="page-title">{% trans 'Your goods' %}</h1>
+        <h2 class="order-number">{% trans 'Order' %} #{{ order.id }}</h2>
+
+        <div class="order-table">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>{% trans 'Product' %}</th>
+                        <th>{% trans 'Quantity' %}</th>
+                        <th>{% trans 'Price per Unit' %}</th>
+                        <th>{% trans 'User' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in detail_order %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price|intcomma }}</td>
+                        <td>{{ item.user }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <a href="{% url 'orders:orders' %}" class="return-btn">
+                <i class="fas fa-arrow-left"></i>{% trans 'Return to back' %}
+            </a>
+        </div>
+    </div>
+</section>
+
+
+{% include 'footer.html' %}
+
+
+{% endblock %}

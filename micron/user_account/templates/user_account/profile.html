@@ -1,187 +1,122 @@
 {% extends 'base.html' %}
-
 {% load static %}
-
-{% block css %}
-<style>
-    .profile-image {
-        width: 100%;
-        height: auto;
-        border-radius: 50%;
-    }
-
-    .profile-title {
-        text-align: center;
-        margin-top: 15px;
-    }
-
-    .profile-buttons {
-        margin-top: 20px;
-    }
-
-    .profile-buttons .btn {
-        margin-bottom: 10px;
-        padding: 10px;
-        font-size: 18px;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-        border-color: #dc3545;
-    }
-
-    .btn-danger:hover {
-        background-color: #c82333;
-        border-color: #bd2130;
-    }
-
-    .underline {
-        border-bottom: 1px solid #dee2e6;
-        padding-bottom: 5px;
-        margin-bottom: 20px;
-    }
-
-    .btn-block {
-        border-radius: 25px;
-        border: none;
-        font-size: 18px;
-        padding: 10px;
-        box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-block:hover {
-        transform: scale(1.02);
-    }
-
-    .small {
-        font-family: Arial, sans-serif;
-        font-size: 20px;
-    }
-
-    .custom-file-upload {
-        /* Add your styles here */
-        background-color: #f8f9fa;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        line-height: 1.5;
-        color: #495057;
-    }
-
-    .custom-file-upload .custom-file-label {
-        font-weight: bold;
-        color: #495057;
-    }
-</style>
-{% endblock %}
 
 {% block title %}
 {{ title }}
 {% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/account/profile.css' %}">
+{% endblock %}
+
 {% block content %}
-
-
 {% include 'navbar.html' %}
 
 
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-4">
-            <img src="{% if user.image %} {{ user.image.url }} {% else %} {% static 'images/users/default_avatar.jpg' %}  {% endif %}"
-                 alt="Profile Image" class="profile-image">
-            <h4 class="profile-title underline">{{ user }}'s Profile</h4>
-            <div class="profile-buttons">
-                <a href="{% url 'user_account:delete_account' %}" class="btn btn-danger btn-block"> <i
-                        class="fas fa-trash icon-trash"></i> Delete account</a>
-                <a href="{% url 'user_account:profile_management' %}" class="btn btn-primary btn-block"> <i
-                        class="fa-solid fa-user" style="color: #ffffff;"></i> Update profile management</a>
-                <a href="{% url 'user_account:manage_shipping' %}" class="btn btn-primary btn-block"> <i
-                        class="fa-solid fa-clipboard" style="color: #ffffff;"></i> Manage Shipping</a>
+<section class="profile-section">
+    <div class="container">
+        <div class="profile-container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="profile-sidebar">
+                        <div class="profile-image-wrapper">
+                            <img src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'images/users/default_avatar.jpg' %}{% endif %}"
+                                 alt="Profile Image" class="profile-image">
+                        </div>
+                        <h4 class="profile-title">{{ user }}'s Profile</h4>
+                        <div class="action-buttons">
+                            <a href="{% url 'user_account:delete_account' %}" class="action-btn btn-delete">
+                                <i class="fas fa-trash me-2"></i>Delete account
+                            </a>
+                            <a href="{% url 'user_account:profile_management' %}" class="action-btn btn-update">
+                                <i class="fa-solid fa-user me-2"></i>Update profile
+                            </a>
+                            <a href="{% url 'user_account:manage_shipping' %}" class="action-btn btn-update">
+                                <i class="fa-solid fa-clipboard me-2"></i>Manage Shipping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="form-section">
+                        <form action="{% url 'user_account:profile' user.profile.id %}" method="POST"
+                              enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="{{ form.first_name.id_for_label }}">First
+                                            name</label>
+                                        {{ form.first_name }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="{{ form.last_name.id_for_label }}">Last
+                                            name</label>
+                                        {{ form.last_name }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Profile Image</label>
+                                <div class="file-upload">
+                                    <label class="file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt me-2"></i>Choose file
+                                        {{ form.image }}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+                                {{ form.username }}
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                                {{ form.email }}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="info-box">
+                                        <label class="form-label">Email Status</label>
+                                        <p class="info-text">
+                                            {% if user.profile.is_email_verified %}
+                                            <i class="fas fa-check-circle dark me-2"></i>Verified
+                                            {% else %}
+                                            <i class="fas fa-times-circle dark me-2"></i>Not Verified
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-box">
+                                        <label class="form-label">Member Since</label>
+                                        <p class="info-text">
+                                            <i class="fas fa-calendar-alt me-2"></i>
+                                            {{ user.profile.created_at|date:"F j, Y" }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="save-btn">
+                                    <i class="fas fa-save me-2"></i>Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-lg-8">
-            <form action="{% url 'user_account:profile' user.profile.id  %}" method="POST" class="profile-form"
-                  enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="small mb-1" for="{{ form.first_name.id_for_label }}">First name</label>
-                            {{ form.first_name }}
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="small mb-1" for="{{ form.last_name.id_for_label }}">Last name</label>
-                            {{ form.last_name }}
-                            <br>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row mb-2">
-                    <div class="col-lg-12">
-                        <div class="custom-file-upload">
-                            <label for="{{ form.image.id_for_label }}" class="custom-file-label">
-                                {{ form.image }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-lg-12">
-                        <div class="form-group">
-                            <label class="small mb-1" for="{{ form.username.id_for_label }}">Username</label>
-                            {{ form.username }}
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-lg-12">
-                        <label class="small mb-1" for="{{ form.email.id_for_label }}">Email</label>
-                        {{ form.email }}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-lg-12">
-                        <label class="small mb-1" for="{{ form.is_email_verified.id_for_label }}">Email Verified</label>
-                        <div style="font-size: 18px;">
-                            {{ user.profile.is_email_verified|yesno:"Yes,No" }}
-                        </div>
-                        <br>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-lg-12" style="font-size: 18px;">
-                        <label class="small mb-1" for="{{ form.created_at.id_for_label }}">Joined</label>
-                        <br>
-                        {{ user.profile.created_at|date:"F j, Y" }}
-                    </div>
-                </div>
-                <hr>
-                <div class="form-row">
-                    <div class="col-lg-12 text-center" style="margin-top: 12px;">
-                        <button type="submit" class="btn btn-outline-dark">Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>
-</div>
+</section>
 
 {% include 'footer.html' %}
-
 {% endblock %}

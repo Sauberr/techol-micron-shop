@@ -1,0 +1,63 @@
+.pagination {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+
+.pagination .page-link,
+.pagination .btn {
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    padding: 10px 20px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 0;
+}
+
+.pagination .page-item.active .btn {
+    background-color: #212529;
+    color: #fff;
+    border-color: #212529;
+}
+
+.pagination .page-link:hover,
+.pagination .btn:hover {
+    background-color: #212529;
+    color: #fff;
+    border-color: #212529;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+    padding: 10px 25px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .pagination {
+        gap: 4px;
+    }
+
+    .pagination .page-link,
+    .pagination .btn {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+
+    .pagination .page-item:first-child .page-link,
+    .pagination .page-item:last-child .page-link {
+        padding: 8px 15px;
+    }
+}

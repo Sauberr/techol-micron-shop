@@ -5,20 +5,28 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/product.css' %}">
+<link rel="stylesheet" href="{% static 'css/reviews/add-review.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <br>
-    <br>
-    <h2>{% trans 'Add Review for' %} {{ product.name }}</h2>
+{% include 'navbar.html' %}
+
+<div class="container review-container">
+    <h2 class="review-title">{% trans 'Add Review for' %} {{ product.name }}</h2>
     <hr>
-    <form method="post">
+    <form method="post" class="review-form">
         {% csrf_token %}
         {{ form.stars|as_crispy_field }}
-        {{ form.text|as_crispy_field }}
-        <button type="submit" class="btn btn-dark"> {% trans 'Send' %}</button>
+        <div class="mb-3">
+            <label for="id_text" class="form-label">{% trans 'Your Review' %}</label>
+            {{ form.text }}
+        </div>
+        <button type="submit" class="btn-return">{% trans 'Send' %}</button>
     </form>
 </div>
+
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock %}
+
 {% endblock %}

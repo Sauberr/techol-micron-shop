@@ -1,0 +1,107 @@
+.order-section {
+    background-color: #f8f9fa;
+    padding: 2rem 0;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #212529;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.order-number {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #212529;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.order-table {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 200px;
+}
+
+.order-table thead {
+    background-color: #212529;
+    color: white;
+}
+
+.order-table th {
+    padding: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+    border: none;
+}
+
+.order-table td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-color: #f8f9fa;
+    color: #212529;
+    font-size: 0.95rem;
+}
+
+.order-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.order-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.return-btn {
+    background-color: #212529;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.return-btn:hover {
+    background-color: #000;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.return-btn i {
+    margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+    .order-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .order-number {
+        font-size: 1.1rem;
+    }
+
+    .order-table th,
+    .order-table td {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+}

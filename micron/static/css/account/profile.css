@@ -1,0 +1,170 @@
+.profile-section {
+    padding: 3rem 0;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.profile-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin: 0 auto;
+}
+
+.profile-sidebar {
+    text-align: center;
+    padding: 2rem;
+    border-right: 1px solid #f1f1f1;
+}
+
+.profile-image-wrapper {
+    width: 360px;
+    height: 360px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.profile-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 1rem 0;
+}
+
+.action-btn {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-delete {
+    background-color: #fff;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-update {
+    background-color: #212529;
+    color: white;
+    border: none;
+}
+
+.btn-update:hover {
+    background-color: #000;
+    transform: translateY(-2px);
+}
+
+.form-section {
+    padding: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-control {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #212529;
+    box-shadow: none;
+    outline: none;
+}
+
+.file-upload {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.file-upload-label {
+    display: block;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border: 1px dashed #dee2e6;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-upload-label:hover {
+    background: #e9ecef;
+}
+
+.info-box {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.info-text {
+    font-size: 1rem;
+    color: #212529;
+    margin: 0;
+}
+
+.save-btn {
+    background-color: #212529;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.save-btn:hover {
+    background-color: #000;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 992px) {
+    .profile-sidebar {
+        border-right: none;
+        border-bottom: 1px solid #f1f1f1;
+        margin-bottom: 2rem;
+    }
+}

@@ -2,83 +2,69 @@
 {% load i18n %}
 {% load static humanize %}
 
-{% block css %}
-<link rel="stylesheet" href="{% static 'css/product.css' %}">
-
-<style>
-    .underline {
-        border-bottom: 1px solid #dee2e6;
-        padding-bottom: 5px;
-        margin-bottom: 20px;
-    }
-</style>
-
+{% block title %}
+{{ title }}
 {% endblock %}
 
-{% block title %}
+{% block css %}
 
-{{ title }}
+<link rel="stylesheet" href="{% static 'css/products/favorite-products.css' %}">
 
 {% endblock %}
 
 
 {% block content %}
-
 {% include 'navbar.html' %}
 
+<section class="py-5">
+    <div class="container">
+        <h1 class="page-title">{% trans 'Favorite Products' %}</h1>
 
-<div class="container mt-4">
-    <h1 class="text-center mb-4 underline">{% trans 'Favorite Products' %}</h1>
-    <br>
-
-    {% if favorite_products %}
-    <div class="row">
-        {% for product in favorite_products %}
-        <div class="col-lg-4 mb-4">
-            <div class="card">
-                <a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}" alt="{{ product.name }}"
-                                                              class="card-img-top" width="270" height="418"></a>
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a class="text-decoration-none title" href="{{ product.get_absolute_url }}">
-                            {{ product.name }}
+        {% if favorite_products %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for product in favorite_products %}
+            <div class="col">
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <a href="{{ product.get_absolute_url }}">
+                            <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}"/>
                         </a>
-                    </h5>
-                    <h5 class="card-text">${{ product.price|intcomma }}</h5>
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'products:delete_from_favorites' product.id %}" class="btn btn-outline-danger">
-                        <i class="fas fa-trash"></i> {% trans 'Remove from Favorites' %}
-                    </a>
+                    </div>
+
+                    <div class="card-body">
+                        <a href="{{ product.get_absolute_url }}" class="text-decoration-none">
+                            <h5 class="product-title">{{ product.name }}</h5>
+                        </a>
+                        <div class="product-price">${{ product.price|intcomma }}</div>
+                        <a href="{% url 'products:delete_from_favorites' product.id %}" class="remove-btn text-decoration-none">
+                            <i class="fas fa-trash me-2"></i>{% trans 'Remove from Favorites' %}
+                        </a>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+
+        <div class="text-center mt-5">
+            <a href="{% url 'products:products' %}" class="return-btn text-decoration-none">
+                <i class="fas fa-arrow-left me-2"></i>{% trans 'Return to Products' %}
+            </a>
+        </div>
+        {% else %}
+        <div class="empty-favorites">
+            <h4>{% trans 'No favorite products yet.' %}</h4>
+            <a href="{% url 'products:products' %}" class="return-btn text-decoration-none">
+                <i class="fas fa-arrow-left me-2"></i>{% trans 'Return to Products' %}
+            </a>
+        </div>
+        {% endif %}
     </div>
-    <div class="text-center mt-4">
-        <a href="{% url 'products:products' %}" class="btn btn-dark">
-            <i class="fas fa-arrow-left"></i> {% trans 'Return to Products' %}
-        </a>
-    </div>
-    {% else %}
-    <div class="text-center">
-        <h4>{% trans 'No favorite products yet.' %}</h4>
-        <a href="{% url 'products:products' %}" class="btn btn-dark mt-3">
-            <i class="fas fa-arrow-left"></i> {% trans 'Return to Products' %}
-        </a>
-    </div>
-    {% endif %}
-    <br>
-    <br>
-    <hr>
-</div>
+</section>
+
+<hr>
 
 {% block footer %}
-
 {% include 'footer.html' %}
-
 {% endblock %}
 
-
 {% endblock %}
-

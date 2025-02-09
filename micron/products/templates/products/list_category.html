@@ -1,119 +1,85 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load static humanize humanize %}
-
-
-{% block css %}
-<link rel="stylesheet" href="{% static 'css/product.css' %}">
-{% endblock %}
+{% load static humanize %}
 
 {% block title %}
-
 | {{ category.name|capfirst }}
+{% endblock %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/products/list-category.css' %}">
 
 {% endblock %}
+
 
 
 {% block content %}
-
-
 {% include 'navbar.html' %}
 
 
 <main>
-
-    <div class="album py-5 bg-light">
+    <div class="py-5">
         <div class="container">
-
-            <div class="pb-3 h5"> {{ category.name|capfirst }}</div>
-
-
+            <h2 class="category-title">{{ category.name|capfirst }}</h2>
             <hr>
 
-            <br>
-
-
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
-
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 {% for product in products %}
+                <div class="col">
+                    <div class="product-card">
+                        {% if product.discount %}
+                        <div class="sale-badge badge position-absolute" style="top: 1rem; right: 1rem">
+                            {% trans 'Sale' %}
+                        </div>
+                        {% endif %}
 
-                {% if product.discount %}
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{%
-                            trans 'Sale' %}
+                        <div class="product-image-wrapper">
+                            <a href="{{ product.get_absolute_url }}">
+                                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}"/>
+                            </a>
                         </div>
-                        <!-- Product image-->
-                        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}"
-                                                                      alt="Product Image" width="650" height="350"/><a/>
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5
-                                            class="fw-bolder">{{ product.name|capfirst }}</h5></a>
-                                    <!-- Product reviews-->
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">${{ product.price|intcomma }}</span>
-                                    ${{ product.price_with_discount|intcomma }}
-                                </div>
+
+                        <div class="card-body">
+                            <a href="{{ product.get_absolute_url }}" class="text-decoration-none">
+                                <h5 class="product-title">{{ product.name|capfirst }}</h5>
+                            </a>
+
+                            <div class="price-section">
+                                {% if product.discount %}
+                                <span class="original-price">${{ product.price|intcomma }}</span>
+                                <span class="discounted-price">${{ product.price_with_discount|intcomma }}</span>
+                                {% else %}
+                                <span class="discounted-price">${{ product.price|intcomma }}</span>
+                                {% endif %}
                             </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto"
-                                                            href="{{ product.get_absolute_url }}">{% trans 'More detail'
-                                    %}</a></div>
-                            </div>
-                    </div>
-                </div>
-                {% else %}
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}"
-                                                                      alt="Product Image" width="650" height="350"/></a>
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5
-                                        class="fw-bolder">{{ product.name|capfirst }}</h5></a>
-                                <!-- Product price-->
-                                ${{ product.price|intcomma }}
-                            </div>
-                        </div>
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto"
-                                                        href="{{ product.get_absolute_url }}">{% trans 'More detail'
-                                %}</a></div>
+
+                            <a href="{{ product.get_absolute_url }}" class="detail-btn text-decoration-none">
+                                {% trans 'More detail' %}
+                            </a>
                         </div>
                     </div>
                 </div>
-                {% endif %}
-
                 {% empty %}
-                <h2 class="text-center" style="white-space: nowrap;"> {% trans 'Sorry, but this session is empty now'
-                    %} </h2>
-
+                <div class="col-12">
+                    <h2 class="empty-category">{% trans 'Sorry, but this session is empty now' %}</h2>
+                </div>
                 {% endfor %}
-
             </div>
-            <a href="{% url 'products:products' %}">
-                <button type="button" class="btn btn-dark"><i class="fa fa-sign-out" aria-hidden="true"></i> Back
+
+            <a href="{% url 'products:products' %}" class="text-decoration-none">
+                <button type="button" class="back-btn">
+                    <i class="fa fa-sign-out me-2" aria-hidden="true"></i>{% trans 'Back' %}
                 </button>
             </a>
         </div>
     </div>
-
-
 </main>
+
 <hr>
 
 {% block footer %}
-
 {% include 'footer.html' %}
-
 {% endblock %}
-
 
 {% endblock %}

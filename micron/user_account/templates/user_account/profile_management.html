@@ -1,46 +1,44 @@
 {% extends 'base.html' %}
-
-{% load static crispy_forms_tags  %}
+{% load static crispy_forms_tags %}
 
 {% block title %}
 {{ title }}
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/login' %}">
-<style>
-    .btn-dark:hover {
-        background-color: #343a40;
-        border-color: #343a40;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/account/profile-managment.css' %}">
 {% endblock %}
 
 {% block content %}
-
 {% include 'navbar.html' %}
 
+<section class="profile-management-section">
+    <div class="form-container">
+        <h2 class="page-title">Update Your Account</h2>
+        <p class="page-description">Please update your email or username below</p>
+        <div class="form-divider"></div>
 
-<div class="container col-7 my-5">
-    <h1 class="text-center">Update your account</h1>
-    <p class="text-sm">Please fill your email or username if you want to update.</p>
-    <hr>
-    <form method="post" action="{% url 'user_account:profile_management' %}" autocomplete="off">
-        {% csrf_token %}
-        <div class="form-group">
-            {{ user_form.username|as_crispy_field }}
-        </div>
-        <div class="form-group">
-            {{ user_form.email|as_crispy_field }}
-        </div>
-        <div class="form-group d-flex justify-content-center">
-            <button type="submit" class="btn btn-outline-dark">Update your account</button>
-        </div>
-    </form>
-</div>
+        <form method="post" action="{% url 'user_account:profile_management' %}" autocomplete="off">
+            {% csrf_token %}
 
-<hr>
+            <div class="form-group position-relative">
+                {{ user_form.username|as_crispy_field }}
+                <i class="fas fa-user input-icon"></i>
+            </div>
+
+            <div class="form-group position-relative">
+                {{ user_form.email|as_crispy_field }}
+                <i class="fas fa-envelope input-icon"></i>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="update-btn">
+                    <i class="fas fa-save me-2"></i>Update Account
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
 
 {% include 'footer.html' %}
-
 {% endblock %}

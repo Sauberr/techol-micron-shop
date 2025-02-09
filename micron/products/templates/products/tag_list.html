@@ -6,48 +6,59 @@
 {{ title }}
 {% endblock %}
 
-{% block content %}
+{% block css %}
 
+<link rel="stylesheet" href="{% static 'css/tags/tag-list.css' %}">
+
+{% endblock %}
+
+
+{% block content %}
 {% include 'navbar.html' %}
 
-<div class="container mt-4 mb-5">
-    <h2 class="text-center">
-        {% if tag %}
-        {% trans "Products tagged with" %}
-        <span class="text-primary">#{{ tag.name }}</span>
-        {% else %}
-        {% trans "All Products" %}
-        {% endif %}
-    </h2>
+<section class="py-5">
+    <div class="container">
+        <h2 class="page-title">
+            {% if tag %}
+            {% trans "Products tagged with" %}
+            <span class="tag-name">#{{ tag.name }}</span>
+            {% else %}
+            {% trans "All Products" %}
+            {% endif %}
+        </h2>
 
-
-    <div class="row mt-4">
         {% if products %}
-        {% for product in products %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="my-text">
-                        {{ product.description|safe|truncatewords:15 }}
-                    </p>
-                    <a href="{{ product.get_absolute_url }}" class="btn btn-primary">
-                        {% trans "View Details" %}
-                    </a>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for product in products %}
+            <div class="col">
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <a href="{{ product.get_absolute_url }}">
+                            <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}"/>
+                        </a>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="product-title">{{ product.name }}</h5>
+                        <h6>${{ product.price|intcomma }}</h6>
+                        <p class="product-description">
+                            {{ product.description|safe|truncatewords:15 }}
+                        </p>
+                        <a href="{{ product.get_absolute_url }}" class="detail-btn">
+                            {% trans "View Details" %}
+                        </a>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
         {% else %}
-        <div class="col-12 text-center">
-            <h5 class="text-muted">{% trans "No products found for this tag." %}</h5>
+        <div class="no-products">
+            <h5>{% trans "No products found for this tag." %}</h5>
         </div>
         {% endif %}
     </div>
-</div>
-
+</section>
 
 {% include 'footer.html' %}
-
 {% endblock %}

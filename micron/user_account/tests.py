@@ -109,10 +109,3 @@ class ChangePasswordViewTestCase(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('swagerfeed123P0'))
-
-
-
-
-
-
-

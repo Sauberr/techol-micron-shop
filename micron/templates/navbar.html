@@ -1,39 +1,17 @@
 {% load i18n %}
 {% load static %}
 
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+
+{% endblock %}
+
+
+
 
 {% include 'search.html' %}
 
-
-<style>
-    .user-profile {
-        font-size: 14px;
-    }
-
-    .dropdown-menu a {
-        font-size: 16px;
-    }
-
-    .dropdown-toggle::after {
-        content: "";
-        display: inline-block;
-        width: 0;
-        height: 0;
-        vertical-align: middle;
-        margin-left: 0.255em;
-        margin-top: -0.6em;
-        border-top: 0.3em solid;
-        border-right: 0.3em solid transparent;
-        border-bottom: 0;
-        border-left: 0.3em solid transparent;
-        transition: transform 0.2s ease-in-out;
-    }
-
-    .dropdown-toggle[aria-expanded="true"]::after {
-        transform: rotate(180deg);
-    }
-
-</style>
 
 
 <header id="header" class="site-header header-scrolled position-fixed text-black bg-light">
@@ -58,145 +36,111 @@
                             aria-label="Close" data-bs-target="#bdNavbar"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <ul id="navbar"
-                        class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a {% if request.path== '/en/' %} class="nav-link me-4 active" href="{% url 'products:index'
-                            %}"{% else %} class="nav-link me-4" href="{% url 'products:index' %}"{% endif %}>Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a {% if 'products/' in request.path %} class="nav-link me-4 active" href="{% url
-                            'products:products' %}">Products {% else %} class="nav-link me-4" href="{% url
-                            'products:products' %}">Products {% endif %}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a {% if 'orders/' in request.path %} class="nav-link me-4 active" href="{% url
-                            'orders:orders' %}">Orders {% else %} class="nav-link me-4" href="{% url 'orders:orders'
-                            %}">Orders {% endif %}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a {% if 'contact/' in request.path %} class="nav-link me-4 active" href="{% url
-                            'user_account:contact' %}">Contact {% else %} class="nav-link me-4" href="{% url
-                            'user_account:contact' %}">Contact {% endif %}</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link me-4 dropdown-toggle link-dark" data-bs-toggle="dropdown" role="button"
-                               aria-expanded="false">Categories</a>
-                            <ul class="dropdown-menu">
-                                {% for category in all_categories %}
-                                <li>
-                                    <a href="{{ category.get_absolute_url }}" class="dropdown-item">{{
-                                        category.name|capfirst }}</a>
-                                </li>
-                                {% endfor %}
+    <ul id="navbar" class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
+        <li class="nav-item">
+            <a {% if request.path == '/en/' %} class="nav-link me-4 active" href="{% url 'products:index' %}" {% else %} class="nav-link me-4" href="{% url 'products:index' %}" {% endif %}>Home</a>
+        </li>
+        <li class="nav-item">
+            <a {% if 'products/' in request.path %} class="nav-link me-4 active" href="{% url 'products:products' %}">Products {% else %} class="nav-link me-4" href="{% url 'products:products' %}">Products {% endif %}</a>
+        </li>
+        <li class="nav-item">
+            <a {% if 'orders/' in request.path %} class="nav-link me-4 active" href="{% url 'orders:orders' %}">Orders {% else %} class="nav-link me-4" href="{% url 'orders:orders' %}">Orders {% endif %}</a>
+        </li>
+        <li class="nav-item">
+            <a {% if 'contact/' in request.path %} class="nav-link me-4 active" href="{% url 'user_account:contact' %}">Contact {% else %} class="nav-link me-4" href="{% url 'user_account:contact' %}">Contact {% endif %}</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link me-4 dropdown-toggle link-dark" data-bs-toggle="dropdown" role="button" aria-expanded="false">Categories</a>
+            <ul class="dropdown-menu">
+                {% for category in all_categories %}
+                <li>
+                    <a href="{{ category.get_absolute_url }}" class="dropdown-item">{{ category.name|capfirst }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        <li class="nav-item">
+    <div class="d-flex align-items-center language-form-container">
+        <form action="{% url 'set_language' %}" method="post" class="nav-link d-inline">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+            <select name="language" id="language-select" onchange="this.form.submit()">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                    {{ language.name_local }}
+                </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+</li>
+        <li class="nav-item">
+            <div class="user-items ps-5">
+                <ul class="d-flex justify-content-end list-unstyled">
+                    <li class="pe-3">
+                        {% if user.is_authenticated %}
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <svg class="user">
+                                    <use xlink:href="#user"></use>
+                                </svg>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><p class="dropdown-item user-profile">{{ user }}'s Profile</p></li>
+                                <li><hr class="dropdown-divider"/></li>
+                                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'user_account:profile' user.profile.id %}"><i class="fa-solid fa-user"></i> {% trans 'Profile' %}</a></li>
+                                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'products:favorite_products' %}"><i class="fa-solid fa-heart"></i> {% trans 'Favourite Products' %}</a></li>
+                                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'user_account:password_change' %}"><i class="fa-solid fa-unlock"></i> {% trans 'Change Password' %}</a></li>
+                                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'user_account:logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> {% trans 'Logout' %}</a></li>
+                                {% if user.is_superuser or user.is_staff %}
+                                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'admin:index' %}"><i class="fa-solid fa-user-tie"></i> {% trans 'Admin Panel' %}</a></li>
+                                {% endif %}
                             </ul>
-                        </li>
-                        <li class="nav-item">
-                            <div class="d-flex align-items-center">
-                                <form action="{% url 'set_language' %}" method="post" class="nav-link d-inline">
+                        </div>
+                        {% else %}
+                        <a href="{% url 'user_account:login' %}">
+                            <svg class="user">
+                                <use xlink:href="#user"></use>
+                            </svg>
+                        </a>
+                        {% endif %}
+                    </li>
+                    <li class="search-item pe-3">
+                        <a href="#" class="search-button">
+                            <svg class="search">
+                                <use xlink:href="#search"></use>
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'cart:cart_summary' %}">
+                            <svg class="cart">
+                                <use xlink:href="#cart"></use>
+                                <form action="{% url 'cart:cart_summary' %}" method="POST" class="d-flex">
                                     {% csrf_token %}
-                                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                                    <select name="language" id="language-select" onchange="this.form.submit()">
-                                        {% get_current_language as LANGUAGE_CODE %}
-                                        {% get_available_languages as LANGUAGES %}
-                                        {% get_language_info_list for LANGUAGES as languages %}
-                                        {% for language in languages %}
-                                        <option value="{{ language.code }}" {% if language.code== LANGUAGE_CODE
-                                                %}selected{% endif %}>
-                                            {{ language.name_local }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                </form>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="user-items ps-5">
-                                <ul class="d-flex justify-content-end list-unstyled">
-                                    <li class="pe-3">
-                                        {% if user.is_authenticated %}
-                                        <div class="dropdown">
-                                            <a class="dropdown-toggle" id="userDropdown" href="#" role="button"
-                                               data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg class="user">
-                                                    <use xlink:href="#user"></use>
-                                                </svg>
-                                            </a>
-                                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                                <li><p class="dropdown-item user-profile">{{ user }}'s Profile</p></li>
-                                                <li>
-                                                    <hr class="dropdown-divider"/>
-                                                </li>
-                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                        href="{% url 'user_account:profile' user.profile.id %}"><i
-                                                        class="fa-solid fa-user"></i> {% trans 'Profile' %}</a></li>
-                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                        href="{% url 'products:favorite_products' %}">
-                                                    <i class="fa-solid fa-heart"></i> {% trans 'Favourite Products'
-                                                    %}</a></li>
-                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                        href="{% url 'user_account:password_change' %}"><i
-                                                        class="fa-solid fa-unlock"></i> {% trans 'Change Password'
-                                                    %}</a></li>
-                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                        href="{% url 'user_account:logout' %}"> <i
-                                                        class="fa fa-sign-out" aria-hidden="true"></i> {% trans 'Logout'
-                                                    %}</a></li>
-                                                {% if user.is_superuser or user.is_staff %}
-                                                <li class="nav-item"><a class="nav-link active" aria-current="page"
-                                                                        href="{% url 'admin:index' %}"><i
-                                                        class="fa-solid fa-user-tie"></i> {% trans 'Admin Panel' %}</a>
-                                                </li>
+                                    <button class="btn btn-outline-dark" type="submit">
+                                        <span class="badge bg-dark text-white ms-1 rounded-pill">
+                                            {% with qty_amount=cart|length %}
+                                                {% if qty_amount > 0 %}
+                                                    {{ qty_amount }}
+                                                {% else %}
+                                                    0
                                                 {% endif %}
-                                            </ul>
-                                        </div>
-                                        {% else %}
-                                        <a href="{% url 'user_account:login' %}">
-                                            <svg class="user">
-                                                <use xlink:href="#user"></use>
-                                            </svg>
-                                        </a>
-                                        {% endif %}
-                                    </li>
-                                    <li class="search-item pe-3">
-                                        <a href="#" class="search-button">
-                                            <svg class="search">
-                                                <use xlink:href="#search"></use>
-                                            </svg>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'cart:cart_summary' %}">
-                                            <svg class="cart">
-                                                <use xlink:href="#cart"></use>
-                                                <form action="{% url 'cart:cart_summary' %}" method="POST"
-                                                      class="d-flex">
-                                                    {% csrf_token %}
-                                                    <button class="btn btn-outline-dark" type="submit">
-                                  <span class="badge bg-dark text-white ms-1 rounded-pill">
-                                        {% with qty_amount=cart|length %}
-
-                                        {% if qty_amount > 0 %}
-
-                                            {{ qty_amount }}
-
-                                            {% else %}
-
-                                                0
-
-                                            {% endif %}
-
-                                {% endwith %}</span>
-                                                    </button>
-                                                </form>
-                                            </svg>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                                            {% endwith %}
+                                        </span>
+                                    </button>
+                                </form>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
             </div>
         </div>
     </nav>

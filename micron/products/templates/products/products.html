@@ -2,140 +2,213 @@
 {% load i18n %}
 {% load static humanize cache %}
 
-
 {% block title %} {{ title }} {% endblock %}
+
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/products/products.css' %}">
+
+{% endblock %}
 
 {% block content %}
 
 
 {% include 'navbar.html' %}
 
-
 {% include 'search.html' %}
 
 
 <section class="py-5">
-    <div class="container px-4 px-lg-5 mt-5">
-        <div class="container mt-3">
-            <form method="get" class="d-flex justify-content-end align-items-end p-3">
-                <div class="form-group" style="margin-right: 5px;">
-                    <label for="discount" class="mr-2">Discount:</label>
-                    <select name="discount" id="discount" class="form-control mr-2">
-                        <option value="">All</option>
-                        <option value="true">Discounted</option>
-                        <option value="false">Not discounted</option>
-                    </select>
-                </div>
-
-                <div class="form-group" style="margin-right: 5px;">
-                    <label for="order" class="mr-2">Order by:</label>
-                    <select name="order" id="order" class="form-control mr-2">
-                        <option value="">None</option>
-                        <option value="price">Price (Low to High)</option>
-                        <option value="-price">Price (High to Low)</option>
-                        <option value="date">New to Old</option>
-                        <option value="-date">Old to New</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary d-flex align-items-center py-2 px-3">
-                        <i class="fas fa-filter mr-2"></i> Filter
-                    </button>
-                </div>
-            </form>
+    <div class="container">
+        <div class="filter-section">
+            <form method="get" class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div class="form-group price-range-group">
+    <label class="mb-2">Price Range:</label>
+    <div class="range-container">
+        <div class="range-track"></div>
+        <div class="range-input">
+            <input type="range" id="min_range" name="min_price" class="price-range min-price" step="0.01">
+            <input type="range" id="max_range" name="max_price" class="price-range max-price" step="0.01">
         </div>
-        <div class="container px-4 px-lg-5 mt-5">
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+    </div>
+    <div class="price-labels">
+        <span>$<span id="min_price_label">0</span></span>
+        <span>$<span id="max_price_label">1000</span></span>
+    </div>
+</div>
+
+        <!-- Existing filters -->
+        <div class="other-filters d-flex gap-3">
+            <div class="form-group">
+                <label for="discount" class="mb-2">Discount:</label>
+                <select name="discount" id="discount" class="form-select">
+                    <option value="">All</option>
+                    <option value="true">Discounted</option>
+                    <option value="false">Not discounted</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="order" class="mb-2">Order by:</label>
+                <select name="order" id="order" class="form-select">
+                    <option value="price">Price (Low to High)</option>
+                    <option value="-price">Price (High to Low)</option>
+                    <option value="date">New to Old</option>
+                    <option value="-date">Old to New</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="filter-btn" id="price-filter-btn">
+                    <i class="fas fa-filter me-2"></i> Filter
+                </button>
+                <button type="button" class="reset-btn ms-2" id="reset-filter-btn">
+                    <i class="fas fa-undo me-2"></i> Reset
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+    <div class="product-grid">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
                 {% cache 3 in products %}
                 {% for product in products %}
-                {% if product.discount == True %}
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{%
-                            trans 'Sale' %}
+                <div class="col">
+                    <div class="product-card card">
+                        {% if product.discount %}
+                        <div class="sale-badge badge position-absolute" style="top: 1rem; right: 1rem">
+                            {% trans 'Sale' %}
                         </div>
-                        <!-- Product image-->
-                        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}"
-                                                                      alt="Product Image" width="635" height="250"/><a/>
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5
-                                            class="fw-bolder">{{ product.name|capfirst }}</h5></a>
-                                    <!-- Product reviews-->
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">${{ product.price|intcomma }}</span>
-                                    ${{ product.price_with_discount|intcomma }}
-                                    <br>
-                                    <br>
-                                    <form action="{% url 'products:add_to_favorites' product.id %}" method="post">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-outline-danger">
-                                            <i class="fa-solid fa-heart fa-beat"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto"
-                                                            href="{{ product.get_absolute_url }}">{% trans 'More detail'
-                                    %}</a></div>
-                            </div>
-                    </div>
-                </div>
-                {% else %}
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}"
-                                                                      alt="Product Image" width="635" height="250"/></a>
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <a class="text-decoration-none title" href="{{ product.get_absolute_url }}"><h5
-                                        class="fw-bolder">{{ product.name|capfirst }}</h5></a>
-                                <!-- Product price-->
-                                ${{ product.price|intcomma }}
-                                <br>
-                                <br>
-                                <form action="{% url 'products:add_to_favorites' product.id %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-danger">
-                                        <i class="fa-solid fa-heart fa-beat"></i>
-                                    </button>
-                                </form>
-                            </div>
+                        {% endif %}
+
+                        <div class="product-image-wrapper">
+                            <a href="{{ product.get_absolute_url }}">
+                                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.name }}"/>
+                            </a>
                         </div>
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto"
-                                                        href="{{ product.get_absolute_url }}">{% trans 'More detail'
-                                %}</a></div>
+
+                        <div class="card-body text-center">
+                            <a href="{{ product.get_absolute_url }}" class="text-decoration-none">
+                                <h5 class="product-title">{{ product.name|capfirst }}</h5>
+                            </a>
+
+                            <div class="price-section">
+                                {% if product.discount %}
+                                <span class="original-price">${{ product.price|intcomma }}</span>
+                                <span class="discounted-price">${{ product.price_with_discount|intcomma }}</span>
+                                {% else %}
+                                <span class="discounted-price">${{ product.price|intcomma }}</span>
+                                {% endif %}
+                            </div>
+
+                            <form action="{% url 'products:add_to_favorites' product.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="favorite-btn">
+                                    <i class="fa-solid fa-heart fa-beat"></i>
+                                </button>
+                            </form>
+
+                            <a href="{{ product.get_absolute_url }}" class="detail-btn text-decoration-none">
+                                {% trans 'More detail' %}
+                            </a>
                         </div>
                     </div>
                 </div>
-                {% endif %}
                 {% endfor %}
                 {% endcache %}
             </div>
         </div>
 
-
         {% include 'pagination.html' with queryset=products custom_range=custom_range %}
-
-
+    </div>
 </section>
 
 <hr>
 
+<script>
+$(document).ready(function () {
+    const minRange = document.getElementById('min_range');
+    const maxRange = document.getElementById('max_range');
+    const minLabel = document.getElementById('min_price_label');
+    const maxLabel = document.getElementById('max_price_label');
+    const resetBtn = document.getElementById('reset-filter-btn');
+
+    const initialMinPrice = parseFloat('{{ min_price|escapejs }}') || 0;
+    const initialMaxPrice = parseFloat('{{ max_price|escapejs }}') || 1000;
+    const globalMinPrice = initialMinPrice;
+    const globalMaxPrice = initialMaxPrice;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedMinPrice = parseFloat(urlParams.get('min_price')) || initialMinPrice;
+    const selectedMaxPrice = parseFloat(urlParams.get('max_price')) || initialMaxPrice;
+
+    function initializeSliders(min = globalMinPrice, max = globalMaxPrice, value_min = selectedMinPrice, value_max = selectedMaxPrice) {
+        minRange.min = min;
+        minRange.max = max;
+        maxRange.min = min;
+        maxRange.max = max;
+
+        minRange.value = value_min;
+        maxRange.value = value_max;
+
+        updatePriceLabels();
+    }
+
+    function updatePriceLabels() {
+        const minValue = parseFloat(minRange.value);
+        const maxValue = parseFloat(maxRange.value);
+
+        minLabel.textContent = minValue.toFixed(2);
+        maxLabel.textContent = maxValue.toFixed(2);
+
+        const percent1 = ((minValue - minRange.min) / (minRange.max - minRange.min)) * 100;
+        const percent2 = ((maxValue - minRange.min) / (minRange.max - minRange.min)) * 100;
+
+        $('.range-track').css('background',
+            `linear-gradient(to right,
+            #ddd ${percent1}%,
+            #212529 ${percent1}%,
+            #212529 ${percent2}%,
+            #ddd ${percent2}%)`
+        );
+    }
+
+    minRange.addEventListener('input', function() {
+        const minValue = parseFloat(this.value);
+        const maxValue = parseFloat(maxRange.value);
+
+        if (minValue > maxValue) {
+            this.value = maxValue;
+        }
+        updatePriceLabels();
+    });
+
+    maxRange.addEventListener('input', function() {
+        const maxValue = parseFloat(this.value);
+        const minValue = parseFloat(minRange.value);
+
+        if (maxValue < minValue) {
+            this.value = minValue;
+        }
+        updatePriceLabels();
+    });
+
+    resetBtn.addEventListener('click', function() {
+        initializeSliders();
+
+
+        const url = new URL(window.location.href);
+        url.searchParams.delete('min_price');
+        url.searchParams.delete('max_price');
+
+        window.location.href = url.toString();
+    });
+
+    initializeSliders();
+});
+</script>
 
 {% include 'footer.html' %}
 
-
 {% endblock %}
-
-
-

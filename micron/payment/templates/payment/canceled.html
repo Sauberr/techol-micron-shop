@@ -1,9 +1,30 @@
 {% extends "base.html" %}
-{% block title %}Payment canceled{% endblock %}
+
+{% block title %}
+Payment canceled
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/payment/canceled.css' %}">
+{% endblock %}
+
+
+
 {% block content %}
-<h1 class="text-center">Your payment has not been processed</h1>
-<p class="text-center"> There was a problem processing your payment.</p>
-<a href="{% url 'products:products' %}" class="btn btn-dark mt-3">
-    <i class="fas fa-arrow-left"></i> Return to the site
-</a>
+
+<section class="cancel-section">
+    <div class="cancel-container">
+        <div class="cancel-icon">
+            <i class="fas fa-times"></i>
+        </div>
+        <h1 class="cancel-title">Payment Not Processed</h1>
+        <p class="cancel-message">
+            There was a problem processing your payment. Please try again or contact support.
+        </p>
+        <a href="{% url 'products:products' %}" class="return-btn">
+            <i class="fas fa-arrow-left"></i>
+            Return to the site
+        </a>
+    </div>
+</section>
 {% endblock %}
