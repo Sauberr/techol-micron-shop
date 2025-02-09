@@ -1,6 +1,6 @@
 import logging
 
-from django.db.models import F, Case, When, DecimalField
+from django.db.models import F, Case, When, DecimalField, Min, Max
 from taggit.models import Tag
 
 from cart.forms import CartAddProductForm
@@ -35,9 +35,32 @@ def products(request):
 
     discount = request.GET.get("discount")
     order = request.GET.get("order")
+    min_price = request.GET.get("min_price")
+    max_price = request.GET.get("max_price")
 
     if discount in ["true", "false"]:
         products = products.filter(discount=(discount == "true"))
+
+    if min_price and max_price:
+        try:
+            min_price = float(min_price)
+            max_price = float(max_price)
+            products = products.annotate(
+                effective_price=Case(
+                    When(
+                        discount=True,
+                        price_with_discount__isnull=False,
+                        then=F('price_with_discount')
+                    ),
+                    default=F('price'),
+                    output_field=DecimalField()
+                )
+            ).filter(
+                effective_price__gte=min_price,
+                effective_price__lte=max_price
+            )
+        except (ValueError, TypeError):
+            pass
 
     order_fields = {
         "price": "price",
@@ -50,8 +73,11 @@ def products(request):
         if 'price' in order_fields[order]:
             products = products.annotate(
                 effective_price=Case(
-                    When(discount=True, price_with_discount__isnull=False,
-                         then=F('price_with_discount')),
+                    When(
+                        discount=True,
+                        price_with_discount__isnull=False,
+                        then=F('price_with_discount')
+                    ),
                     default=F('price'),
                     output_field=DecimalField()
                 )
@@ -64,12 +90,41 @@ def products(request):
         else:
             products = products.order_by(order_fields[order])
 
+    price_range = products.aggregate(
+        min_price=Min(
+            Case(
+                When(
+                    discount=True,
+                    price_with_discount__isnull=False,
+                    then='price_with_discount'
+                ),
+                default='price',
+                output_field=DecimalField()
+            )
+        ),
+        max_price=Max(
+            Case(
+                When(
+                    discount=True,
+                    price_with_discount__isnull=False,
+                    then='price_with_discount'
+                ),
+                default='price',
+                output_field=DecimalField()
+            )
+        )
+    )
+
     custom_range, products = paginateprodcuts(request, products, 6)
     context = {
         "title": "| Products",
         "products": products,
         "search_query": search_query,
         "custom_range": custom_range,
+        "min_price": float(price_range['min_price'] or 0),
+        "max_price": float(price_range['max_price'] or 1000),
+        "selected_min_price": min_price or price_range['min_price'] or 0,
+        "selected_max_price": max_price or price_range['max_price'] or 1000,
     }
     return render(request, "products/products.html", context)
 
