@@ -53,7 +53,7 @@ def order_create(request):
             form = OrderCreateForm(instance=shipping)
         else:
             form = OrderCreateForm()
-    return render(request, "orders/order/create.html", {"cart": cart, "form": form})
+    return render(request, "orders/order/checkout.html", {"cart": cart, "form": form})
 
 
 @login_required(login_url="/accounts/login/")
@@ -97,6 +97,6 @@ def detail_order(request, order_id: int):
     detail_order = OrderItem.objects.filter(user=request.user, order=order)
     return render(
         request,
-        "orders/order/detail_order.html",
+        "orders/order/order-detail.html",
         {"detail_order": detail_order, "order": order},
     )
