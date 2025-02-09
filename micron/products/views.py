@@ -1,14 +1,12 @@
 import logging
 
-from django.db.models import F, Case, When, DecimalField, Min, Max
-from taggit.models import Tag
-
 from cart.forms import CartAddProductForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg
+from django.db.models import Avg, Case, DecimalField, F, Max, Min, When
 from django.shortcuts import get_object_or_404, redirect, render
 from products.models import Category, Product, Review
+from taggit.models import Tag
 
 from .forms import ReviewForm
 from .recommender import Recommender

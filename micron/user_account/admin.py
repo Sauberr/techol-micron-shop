@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from user_account.models import Contact, EmailVerification, User, Profile
+from user_account.models import Contact, EmailVerification, Profile, User
 
 
 @admin.register(User)

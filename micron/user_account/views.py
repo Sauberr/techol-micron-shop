@@ -3,7 +3,13 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import HttpResponseRedirect, redirect, render, reverse, get_object_or_404
+from django.shortcuts import (
+    HttpResponseRedirect,
+    get_object_or_404,
+    redirect,
+    render,
+    reverse,
+)
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from orders.forms import OrderCreateForm
@@ -16,7 +22,7 @@ from user_account.forms import (
     UserRegistrationForm,
     UserUpdateForm,
 )
-from user_account.models import EmailVerification, User, Profile
+from user_account.models import EmailVerification, Profile, User
 
 
 class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):

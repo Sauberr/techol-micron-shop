@@ -1,10 +1,10 @@
-from http import HTTPStatus
-from django.urls import reverse
-from django.test import TestCase
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.conf import settings
 import os
+from http import HTTPStatus
 
+from django.conf import settings
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
+from django.urls import reverse
 from products.models import Category, Product, Review
 from user_account.models import User
 
@@ -169,3 +169,4 @@ class CategoryViewTestCase(BaseCategoryTestCase):
         response = self.client.get(self.category.get_absolute_url())
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTrue('category' in response.context)
+        

@@ -6,7 +6,7 @@ from django.contrib.auth.forms import (
     UserChangeForm,
     UserCreationForm,
 )
-from user_account.models import Contact, User, Profile
+from user_account.models import Contact, Profile, User
 from user_account.tasks import send_email_verification
 
 

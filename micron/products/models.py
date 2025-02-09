@@ -1,12 +1,11 @@
-from IPython.core.events import available_events
 from django.db import models
 from django.urls import reverse
+from django_ckeditor_5.fields import CKEditor5Field
 from faker import Faker
+from IPython.core.events import available_events
 from parler.models import TranslatableModel, TranslatedFields
 from taggit.managers import TaggableManager
-
 from user_account.models import User
-from django_ckeditor_5.fields import CKEditor5Field
 
 
 class Category(TranslatableModel):

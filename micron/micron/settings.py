@@ -1,10 +1,10 @@
 import os
 from datetime import timedelta
 from pathlib import Path
-import sentry_sdk
 from typing import Dict, List, Tuple
 
 import environ
+import sentry_sdk
 from django.utils.translation import gettext_lazy as _
 
 env = environ.Env(

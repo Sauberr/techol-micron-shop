@@ -9,8 +9,8 @@ from products.views import (
     list_category,
     product_detail,
     products,
-    update_review,
     tag_list,
+    update_review,
 )
 
 app_name: str = "products"

@@ -1,9 +1,9 @@
-from django.test import TestCase
-from django.core.exceptions import ValidationError
-from django.utils import timezone
 from datetime import timedelta
 
 from coupons.models import Coupon
+from django.core.exceptions import ValidationError
+from django.test import TestCase
+from django.utils import timezone
 
 
 class BaseCouponTestCase(TestCase):

@@ -1,10 +1,10 @@
-from http import HTTPStatus
-from django.urls import reverse
-from django.test import TestCase
 from abc import ABC
+from http import HTTPStatus
+
 from django.contrib import auth
 from django.core import mail
-
+from django.test import TestCase
+from django.urls import reverse
 from user_account.models import User
 
 
