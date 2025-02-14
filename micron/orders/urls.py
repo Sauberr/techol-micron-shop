@@ -2,7 +2,7 @@ from django.urls import path
 from django.utils.translation import gettext_lazy as _
 from orders.views import *
 
-app_name = "orders"
+app_name: str = "orders"
 
 urlpatterns = [
 

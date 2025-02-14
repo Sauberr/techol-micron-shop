@@ -13,7 +13,7 @@ from .models import Order, OrderItem
 from .tasks import order_created
 
 
-@login_required(login_url="/accounts/login/")
+@login_required(login_url="/user_account/login/")
 def order_create(request):
     cart = Cart(request)
 
@@ -56,14 +56,14 @@ def order_create(request):
     return render(request, "orders/order/checkout.html", {"cart": cart, "form": form})
 
 
-@login_required(login_url="/accounts/login/")
+@login_required(login_url="/user_account/login/")
 @staff_member_required
 def admin_order_detail(request, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     return render(request, "admin/orders/order/detail.html", {"order": order})
 
 
-@login_required(login_url="/accounts/login/")
+@login_required(login_url="/user_account/login/")
 @staff_member_required
 def admin_order_pdf(request, order_id: int):
     order = get_object_or_404(Order, id=order_id)
@@ -76,7 +76,7 @@ def admin_order_pdf(request, order_id: int):
     return response
 
 
-@login_required(login_url="/accounts/login/")
+@login_required(login_url="/user_account/login/")
 def orders(request):
     orders = Order.objects.filter(user=request.user).order_by("-created")
     return render(
@@ -84,14 +84,14 @@ def orders(request):
     )
 
 
-@login_required(login_url="/accounts/login/")
+@login_required(login_url="/user_account/login/")
 def delete_order(request, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     order.delete()
     return redirect("orders:orders")
 
 
-@login_required(login_url="/accounts/login/")
+@login_required(login_url="/user_account/login/")
 def detail_order(request, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     detail_order = OrderItem.objects.filter(user=request.user, order=order)
