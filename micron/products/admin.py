@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from parler.admin import TranslatableAdmin
 
-from .models import Category, Product, Review
+from .models import Category, Product, Review, ProductImage
 
 
 @admin.register(Category)
@@ -11,6 +11,11 @@ class CategoryAdmin(TranslatableAdmin):
 
     def get_prepopulated_fields(self, request, obj=None):
         return {"slug": ("name",)}
+
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
 
 
 @admin.register(Product)
@@ -32,6 +37,7 @@ class ProductAdmin(TranslatableAdmin):
     list_filter = ["available", "created", "updated"]
     list_editable = ["price", "available"]
     list_display_links = ("name", "thumbnail", "slug")
+    inlines = [ProductImageInline]
 
     def get_prepopulated_fields(self, request, obj=None):
         return {"slug": ("name",)}

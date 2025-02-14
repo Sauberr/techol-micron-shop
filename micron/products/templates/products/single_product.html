@@ -7,33 +7,54 @@
 {% endblock %}
 
 {% block css %}
-
 <link rel="stylesheet" href="{% static 'css/products/single-product.css' %}">
-
 {% endblock %}
-
 
 {% block content %}
 {% include 'navbar.html' %}
-
-
 
 <section class="product-section">
     <div class="container">
         <div class="product-container">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="product-image-container">
-                        {% if product.discount %}
-                        <div class="sale-badge">{% trans 'Sale' %}</div>
+                   <div class="product-gallery">
+                        <div class="product-image-container">
+                            {% if product.discount %}
+                            <div class="sale-badge">{% trans 'Sale' %}</div>
+                            {% endif %}
+                            <img class="product-image-zoom main-image"
+                                 src="{{ product.image.url }}"
+                                 alt="{{ product.name }}"
+                                 data-zoom-image="{{ product.image.url }}"/>
+                        </div>
+
+                        {% if product.additional_images.all|length >= 1 %}
+                        <div class="product-thumbnails-wrapper">
+                            <div class="product-thumbnails-slider">
+                                <div class="thumbnail-container">
+                                    <img class="thumbnail-image active"
+                                         src="{{ product.image.url }}"
+                                         alt="{{ product.name }}"
+                                         data-full-image="{{ product.image.url }}"
+                                         data-zoom-image="{{ product.image.url }}"
+                                         onclick="changeMainImage(this)">
+                                    {% if product.additional_images.all %}
+                                    {% for img in product.additional_images.all %}
+                                    <img class="thumbnail-image"
+                                         src="{{ img.image.url }}"
+                                         alt="{{ product.name }}"
+                                         data-full-image="{{ img.image.url }}"
+                                         data-zoom-image="{{ img.image.url }}"
+                                         onclick="changeMainImage(this)">
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                         {% endif %}
-                        <img class="product-image-zoom"
-                             src="{{ product.image.url }}"
-                             alt="{{ product.name }}"
-                             data-zoom-image="{{ product.image.url }}"/>
                     </div>
                 </div>
-
                 <div class="col-md-6">
                     <div class="product-info">
                         <div class="product-sku">SKU: {{ product.id }}</div>
@@ -163,6 +184,47 @@
         {% endif %}
     </div>
 </section>
+
+<script>
+$(document).ready(function() {
+    initZoom();
+});
+
+function initZoom() {
+    $('.product-image-container').trigger('zoom.destroy');
+    // Инициализируем zoom с URL текущего изображения
+    $('.product-image-container').zoom({
+        url: $('.main-image').attr('data-zoom-image'),
+        touch: false,
+        onZoomIn: function() {
+            console.log('Zoom in');
+        },
+        onZoomOut: function() {
+            console.log('Zoom out');
+        }
+    });
+}
+
+function changeMainImage(thumbnail) {
+    const mainImage = document.querySelector('.main-image');
+    const newImageUrl = thumbnail.getAttribute('data-full-image');
+
+    mainImage.style.opacity = '0';
+
+    setTimeout(() => {
+        mainImage.src = newImageUrl;
+        mainImage.setAttribute('data-zoom-image', newImageUrl);
+        mainImage.style.opacity = '1';
+
+        initZoom();
+    }, 300);
+
+    document.querySelectorAll('.thumbnail-image').forEach(img => {
+        img.classList.remove('active');
+    });
+    thumbnail.classList.add('active');
+}
+</script>
 
 <script>
     (function($) {

@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 from django_ckeditor_5.fields import CKEditor5Field
 from faker import Faker
-from IPython.core.events import available_events
 from parler.models import TranslatableModel, TranslatedFields
 from taggit.managers import TaggableManager
 from user_account.models import User
@@ -32,6 +31,18 @@ class Category(TranslatableModel):
                 name=faker.name(),
                 slug=faker.slug(),
             )
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey('Product', related_name='additional_images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='products/additional/')
+
+    class Meta:
+        verbose_name: str = 'product image'
+        verbose_name_plural: str = 'product images'
+
+    def __str__(self):
+        return f"Image {self.product.name}"
 
 
 class Product(TranslatableModel):

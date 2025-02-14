@@ -169,4 +169,3 @@ class CategoryViewTestCase(BaseCategoryTestCase):
         response = self.client.get(self.category.get_absolute_url())
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTrue('category' in response.context)
-        
