@@ -186,59 +186,40 @@
 </section>
 
 <script>
-$(document).ready(function() {
-    initZoom();
-});
-
-function initZoom() {
-    $('.product-image-container').trigger('zoom.destroy');
-    // Инициализируем zoom с URL текущего изображения
-    $('.product-image-container').zoom({
-        url: $('.main-image').attr('data-zoom-image'),
-        touch: false,
-        onZoomIn: function() {
-            console.log('Zoom in');
-        },
-        onZoomOut: function() {
-            console.log('Zoom out');
-        }
-    });
-}
-
-function changeMainImage(thumbnail) {
-    const mainImage = document.querySelector('.main-image');
-    const newImageUrl = thumbnail.getAttribute('data-full-image');
-
-    mainImage.style.opacity = '0';
-
-    setTimeout(() => {
-        mainImage.src = newImageUrl;
-        mainImage.setAttribute('data-zoom-image', newImageUrl);
-        mainImage.style.opacity = '1';
-
-        initZoom();
-    }, 300);
-
-    document.querySelectorAll('.thumbnail-image').forEach(img => {
-        img.classList.remove('active');
-    });
-    thumbnail.classList.add('active');
-}
-</script>
-
-<script>
-    (function($) {
-        $(document).ready(function() {
-            $('.product-image-container').zoom({
-                url: $('.product-image-zoom').attr('data-zoom-image'),
-                touch: false,
-                onZoomIn: function() {
-                    console.log('Zoom initialized');
-                }
-            });
+(function($) {
+    function initZoom() {
+        $('.product-image-container').trigger('zoom.destroy');
+        $('.product-image-container').zoom({
+            url: $('.main-image').attr('data-zoom-image'),
+            touch: false,
         });
-    })(jQuery);
+    }
+
+    window.changeMainImage = function(thumbnail) {
+        const mainImage = document.querySelector('.main-image');
+        const newImageUrl = thumbnail.getAttribute('data-full-image');
+
+        mainImage.style.opacity = '0';
+
+        setTimeout(() => {
+            mainImage.src = newImageUrl;
+            mainImage.setAttribute('data-zoom-image', newImageUrl);
+            mainImage.style.opacity = '1';
+            initZoom();
+        }, 300);
+
+        document.querySelectorAll('.thumbnail-image').forEach(img => {
+            img.classList.remove('active');
+        });
+        thumbnail.classList.add('active');
+    };
+
+    $(document).ready(function() {
+        initZoom();
+    });
+})(jQuery);
 </script>
+
 
 {% include 'footer.html' %}
 {% endblock %}

@@ -150,7 +150,7 @@ p {
 .thumbnail-image {
     width: 65px;
     height: 65px;
-    object-fit: cover;
+    object-fit: contain;
     cursor: pointer;
     border: 2px solid transparent;
     border-radius: 4px;
