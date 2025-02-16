@@ -1,5 +1,5 @@
 from django.urls import path
-from payment.views import *
+from payment.views import CanceledTemplateView, SuccessTemplateView, payment_process
 
 from . import webhooks
 

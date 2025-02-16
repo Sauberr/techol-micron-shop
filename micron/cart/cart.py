@@ -87,7 +87,7 @@ class Cart:
             del self.cart[product_id]
             self.save()
 
-    def get_total_price(self):
+    def get_total_price(self) -> int:
         return sum(
             Decimal(item["price"]) * item["quantity"] for item in self.cart.values()
         )

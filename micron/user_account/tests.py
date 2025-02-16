@@ -14,7 +14,7 @@ class BaseViewTestCase(ABC, TestCase):
     title = None
 
     def setUp(self):
-            self.path = reverse(self.path_name) if self.path_name is not None else None
+        self.path = reverse(self.path_name) if self.path_name is not None else None
 
     def test_get(self):
         if self.path is not None:
@@ -74,7 +74,8 @@ class ResetPasswordViewTestCase(BaseViewTestCase):
 
     def setUp(self):
         super().setUp()
-        self.user = User.objects.create_user(username='swagerfeed', password='swagerfeed123', email='swagerfeed@gmail.com')
+        self.user = User.objects.create_user(username='swagerfeed', password='swagerfeed123',
+                                             email='swagerfeed@gmail.com')
 
     def test_user_login(self):
         login_path = reverse('user_account:login')

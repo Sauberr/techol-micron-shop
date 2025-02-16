@@ -11,7 +11,7 @@ class BaseViewTestCase(ABC, TestCase):
     title = None
 
     def setUp(self):
-            self.path = reverse(self.path_name) if self.path_name is not None else None
+        self.path = reverse(self.path_name) if self.path_name is not None else None
 
     def test_get(self):
         if self.path is not None:

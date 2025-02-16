@@ -1,6 +1,13 @@
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
-from orders.views import *
+from orders.views import (
+    admin_order_detail,
+    admin_order_pdf,
+    delete_order,
+    detail_order,
+    order_create,
+    orders,
+)
 
 app_name: str = "orders"
 

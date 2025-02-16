@@ -141,7 +141,8 @@ def product_detail(request, product_slug: str):
             translations__slug=product_slug,
             available=True,
         )
-        product_slug_in_current_language = product_in_other_language.translations.filter(language_code=language).first().slug
+        product_slug_in_current_language = product_in_other_language.translations.filter(
+            language_code=language).first().slug
         product = get_object_or_404(
             Product,
             translations__language_code=language,
@@ -176,7 +177,7 @@ def tag_list(request, tag_slug=None):
         tag = get_object_or_404(Tag, slug=tag_slug)
         products = products.filter(tags__in=[tag])
 
-    context = {"products": products, "tag": tag,  "title": "| Tags"}
+    context = {"products": products, "tag": tag, "title": "| Tags"}
 
     return render(request, "products/tag_list.html", context)
 
