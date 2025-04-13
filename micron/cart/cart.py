@@ -18,19 +18,27 @@ class Cart:
         self.coupon_id = self.session.get("coupon_id")
 
     def __iter__(self):
-        """Loop through the shopping
-        cart items and
-        get products from the database.
-        """
+        """Loop through the shopping cart items and get products from the database."""
         product_ids = self.cart.keys()
         # get product objects and add them to cart
         products = Product.objects.filter(id__in=product_ids)
         cart = self.cart.copy()
+
         for product in products:
             cart[str(product.id)]["product"] = product
+
         for item in cart.values():
             item["price"] = Decimal(item["price"])
+            if "bonus_points" in item and item["bonus_points"] is not None:
+                item["bonus_points"] = Decimal(item["bonus_points"])
+            else:
+                item["bonus_points"] = Decimal("0")
+
             item["total_price"] = item["price"] * item["quantity"]
+
+            if "bonus_points" in item:
+                item["total_bonus_points"] = item["bonus_points"] * item["quantity"]
+
             yield item
 
     def __len__(self):
@@ -59,6 +67,13 @@ class Cart:
             Decimal(item["price"]) * item["quantity"] for item in self.cart.values()
         )
 
+    def get_total_bonus_points(self):
+        """Calculate total bonus points for all items in cart"""
+        return sum(
+            item["quantity"] * Decimal(item.get("bonus_points", "0") or "0")
+            for item in self.cart.values()
+        )
+
     def add(self, product, quantity, override_quantity=False):
         """Add goods in cart or update it quantity"""
         product_id = str(product.id)
@@ -68,7 +83,16 @@ class Cart:
                 if product.price_with_discount
                 else str(product.price)
             )
-            self.cart[product_id] = {"quantity": 0, "price": price}
+
+            bonus_points = str(
+                product.bonus_points if product.bonus_points is not None else 0
+            )
+
+            self.cart[product_id] = {
+                "quantity": 0,
+                "price": price,
+                "bonus_points": bonus_points,
+            }
         if override_quantity:
             self.cart[product_id]["quantity"] = quantity
         else:
