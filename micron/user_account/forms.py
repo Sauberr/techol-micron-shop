@@ -110,7 +110,6 @@ class UserUpdateForm(forms.ModelForm):
         fields = ["username", "email"]
         exclude = ["password1", "password2"]
 
-    # Email validation
 
     def clean_email(self):
         data = self.cleaned_data["email"]
@@ -192,15 +191,13 @@ class UserRegistrationForm(UserCreationForm):
             "password2",
         )
 
-    # Password validation
-
+    
     def clean_password2(self):
         cd = self.cleaned_data
         if cd["password1"] != cd["password2"]:
             raise forms.ValidationError("Password1 don't match.")
         return cd["password1"]
-
-    # Email validation
+        
 
     def clean_email(self):
         data = self.cleaned_data["email"]
@@ -211,7 +208,6 @@ class UserRegistrationForm(UserCreationForm):
             raise forms.ValidationError("Your email is too long")
         return data
 
-    # Save user and send verification email
     def save(self, commit=True):
         user = super(UserRegistrationForm, self).save(commit=True)
         send_email_verification.delay(user.id)
