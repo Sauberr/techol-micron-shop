@@ -54,7 +54,7 @@ def profile(request, profile_id):
     else:
         form = UserProfileForm(instance=user)
 
-    context = {"title": "| Profile", "form": form}
+    context = {"title": "| Profile", "form": form, "user": user}
     return render(request, "user_account/profile.html", context)
 
 

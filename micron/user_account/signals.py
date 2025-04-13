@@ -17,7 +17,7 @@ def profile_create(sender, instance, created, **kwargs):
         )
 
 
-def update_user(sender, instance, created, **kwargs):
+def update_profile(sender, instance, created, **kwargs):
     profile = instance
     user = profile.user
 
@@ -33,12 +33,12 @@ def update_user(sender, instance, created, **kwargs):
 
 def delete_profile(sender, instance, **kwargs):
     try:
-        user = instance.profile
+        user = instance.user
         user.delete()
     except User.DoesNotExist:
         pass
 
 
 post_save.connect(profile_create, sender=User)
-post_save.connect(update_user, sender=Profile)
+post_save.connect(update_profile, sender=Profile)
 post_delete.connect(delete_profile, sender=Profile)
