@@ -9,10 +9,9 @@ from orders.models import Order
 
 
 @shared_task
-def payment_completed(order_id: int):
+def send_order_invoice(order_id: int):
     """
-    Task to send an e-mail notification when an order is
-    successfully paid.
+    Task to send an e-mail invoice when an order is paid.
     """
     order = Order.objects.get(id=order_id)
     # create invoice e-mail
@@ -28,3 +27,26 @@ def payment_completed(order_id: int):
     email.attach(f"order_{order.id}.pdf", out.getvalue(), "application/pdf")
     # send e-mail
     email.send()
+
+
+@shared_task
+def add_user_bonus_points(order_id: int):
+    """
+    Task to add bonus points to the user's account after successful payment.
+    """
+    order = Order.objects.get(id=order_id)
+    if order.paid and order.user and order.bonus_points > 0:
+        order.user.add_bonus_points(order.bonus_points)
+
+
+@shared_task
+def payment_completed(order_id: int):
+    """
+    Task to handle all post-payment actions.
+    Calls other specialized tasks.
+    """
+    # Queue the invoice email task
+    send_order_invoice.delay(order_id)
+
+    # Queue the bonus points task
+    add_user_bonus_points.delay(order_id)

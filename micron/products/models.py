@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from django.urls import reverse
 from django_ckeditor_5.fields import CKEditor5Field
@@ -59,6 +61,7 @@ class Product(TranslatableModel):
     price_with_discount = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
+    bonus_points = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=0)
     available = models.BooleanField(default=True)
     discount = models.BooleanField(default=False)
     tags = TaggableManager(blank=True)
@@ -74,6 +77,15 @@ class Product(TranslatableModel):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if self.price:
+            if self.discount and self.price_with_discount:
+                self.bonus_points = self.price_with_discount * Decimal(0.3)
+            else:
+                self.bonus_points = self.price * Decimal(0.3)
+        super().save(*args, **kwargs)
+
 
     def get_absolute_url(self):
         return reverse("products:product_detail", args=[self.slug])

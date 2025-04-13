@@ -18,7 +18,7 @@
         <div class="product-container">
             <div class="row">
                 <div class="col-md-6">
-                   <div class="product-gallery">
+                    <div class="product-gallery">
                         <div class="product-image-container">
                             {% if product.discount %}
                             <div class="sale-badge">{% trans 'Sale' %}</div>
@@ -67,6 +67,18 @@
                             ${{ product.price|intcomma }}
                             {% endif %}
                         </div>
+
+                        {% if product.bonus_points > 0 %}
+
+                        <h4 style="display: flex; align-items: center; gap: 5px;">
+                            {{ product.bonus_points }}
+                            <img src="{% static 'images/icon/bonus_points_icon.svg' %}"
+                                 width="20px"
+                                 height="20px"
+                                 alt="micron points">
+                        </h4>
+
+                        {% endif %}
 
                         <div class="product-tags">
                             {% for tag in product.tags.all %}
@@ -140,7 +152,8 @@
                             <a href="{% url 'products:update_review' review.id %}" class="review-btn btn-outline-dark">
                                 <i class="fas fa-edit me-2"></i>{% trans 'Update' %}
                             </a>
-                            <a href="{% url 'products:delete_review' review.id %}" class="review-btn btn-outline-danger">
+                            <a href="{% url 'products:delete_review' review.id %}"
+                               class="review-btn btn-outline-danger">
                                 <i class="fas fa-trash me-2"></i>{% trans 'Delete' %}
                             </a>
                         </div>
@@ -186,38 +199,38 @@
 </section>
 
 <script>
-(function($) {
-    function initZoom() {
-        $('.product-image-container').trigger('zoom.destroy');
-        $('.product-image-container').zoom({
-            url: $('.main-image').attr('data-zoom-image'),
-            touch: false,
-        });
-    }
+    (function ($) {
+        function initZoom() {
+            $('.product-image-container').trigger('zoom.destroy');
+            $('.product-image-container').zoom({
+                url: $('.main-image').attr('data-zoom-image'),
+                touch: false,
+            });
+        }
 
-    window.changeMainImage = function(thumbnail) {
-        const mainImage = document.querySelector('.main-image');
-        const newImageUrl = thumbnail.getAttribute('data-full-image');
+        window.changeMainImage = function (thumbnail) {
+            const mainImage = document.querySelector('.main-image');
+            const newImageUrl = thumbnail.getAttribute('data-full-image');
 
-        mainImage.style.opacity = '0';
+            mainImage.style.opacity = '0';
 
-        setTimeout(() => {
-            mainImage.src = newImageUrl;
-            mainImage.setAttribute('data-zoom-image', newImageUrl);
-            mainImage.style.opacity = '1';
+            setTimeout(() => {
+                mainImage.src = newImageUrl;
+                mainImage.setAttribute('data-zoom-image', newImageUrl);
+                mainImage.style.opacity = '1';
+                initZoom();
+            }, 300);
+
+            document.querySelectorAll('.thumbnail-image').forEach(img => {
+                img.classList.remove('active');
+            });
+            thumbnail.classList.add('active');
+        };
+
+        $(document).ready(function () {
             initZoom();
-        }, 300);
-
-        document.querySelectorAll('.thumbnail-image').forEach(img => {
-            img.classList.remove('active');
         });
-        thumbnail.classList.add('active');
-    };
-
-    $(document).ready(function() {
-        initZoom();
-    });
-})(jQuery);
+    })(jQuery);
 </script>
 
 

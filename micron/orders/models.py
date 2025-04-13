@@ -23,6 +23,9 @@ class Order(models.Model):
     coupon = models.ForeignKey(
         Coupon, related_name="orders", null=True, blank=True, on_delete=models.SET_NULL
     )
+    bonus_points = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0
+    )
     discount = models.IntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]
     )

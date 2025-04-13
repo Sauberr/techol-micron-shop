@@ -3,7 +3,7 @@ from payment.views import CanceledTemplateView, SuccessTemplateView, payment_pro
 
 from . import webhooks
 
-app_name = "payment"
+app_name: str = "payment"
 
 urlpatterns = [
     path("process/", payment_process, name="process"),

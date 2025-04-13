@@ -31,6 +31,9 @@ def order_create(request):
             if cart.coupon:
                 order.coupon = cart.coupon
                 order.discount = cart.coupon.discount
+
+            order.bonus_points = cart.get_total_bonus_points()
+
             order.save()
             for item in cart:
                 OrderItem.objects.create(

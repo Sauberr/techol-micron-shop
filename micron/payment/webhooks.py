@@ -39,4 +39,5 @@ def stripe_webhook(request):
             # run asynchronous job
             payment_completed.delay(order.id)
 
+
     return HttpResponse(status=200)

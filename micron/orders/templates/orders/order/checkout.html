@@ -47,6 +47,17 @@ Checkout
             <div class="total-amount">
                 Total: ${{ cart.get_total_price_after_discount|floatformat:2 }}
             </div>
+           <div class="total-amount">
+                <span class="bonus-points">
+                    Total Bonus points: {{ cart.get_total_bonus_points|intcomma }}
+                    <img src="{% static 'images/icon/bonus_points_icon.svg' %}"
+                         width="20"
+                         height="20"
+                         alt="micron points">
+                </span>
+           </div>
+
+
         </div>
 
         <form method="post" class="checkout-form">

@@ -139,6 +139,23 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.total-amount {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bonus-points {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.total-amount img {
+    display: block;
+}
+
+
+
 @media (max-width: 768px) {
     .checkout-container {
         margin: 1rem;
