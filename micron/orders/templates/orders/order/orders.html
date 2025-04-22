@@ -31,6 +31,8 @@
                             <th scope="col">City</th>
                             <th scope="col">Postal Code</th>
                             <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Bonus points</th>
                             <th scope="col">Actions</th>
                         </tr>
                         </thead>
@@ -43,6 +45,8 @@
                             <td>{{ order.city }}</td>
                             <td>{{ order.postal_code }}</td>
                             <td class="date-column">{{ order.created|naturaltime }}</td>
+                            <th>{{ order.paid }}</th>
+                            <td> {{ order.bonus_points }}</td>
                             <td class="action-buttons">
                                 <a href="{% url 'orders:detail_order' order.id %}" class="btn btn-detail">
                                     <i class="fas fa-info-circle"></i> Detail
