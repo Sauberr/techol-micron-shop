@@ -12,6 +12,16 @@
 {% block content %}
 {% include 'navbar.html' %}
 
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <section class="cart-section">
     <div class="cart-container">
         <h1 class="page-title">Shopping Cart</h1>
@@ -29,6 +39,11 @@
         <div class="cart-items">
             {% for item in cart %}
             {% with product=item.product %}
+            {% if item.product.quantity < item.quantity %}
+            <div class="alert alert-warning">
+                 Only {{ item.product.quantity }} items available. Quantity has been adjusted.
+            </div>
+            {% endif %}
             <div class="cart-item">
                 <div class="row g-0">
                     <div class="col-md-3">
