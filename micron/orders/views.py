@@ -7,6 +7,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
 
 from .forms import OrderCreateForm
 from .models import Order, OrderItem
@@ -35,7 +37,26 @@ def order_create(request):
             order.bonus_points = cart.get_total_bonus_points()
 
             order.save()
+
             for item in cart:
+
+                product = item['product']
+                quantity = item['quantity']
+
+                if product.quantity < quantity:
+                    messages.error(
+                        request,
+                        _(
+                            "Sorry, only {0} units of {1} are available now. Please update your cart."
+                        ).format(product.quantity, product.name),
+                    )
+
+                    order.delete()
+                    return redirect("cart:cart_summary")
+
+                product.quantity -= quantity
+                product.save()
+
                 OrderItem.objects.create(
                     order=order,
                     product=item["product"],

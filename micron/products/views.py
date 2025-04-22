@@ -150,7 +150,8 @@ def product_detail(request, product_slug: str):
             available=True,
         )
 
-    cart_product_form = CartAddProductForm()
+    cart_product_form = CartAddProductForm(product=product)
+
     r = Recommender()
     recommended_products = r.suggest_products_for([product], 4)
     reviews = Review.objects.filter(product=product)
