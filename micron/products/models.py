@@ -64,6 +64,7 @@ class Product(TranslatableModel):
     bonus_points = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=0)
     available = models.BooleanField(default=True)
     discount = models.BooleanField(default=False)
+    quantity = models.PositiveIntegerField(default=0)
     tags = TaggableManager(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

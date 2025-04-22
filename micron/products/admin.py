@@ -29,6 +29,7 @@ class ProductAdmin(TranslatableAdmin):
         "slug",
         "thumbnail",
         "price",
+        "quantity",
         "available",
         "discount",
         "created",
