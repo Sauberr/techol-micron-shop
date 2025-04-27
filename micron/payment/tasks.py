@@ -35,7 +35,7 @@ def add_user_bonus_points(order_id: int):
     Task to add bonus points to the user's account after successful payment.
     """
     order = Order.objects.get(id=order_id)
-    if order.paid and order.user and order.bonus_points > 0:
+    if order.paid == "paid" and order.user and order.bonus_points > 0:
         order.user.add_bonus_points(order.bonus_points)
 
 

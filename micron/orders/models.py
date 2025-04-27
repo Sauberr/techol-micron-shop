@@ -8,6 +8,11 @@ from django.utils.translation import gettext_lazy as _
 from products.models import Product
 from user_account.models import User
 
+STATUS = (
+    ("paid", _("Paid")),
+    ("unpaid", _("Unpaid")),
+)
+
 
 class Order(models.Model):
     first_name = models.CharField(_("first_name"), max_length=50)
@@ -18,7 +23,7 @@ class Order(models.Model):
     city = models.CharField(_("city"), max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    paid = models.BooleanField(default=False)
+    paid = models.CharField(choices=STATUS, max_length=10, default="unpaid")
     stripe_id = models.CharField(max_length=250, blank=True)
     coupon = models.ForeignKey(
         Coupon, related_name="orders", null=True, blank=True, on_delete=models.SET_NULL
