@@ -10,6 +10,7 @@ from django.shortcuts import (
     render,
     reverse,
 )
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView
 from orders.forms import OrderCreateForm
@@ -29,7 +30,7 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
     model = User
     template_name = "user_account/login.html"
     form_class = UserLoginForm
-    success_message = "You were successfully logged in"
+    success_message = _("You were successfully logged in")
     title = "| Login"
     success_url = reverse_lazy("products:products")
 
@@ -61,10 +62,8 @@ def profile(request, profile_id):
 @login_required
 def manage_shipping(request):
     try:
-        # Account user with shipping address
-        shipping = Order.objects.get(user=request.user.id)
+        shipping = Order.objects.filter(user=request.user.id).latest("created")
     except Order.DoesNotExist:
-        # Account user without shipping address
         shipping = None
     form = OrderCreateForm(instance=shipping)
     if request.method == "POST":
@@ -98,7 +97,7 @@ def profile_management(request):
 def delete_account(request):
     user = get_object_or_404(User, id=request.user.id)
     if request.method == "POST":
-        messages.success(request, "Your account was successfully deleted")
+        messages.success(request, _("Your account was successfully deleted"))
         user.delete()
         return redirect("products:products")
     context = {"title": "| Delete account"}
@@ -110,7 +109,7 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
     form_class = UserRegistrationForm
     template_name = "user_account/registration/registration.html"
     success_url = reverse_lazy("user_account:login")
-    success_message = "Your account was successfully created"
+    success_message = _("Your account was successfully created")
     title = "| Registration"
 
 
@@ -118,7 +117,7 @@ class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
     template_name = "user_account/password/password_reset.html"
     email_template_name = "user_account/password/password_reset_email.txt"
     subject_template_name = "user_account/password/password_reset_subject.html"
-    success_message = (
+    success_message = _(
         "We've emailed you instructions for setting your password, "
         "if an account exists with the email you entered. You should receive them shortly."
         " If you don't receive an email, "
@@ -131,7 +130,7 @@ class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
 class ChangePasswordView(TitleMixin, SuccessMessageMixin, PasswordChangeView):
     template_name = "user_account/password/password_change.html"
     form_class = PasswordChangingForm
-    success_message = "Your password was successfully changed"
+    success_message = _("Your password was successfully changed")
     success_url = reverse_lazy("user_account:login")
     title = "| Change Password"
 
@@ -164,7 +163,7 @@ def logout(request):
                 del request.session[key]
     except KeyError:
         pass
-    messages.success(request, "Logout Success")
+    messages.success(request, _("Logout Success"))
     auth.logout(request)
     return redirect("products:products")
 
@@ -175,9 +174,9 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Your message was successfully sent")
+            messages.success(request, _("Your message was successfully sent"))
             return redirect("products:products")
         else:
-            messages.error(request, "Please correct the error below")
+            messages.error(request, _("Please correct the error below"))
     context = {"title": "| Contact US", "form": form}
     return render(request, "user_account/contact.html", context)

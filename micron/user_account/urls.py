@@ -14,7 +14,7 @@ from user_account.views import (
     profile_management,
 )
 
-app_name = "user_account"
+app_name: str = "user_account"
 
 urlpatterns = [
     # Login page

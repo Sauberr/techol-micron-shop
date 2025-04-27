@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 
@@ -15,13 +15,12 @@ from .models import Order, OrderItem
 from .tasks import order_created
 
 
-@login_required(login_url="/user_account/login/")
+@login_required(login_url=reverse_lazy("user_account:login"))
 def order_create(request):
     cart = Cart(request)
 
     try:
-        # Get the user's shipping data
-        shipping = Order.objects.get(user=request.user.id)
+        shipping = Order.objects.filter(user=request.user.id).latest("created")
     except Order.DoesNotExist:
         shipping = None
 
@@ -64,30 +63,26 @@ def order_create(request):
                     quantity=item["quantity"],
                     user=request.user,
                 )
-            # Clear cart
             cart.clear()
-            # Launch asynchronous task
             order_created.delay(order.id)
-            # set the order in the session
             request.session["order_id"] = order.id
             return redirect(reverse("payment:process"))
     else:
         if shipping:
-            # Use the user's shipping data as the initial data for the form
             form = OrderCreateForm(instance=shipping)
         else:
             form = OrderCreateForm()
     return render(request, "orders/order/checkout.html", {"cart": cart, "form": form})
 
 
-@login_required(login_url="/user_account/login/")
+@login_required(login_url=reverse_lazy("user_account:login"))
 @staff_member_required
 def admin_order_detail(request, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     return render(request, "admin/orders/order/detail.html", {"order": order})
 
 
-@login_required(login_url="/user_account/login/")
+@login_required(login_url=reverse_lazy("user_account:login"))
 @staff_member_required
 def admin_order_pdf(request, order_id: int):
     order = get_object_or_404(Order, id=order_id)
@@ -100,7 +95,7 @@ def admin_order_pdf(request, order_id: int):
     return response
 
 
-@login_required(login_url="/user_account/login/")
+@login_required(login_url=reverse_lazy("user_account:login"))
 def orders(request):
     orders = Order.objects.filter(user=request.user).order_by("-created")
     return render(
@@ -108,14 +103,14 @@ def orders(request):
     )
 
 
-@login_required(login_url="/user_account/login/")
+@login_required(login_url=reverse_lazy("user_account:login"))
 def delete_order(request, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     order.delete()
     return redirect("orders:orders")
 
 
-@login_required(login_url="/user_account/login/")
+@login_required(login_url=reverse_lazy("user_account:login"))
 def detail_order(request, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     detail_order = OrderItem.objects.filter(user=request.user, order=order)

@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from products.models import Category, Product, Review
 from taggit.models import Tag
 
+from django.utils.translation import gettext_lazy as _
 from .forms import ReviewForm
 from .recommender import Recommender
 from .utils import paginateprodcuts, searchproducts
@@ -198,18 +199,17 @@ def list_category(request, category_slug=None):
         )
         products = Product.objects.filter(category=category)
         context = {"products": products, "category": category}
-        return render(request, "products/list_category.html", context)
+    return render(request, "products/list_category.html", context)
 
 
 @login_required
 def add_to_favorite(request, product_id: int):
-    if request.user.is_authenticated:
-        try:
-            product = Product.objects.get(pk=product_id)
-            request.user.favorite_products.add(product)
-        except Product.DoesNotExist:
-            pass
-        return redirect("products:products")
+    try:
+        product = Product.objects.get(pk=product_id)
+        request.user.favorite_products.add(product)
+    except Product.DoesNotExist:
+        pass
+    return redirect("products:products")
 
 
 @login_required
@@ -227,13 +227,12 @@ def favorite_products(request):
 
 @login_required
 def delete_from_favorites(request, product_id: int):
-    if request.user.is_authenticated:
-        try:
-            product = Product.objects.get(pk=product_id)
-            request.user.favorite_products.remove(product)
-        except Product.DoesNotExist:
-            pass
-        return redirect("products:favorite_products")
+    try:
+        product = Product.objects.get(pk=product_id)
+        request.user.favorite_products.remove(product)
+    except Product.DoesNotExist:
+        pass
+    return redirect("products:favorite_products")
 
 
 @login_required
@@ -280,14 +279,14 @@ def update_review(request, review_id: int):
     review = get_object_or_404(Review, id=review_id)
 
     if request.user != review.user:
-        messages.error(request, "You do not have permission to update this review")
+        messages.error(request, _("You do not have permission to update this review"))
         return redirect("products:product_detail", product_slug=review.product.slug)
 
     if request.method == "POST":
         form = ReviewForm(request.POST, instance=review)
         if form.is_valid():
             form.save()
-            messages.success(request, "Review updated successfully")
+            messages.success(request, _("Review updated successfully"))
             return redirect("products:product_detail", product_slug=review.product.slug)
     else:
         form = ReviewForm(instance=review)
