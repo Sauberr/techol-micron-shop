@@ -39,34 +39,22 @@ All actions should be executed from the source directory of the project and only
    ./manage.py migrate
    ./manage.py loaddata <path_to_fixture_files> 
    ```
-
-4. Install redis:
-   ```bash
-   redis-server
-   ```
-
-5. Install celery:
+   
+4. Install celery:
    ```bash
    celery -A app name worker -l INFO --pool=solo
    ```
    
-6. Docker :
+5. Docker :
    ```bash
    docker run -it --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management
    
    docker run -it --rm --name redis -p 6379:6379 redis
    ```
 
-7. Stripe :
+6. Stripe :
    ```bash
    stripe listen --forward-to localhost:8000/payment/webhook/
-   ```
-
-## Docker 
-   ```bash
-   docker build .
-
-   docker-compose up
    ```
 
 ## License
