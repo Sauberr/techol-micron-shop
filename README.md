@@ -204,7 +204,6 @@ This project exemplifies modern e-commerce development practices, offering a dyn
     - **Main site**: http://localhost:8000
     - **Admin panel**: http://localhost:8000/admin
     - **API documentation**: http://localhost:8000/api/docs/
-    - **RabbitMQ Management**: http://localhost:15672 (guest/guest)
 
 ## 🐳 Docker Deployment
 
