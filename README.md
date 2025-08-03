@@ -1,4 +1,8 @@
+<p align="center">
+  <img src="demonstration/logo.png" alt="Micron Logo" width="120" height="120" style="border-radius: 50%;">
+</p>
 <h1 align="center"> 🖥️ Micron Hardware Store 🖥️ </h1>
+
 
 </br>
 <p align="center">
@@ -226,52 +230,6 @@ docker-compose exec web python manage.py createsuperuser
 ### Load fixture data via Docker
 ```bash
 docker-compose exec web python manage.py loaddata fixtures/initial_data.json
-```
-
-## 🔧 Additional Commands
-
-### Django Management Commands
-```bash
-# Collect static files
-python manage.py collectstatic
-
-# Create migrations
-python manage.py makemigrations
-
-# Check for issues
-python manage.py check
-
-# Run tests
-python manage.py test
-```
-
-### Celery Commands
-```bash
-# Start Celery beat scheduler
-celery -A micron beat -l INFO
-
-# Monitor Celery tasks
-celery -A micron flower
-```
-
-## 📁 Project Structure
-```
-micron-hardware-store/
-├── micron/                 # Main Django project
-├── apps/                   # Django applications
-│   ├── products/          # Product management
-│   ├── cart/              # Shopping cart
-│   ├── orders/            # Order processing
-│   ├── users/             # User management
-│   └── api/               # REST API
-├── static/                # Static files
-├── media/                 # Media uploads
-├── templates/             # HTML templates
-├── fixtures/              # Initial data
-├── requirements.txt       # Python dependencies
-├── docker-compose.yml     # Docker configuration
-├── Dockerfile            # Docker image
-└── manage.py             # Django management script
 ```
 
 ## 🌐 API Endpoints
