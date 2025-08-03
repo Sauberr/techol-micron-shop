@@ -236,8 +236,6 @@ The application provides a comprehensive REST API:
 
 - **Products**: `/api/products/` - List and search products
 - **Categories**: `/api/categories/` - Product categories
-- **Cart**: `/api/cart/` - Shopping cart operations
-- **Orders**: `/api/orders/` - Order management
 - **Users**: `/api/users/` - User authentication and profiles
 
 Full API documentation is available at `/api/docs/` when running the development server.
