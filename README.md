@@ -36,18 +36,22 @@ This project exemplifies modern e-commerce development practices, offering a dyn
  - **API**: [**`Django REST Framework`**](https://django-rest-framework.org/)
  - **Deployment**: [**`Docker`**](https://docker.com/)
 
-<img src="demonstration/1.png" width="400">
+<div align="center">
+
+<img src="demonstration/1.png" width="800">
   
-<img src="demonstration/2.png" width="400">
-<img src="demonstration/3.png" width="400">
+<img src="demonstration/2.png" width="800">
+<img src="demonstration/3.png" width="800">
 
-<img src="demonstration/4.png" width="400">
-<img src="demonstration/5.png" width="400">
+<img src="demonstration/4.png" width="800">
+<img src="demonstration/5.png" width="800">
 
-<img src="demonstration/6.png" width="400">
-<img src="demonstration/7.png" width="400">
+<img src="demonstration/6.png" width="800">
+<img src="demonstration/7.png" width="800">
 
-<img src="demonstration/8.png" width="400">
+<img src="demonstration/8.png" width="800"> 
+
+</div>
 
 ## 🚀 Features
 
