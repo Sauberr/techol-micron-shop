@@ -30,6 +30,7 @@ This project exemplifies modern e-commerce development practices, offering a dyn
 ## Stack:
 
  - **Backend**: [**`Python 3.11+`**](https://python.org/)
+ - **Frontent**: HTML, CSS, JavaScript
  - **Framework**: [**`Django 4.2+`**](https://djangoproject.com/)
  - **Database**: [**`PostgreSQL`**](https://postgresql.org/)
  - **Cache**: [**`Redis`**](https://redis.io/)
