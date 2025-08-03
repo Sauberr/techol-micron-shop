@@ -57,7 +57,6 @@ This project exemplifies modern e-commerce development practices, offering a dyn
 
 ## 🚀 Features
 
-### 🛍️ For Customers
 * Comprehensive product catalog with advanced search functionality
 * User registration and authentication system
 * Social media login (Google, GitHub) integration
@@ -75,8 +74,6 @@ This project exemplifies modern e-commerce development practices, offering a dyn
 * Product tags for better categorization
 * Multi-language support (English/Ukrainian)
 * Responsive design for all devices
-
-### 👨‍💼 For Administrators
 * Powerful Django admin panel for complete store management
 * CRUD operations for products, categories, and orders
 * User management and customer support tools
