@@ -38,7 +38,7 @@ This project exemplifies modern e-commerce development practices, offering a dyn
 
 <img src="demonstration/1.png" width="400">
   
-<img src="demonstration/2.png" width="400"">
+<img src="demonstration/2.png" width="400">
 <img src="demonstration/3.png" width="400">
 
 <img src="demonstration/4.png" width="400">
