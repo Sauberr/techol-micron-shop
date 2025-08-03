@@ -1,10 +1,8 @@
 <p align="center">
-  <img src="demonstration/logo.png" alt="Micron Logo" width="120" height="120" style="border-radius: 50%;">
+  <img src="demonstration/logo.png" alt="Micron Logo" width="150" height="150" style="border-radius: 50%;">
 </p>
 <h1 align="center"> 🖥️ Micron Hardware Store 🖥️ </h1>
 
-
-</br>
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge&logo=python&logoColor=white">
   <img src="https://img.shields.io/badge/Django-4.2+-green?style=for-the-badge&logo=django&logoColor=white">
