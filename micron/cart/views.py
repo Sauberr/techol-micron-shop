@@ -1,3 +1,5 @@
+from django.http import HttpRequest
+
 from coupons.forms import CouponApplyForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
@@ -9,7 +11,7 @@ from .cart import Cart
 from .forms import CartAddProductForm
 
 
-def cart_summary(request):
+def cart_summary(request: HttpRequest):
     cart = Cart(request)
     cart_updated = False
 
@@ -50,7 +52,7 @@ def cart_summary(request):
 
 
 @require_POST
-def cart_add(request, product_id: int):
+def cart_add(request: HttpRequest, product_id: int):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
 
@@ -77,7 +79,7 @@ def cart_add(request, product_id: int):
 
 
 @require_POST
-def cart_remove(request, product_id: int):
+def cart_remove(request: HttpRequest, product_id: int):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     cart.remove(product)
@@ -85,7 +87,7 @@ def cart_remove(request, product_id: int):
 
 
 @require_POST
-def cart_clear(request):
+def cart_clear(request: HttpRequest):
     cart = Cart(request)
     cart.clear()
     return redirect("cart:cart_summary")

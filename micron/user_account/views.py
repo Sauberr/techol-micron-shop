@@ -1,3 +1,5 @@
+from django.http import HttpRequest
+
 from common.views import TitleMixin
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
@@ -43,7 +45,7 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
 
 
 @login_required
-def profile(request, profile_id):
+def profile(request: HttpRequest, profile_id: int):
     profile = get_object_or_404(Profile, id=profile_id)
     user = profile.user
 
@@ -60,7 +62,7 @@ def profile(request, profile_id):
 
 
 @login_required
-def manage_shipping(request):
+def manage_shipping(request: HttpRequest):
     try:
         shipping = Order.objects.filter(user=request.user.id).latest("created")
     except Order.DoesNotExist:
@@ -69,9 +71,7 @@ def manage_shipping(request):
     if request.method == "POST":
         form = OrderCreateForm(request.POST, instance=shipping)
         if form.is_valid():
-            # Assign the user FK on the object
             shipping_user = form.save(commit=False)
-            # Adding the FK itself
             shipping_user.user = request.user
             shipping_user.save()
             return redirect("user_account:profile", request.user.profile.id)
@@ -81,8 +81,7 @@ def manage_shipping(request):
 
 
 @login_required
-def profile_management(request):
-    # Updating our user's username and email
+def profile_management(request: HttpRequest):
     user_form = UserUpdateForm(instance=request.user.profile)
     if request.method == "POST":
         user_form = UserUpdateForm(request.POST, instance=request.user.profile)
@@ -94,7 +93,7 @@ def profile_management(request):
 
 
 @login_required
-def delete_account(request):
+def delete_account(request: HttpRequest):
     user = get_object_or_404(User, id=request.user.id)
     if request.method == "POST":
         messages.success(request, _("Your account was successfully deleted"))
@@ -154,7 +153,7 @@ class EmailVerificationView(TitleMixin, TemplateView):
             return HttpResponseRedirect(reverse("products:products"))
 
 
-def logout(request):
+def logout(request: HttpRequest) -> HttpResponseRedirect:
     try:
         for key in list(request.session.keys()):
             if key == "session_key":
@@ -168,7 +167,7 @@ def logout(request):
     return redirect("products:products")
 
 
-def contact(request):
+def contact(request: HttpRequest):
     form = ContactForm()
     if request.method == "POST":
         form = ContactForm(request.POST)

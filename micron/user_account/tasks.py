@@ -7,7 +7,7 @@ from user_account.models import EmailVerification, User
 
 
 @shared_task
-def send_email_verification(user_id: int):
+def send_email_verification(user_id: int) -> None:
     user = User.objects.get(id=user_id)
     expiration = now() + timedelta(hours=48)
     record = EmailVerification.objects.create(

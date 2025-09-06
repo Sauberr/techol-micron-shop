@@ -1,11 +1,13 @@
 from django.contrib import messages
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator, Page
 from django.db.models import Q
+from django.http import HttpRequest
+from django.utils.translation import gettext_lazy as _
 
 from .models import Product
 
 
-def searchproducts(request):
+def searchproducts(request: HttpRequest) -> tuple[Product, str]:
     search_query = ""
     if request.GET.get("search_query"):
         search_query = request.GET["search_query"]
@@ -15,12 +17,12 @@ def searchproducts(request):
     )
 
     if not products.exists():
-        messages.error(request, "No search results found. Please try again.")
+        messages.error(request, _("No search results found. Please try again."))
 
     return products, search_query
 
 
-def paginateprodcuts(request, products, results):
+def paginateprodcuts(request: HttpRequest, products: Product, results) -> tuple[range, Page]:
     page = request.GET.get("page")
     paginator = Paginator(products, results)
     try:

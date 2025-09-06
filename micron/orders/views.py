@@ -3,7 +3,7 @@ from cart.cart import Cart
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
@@ -16,7 +16,7 @@ from .tasks import order_created
 
 
 @login_required(login_url=reverse_lazy("user_account:login"))
-def order_create(request):
+def order_create(request: HttpRequest):
     cart = Cart(request)
 
     try:
@@ -77,14 +77,14 @@ def order_create(request):
 
 @login_required(login_url=reverse_lazy("user_account:login"))
 @staff_member_required
-def admin_order_detail(request, order_id: int):
+def admin_order_detail(request: HttpRequest, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     return render(request, "admin/orders/order/detail.html", {"order": order})
 
 
 @login_required(login_url=reverse_lazy("user_account:login"))
 @staff_member_required
-def admin_order_pdf(request, order_id: int):
+def admin_order_pdf(request: HttpRequest, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     html = render_to_string("orders/order/pdf.html", {"order": order})
     response = HttpResponse(content_type="application/pdf")
@@ -96,7 +96,7 @@ def admin_order_pdf(request, order_id: int):
 
 
 @login_required(login_url=reverse_lazy("user_account:login"))
-def orders(request):
+def orders(request: HttpRequest):
     orders = Order.objects.filter(user=request.user).order_by("-created")
     return render(
         request, "orders/order/orders.html", {"orders": orders, "title": "| Orders"}
@@ -104,14 +104,14 @@ def orders(request):
 
 
 @login_required(login_url=reverse_lazy("user_account:login"))
-def delete_order(request, order_id: int):
+def delete_order(request: HttpRequest, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     order.delete()
     return redirect("orders:orders")
 
 
 @login_required(login_url=reverse_lazy("user_account:login"))
-def detail_order(request, order_id: int):
+def detail_order(request: HttpRequest, order_id: int):
     order = get_object_or_404(Order, id=order_id)
     detail_order = OrderItem.objects.filter(user=request.user, order=order)
     return render(

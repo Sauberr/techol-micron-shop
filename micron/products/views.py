@@ -1,5 +1,7 @@
 import logging
 
+from django.http import HttpRequest
+
 from cart.forms import CartAddProductForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -16,7 +18,7 @@ from .utils import paginateprodcuts, searchproducts
 logger = logging.getLogger("main")
 
 
-def index(request):
+def index(request: HttpRequest):
     products, search_query = searchproducts(request)
     reviews = Review.objects.all()
     context = {
@@ -28,7 +30,7 @@ def index(request):
     return render(request, "index.html", context)
 
 
-def products(request):
+def products(request: HttpRequest):
     logger.info("products")
     products, search_query = searchproducts(request)
 
@@ -128,7 +130,7 @@ def products(request):
     return render(request, "products/products.html", context)
 
 
-def product_detail(request, product_slug: str):
+def product_detail(request: HttpRequest, product_slug: str):
     language = request.LANGUAGE_CODE
     try:
         product = Product.objects.get(
@@ -171,7 +173,7 @@ def product_detail(request, product_slug: str):
     return render(request, "products/single_product.html", context)
 
 
-def tag_list(request, tag_slug=None):
+def tag_list(request: HttpRequest, tag_slug=None):
     products = Product.objects.all().order_by("-id")
 
     tag = None
@@ -184,7 +186,7 @@ def tag_list(request, tag_slug=None):
     return render(request, "products/tag_list.html", context)
 
 
-def list_category(request, category_slug=None):
+def list_category(request: HttpRequest, category_slug=None):
     if category_slug:
         language = request.LANGUAGE_CODE
         category = get_object_or_404(
@@ -203,7 +205,7 @@ def list_category(request, category_slug=None):
 
 
 @login_required
-def add_to_favorite(request, product_id: int):
+def add_to_favorite(request: HttpRequest, product_id: int):
     try:
         product = Product.objects.get(pk=product_id)
         request.user.favorite_products.add(product)
@@ -213,7 +215,7 @@ def add_to_favorite(request, product_id: int):
 
 
 @login_required
-def favorite_products(request):
+def favorite_products(request: HttpRequest):
     if request.user.is_authenticated:
         favorite_products = request.user.favorite_products.all()
         context = {
@@ -226,7 +228,7 @@ def favorite_products(request):
 
 
 @login_required
-def delete_from_favorites(request, product_id: int):
+def delete_from_favorites(request: HttpRequest, product_id: int):
     try:
         product = Product.objects.get(pk=product_id)
         request.user.favorite_products.remove(product)
@@ -236,7 +238,7 @@ def delete_from_favorites(request, product_id: int):
 
 
 @login_required
-def add_review(request, product_id: int):
+def add_review(request: HttpRequest, product_id: int):
     product = get_object_or_404(Product, id=product_id)
 
     existing_review = Review.objects.filter(user=request.user, product=product).first()
@@ -262,7 +264,7 @@ def add_review(request, product_id: int):
 
 
 @login_required
-def delete_review(request, review_id: int):
+def delete_review(request: HttpRequest, review_id: int):
     review = get_object_or_404(Review, id=review_id)
 
     if request.user != review.user:
@@ -275,7 +277,7 @@ def delete_review(request, review_id: int):
 
 
 @login_required
-def update_review(request, review_id: int):
+def update_review(request: HttpRequest, review_id: int):
     review = get_object_or_404(Review, id=review_id)
 
     if request.user != review.user:
