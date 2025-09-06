@@ -10,7 +10,6 @@ class Cart:
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
-            """Save empty cart in session"""
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
         self.coupon_id = self.session.get("coupon_id")

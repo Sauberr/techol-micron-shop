@@ -60,13 +60,10 @@ class Order(models.Model):
 
     def get_stripe_url(self):
         if not self.stripe_id:
-            # no associated payments
             return ""
         if "_test_" in settings.STRIPE_SECRET_KEY:
-            # Stripe path for test payments
             path = "/test/"
         else:
-            # the Stripe way for real payments
             path = "/"
         return f"https://dashboard.stripe.com{path}payments/{self.stripe_id}"
 
