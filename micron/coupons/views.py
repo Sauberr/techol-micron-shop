@@ -1,3 +1,4 @@
+from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -7,7 +8,7 @@ from .models import Coupon
 
 
 @require_POST
-def coupon_apply(request):
+def coupon_apply(request: HttpRequest):
     now = timezone.now()
     form = CouponApplyForm(request.POST)
     if form.is_valid():
@@ -23,7 +24,7 @@ def coupon_apply(request):
 
 
 @require_POST
-def coupon_remove(request):
+def coupon_remove(request: HttpRequest):
     if "coupon_id" in request.session:
         del request.session["coupon_id"]
     return redirect("cart:cart_summary")
