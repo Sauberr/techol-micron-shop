@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.db import models
@@ -15,19 +16,19 @@ class User(AbstractUser):
     bonus_points = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     class Meta:
-        verbose_name: str = "User"
-        verbose_name_plural: str = "Users"
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
     def __str__(self):
         return self.username
 
-    def add_bonus_points(self, points):
+    def add_bonus_points(self, points: float) -> None:
         self.bonus_points += points
         self.save()
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(to=get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
     username = models.CharField(max_length=100, null=True, blank=True)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
@@ -37,8 +38,8 @@ class Profile(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        verbose_name: str = "Profile"
-        verbose_name_plural: str = "Profiles"
+        verbose_name = "Profile"
+        verbose_name_plural = "Profiles"
 
     def __str__(self):
         return self.user.username
@@ -46,13 +47,13 @@ class Profile(models.Model):
 
 class EmailVerification(models.Model):
     code = models.UUIDField(unique=True)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     expiration = models.DateTimeField()
 
     class Meta:
-        verbose_name: str = "Email Verification"
-        verbose_name_plural: str = "Email Verifications"
+        verbose_name = "Email Verification"
+        verbose_name_plural = "Email Verifications"
 
     def __str__(self):
         return f"EmailVerification object for {self.user.email}"
@@ -85,8 +86,8 @@ class Contact(models.Model):
     message = CKEditor5Field(config_name='extends')
 
     class Meta:
-        verbose_name: str = "Contact"
-        verbose_name_plural: str = "Contacts"
+        verbose_name = "Contact"
+        verbose_name_plural = "Contacts"
 
     def __str__(self):
         return self.name

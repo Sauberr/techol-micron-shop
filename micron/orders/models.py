@@ -1,18 +1,16 @@
 from decimal import Decimal
 
-from coupons.models import Coupon
+from django.contrib.auth import get_user_model
+
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from products.models import Product
-from user_account.models import User
 
 STATUS = (
     ("paid", _("Paid")),
     ("unpaid", _("Unpaid")),
 )
-
 
 class Order(models.Model):
     first_name = models.CharField(_("first_name"), max_length=50)
@@ -26,7 +24,7 @@ class Order(models.Model):
     paid = models.CharField(choices=STATUS, max_length=10, default="unpaid")
     stripe_id = models.CharField(max_length=250, blank=True)
     coupon = models.ForeignKey(
-        Coupon, related_name="orders", null=True, blank=True, on_delete=models.SET_NULL
+        "coupons.Coupon", related_name="orders", null=True, blank=True, on_delete=models.SET_NULL
     )
     bonus_points = models.DecimalField(
         max_digits=10, decimal_places=2, default=0
@@ -34,7 +32,7 @@ class Order(models.Model):
     discount = models.IntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         ordering = ["-created"]
@@ -69,17 +67,17 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
+    order = models.ForeignKey("Order", related_name="items", on_delete=models.CASCADE)
     product = models.ForeignKey(
-        Product, related_name="order_items", on_delete=models.CASCADE
+        "products.Product", related_name="order_items", on_delete=models.CASCADE
     )
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
-        verbose_name: str = "order item"
-        verbose_name_plural: str = "order items"
+        verbose_name = "order item"
+        verbose_name_plural = "order items"
 
     def __str__(self):
         return str(self.id)

@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from django_ckeditor_5.fields import CKEditor5Field
@@ -54,7 +55,7 @@ class Product(TranslatableModel):
         description=CKEditor5Field(config_name='extends', blank=True, null=True),
     )
     category = models.ForeignKey(
-        Category, related_name="products", on_delete=models.CASCADE
+        "Category", related_name="products", on_delete=models.CASCADE
     )
     image = models.ImageField(upload_to="products")
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -92,7 +93,7 @@ class Product(TranslatableModel):
         return reverse("products:product_detail", args=[self.slug])
 
     @classmethod
-    def generate_instances(cls, count):
+    def generate_instances(cls, count: int):
         faker = Faker()
         for _ in range(count):
             cls.objects.create(
@@ -114,8 +115,8 @@ class Review(models.Model):
         (5, "★★★★★"),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    product = models.ForeignKey("Product", on_delete=models.CASCADE)
     stars = models.IntegerField(choices=STARS_CHOICES)
     text = CKEditor5Field(config_name='extends')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -131,7 +132,7 @@ class Review(models.Model):
         return f"{self.user}"
 
     @classmethod
-    def generate_instances(cls, count):
+    def generate_instances(cls, count: int = 5):
         faker = Faker()
         for _ in range(count):
             cls.objects.create(

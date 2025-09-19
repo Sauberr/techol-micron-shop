@@ -3,7 +3,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import include, path, re_path
+from django.urls import include, path
 from django.utils.translation import gettext_lazy as _
 from payment import webhooks
 
@@ -46,10 +46,10 @@ urlpatterns = i18n_patterns(
     # Add DRF
     path("drf-auth/", include("rest_framework.urls", namespace="rest_framework")),
     # Add DJOSER
-    path("api/auth/", include("djoser.urls")),
-    re_path(r"^auth/", include("djoser.urls.authtoken")),
+    path("api/<str:version>/auth/", include("djoser.urls")),
+    path("api/<str:version>/auth/", include("djoser.urls.authtoken")),
     # Shop API
-    path("api/", include("api.urls", namespace="api")),
+    path("api/<str:version>/", include("api.urls", namespace="api")),
     # Add rosetta
     path("rosetta/", include("rosetta.urls")),
     # Add CKEditor

@@ -308,21 +308,88 @@ LOGGING: Dict[str, ...] = {
 # DRF
 
 REST_FRAMEWORK: Dict[str, ...] = {
+
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 3,
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ],
+
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
+    ],
+
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "100/hour",
+        "user": "1000/hour",
+    },
+
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+
+    "DEFAULT+FILTER_BACKENDS": [
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ],
+
+    "SEARCH_PARAM": "search",
+    "ORDERING_PARAM": "ordering",
+    "FILTER_PARAM": "filter",
+
+    "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
+    "DEFAULT_VERSION": "v1",
+    "ALLOWED_VERSIONS": ["v1", "v2"],
+    "VERSION_PARAM": "version",
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+    "DEFAULT_METADATA_CLASS": "rest_framework.metadata.SimpleMetadata",
+    "DEFAULT_CONTENT_NEGOTIATION_CLASS": "rest_framework.negotiation.DefaultContentNegotiation",
+
+    "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
+    "DATE_FORMAT": "%Y-%m-%d",
+    "DATETIME_INPUT_FORMATS": [
+        "%Y-%m-%d",
+        "iso-8601",
+    ],
+
+    "TIME_FORMAT": "%H:%M:%S",
+    "TIME_INPUT_FORMATS": [
+        "%H:%M:%S",
+        "%H:%M",
+        "%H:%M:%S.%f",
+    ],
+
+    "UNICODE_JSON": True,
+    "COMPACT_JSON": False,
+    "STRICT_JSON": True,
+    "COERCE_DECIMAL_TO_STRING": False,
+
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "TEST_REQUEST_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.MultiPartRenderer",
+    ],
+
+    "URL_FORMAT_OVERRIDE": "format",
+    "FORMAT_SUFFIX_KWARG": "format",
+
+    "HTML_SELECT_CUTOFF": 1000,
+    "HTML_SELECT_CUTOFF_TEXT": "More than 1000 items, please use search",
+
+    "UPLOADED_FILES_USE_URL": True,
+    "URL_FIELD_NAME": "url",
+
+    "NUM_PROXIES": None,
 }
 
 SIMPLE_JWT: Dict[str, ...] = {

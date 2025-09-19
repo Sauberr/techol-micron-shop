@@ -11,17 +11,17 @@ class Coupon(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
         help_text="Percentage value (0 to 100)",
     )
-    active = models.BooleanField()
+    active = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name: str = "coupon"
-        verbose_name_plural: str = "coupons"
+        verbose_name = "coupon"
+        verbose_name_plural = "coupons"
 
     def __str__(self):
         return self.code
 
     @classmethod
-    def generate_instances(cls, count):
+    def generate_instances(cls, count: int = 5):
         faker = Faker()
         for _ in range(count):
             cls.objects.create(
