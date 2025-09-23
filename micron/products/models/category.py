@@ -6,13 +6,13 @@ from parler.models import TranslatableModel, TranslatedFields
 
 class Category(TranslatableModel):
     translations = TranslatedFields(
-        name=models.CharField(max_length=200),
-        slug=models.SlugField(max_length=200, unique=True),
+        name=models.CharField(max_length=200, help_text="Category name"),
+        slug=models.SlugField(max_length=200, unique=True, help_text="Category slug"),
     )
 
     class Meta:
-        verbose_name: str = "category"
-        verbose_name_plural: str = "categories"
+        verbose_name = "category"
+        verbose_name_plural = "categories"
 
     def __str__(self):
         return self.name
@@ -21,7 +21,7 @@ class Category(TranslatableModel):
         return reverse("products:list_category", args=[self.slug])
 
     @classmethod
-    def generate_instances(cls, count):
+    def generate_instances(cls, count: int = 5):
         faker = Faker()
         for _ in range(count):
             cls.objects.create(

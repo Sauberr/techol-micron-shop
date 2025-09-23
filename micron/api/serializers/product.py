@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from parler_rest.serializers import TranslatableModelSerializer
 
 from rest_framework import serializers
 from products.models.category import Category
@@ -8,9 +9,16 @@ from api.serializers.review import ReviewSerializer
 User = get_user_model()
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.SlugRelatedField(
-        slug_field="name", queryset=Category.objects.all()
+class ProductSerializer(TranslatableModelSerializer):
+    name = serializers.CharField(required=True)
+    slug = serializers.SlugField(
+        required=True,
+    )
+    description = serializers.CharField(
+        required=True,
+    )
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all()
     )
     reviews = serializers.SerializerMethodField()
 

@@ -23,8 +23,8 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name: str = "review"
-        verbose_name_plural: str = "reviews"
+        verbose_name = "review"
+        verbose_name_plural = "reviews"
         indexes = [
             models.Index(fields=["-created_at"]),
         ]

@@ -6,14 +6,14 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Coupon(models.Model):
-    code = models.CharField(max_length=50, unique=True, help_text="Unique coupon code (for example: SAVE20, SUMMER2024)")
-    valid_from = models.DateTimeField(help_text="Start date and time when the coupon becomes valid")
-    valid_to = models.DateTimeField(help_text="End date and time when the coupon expires")
+    code = models.CharField(max_length=50, unique=True, help_text=_("Unique coupon code (for example: SAVE20, SUMMER2024)"))
+    valid_from = models.DateTimeField(help_text=_("Start date and time when the coupon becomes valid"))
+    valid_to = models.DateTimeField(help_text=_("End date and time when the coupon expires"))
     discount = models.IntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
-        help_text="Percentage value (0 to 100)",
+        help_text=_("Percentage value (0 to 100)"),
     )
-    active = models.BooleanField(default=False, help_text="Designates whether this coupon is active")
+    active = models.BooleanField(default=False, help_text=_("Designates whether this coupon is active"))
 
     class Meta:
         verbose_name = "coupon"
