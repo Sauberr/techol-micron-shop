@@ -2,11 +2,16 @@ import os
 from http import HTTPStatus
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
-from products.models import Category, Product, Review
-from user_account.models import User
+from products.models.category import Category
+from products.models.product import Product
+from products.models.review import Review
+
+
+User = get_user_model()
 
 
 class BaseCategoryTestCase(TestCase):

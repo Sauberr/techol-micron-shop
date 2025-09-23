@@ -19,7 +19,7 @@ class CartAddProductForm(forms.Form):
         required=False, initial=False, widget=forms.HiddenInput
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         product = kwargs.pop("product", None)
         super().__init__(*args, **kwargs)
 

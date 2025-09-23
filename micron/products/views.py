@@ -7,19 +7,22 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Case, DecimalField, F, Max, Min, When
 from django.shortcuts import get_object_or_404, redirect, render
-from products.models import Category, Product, Review
+from products.models.category import Category
+from products.models.product import Product
+from products.models.review import Review
 from taggit.models import Tag
 
 from django.utils.translation import gettext_lazy as _
 from .forms import ReviewForm
 from .recommender import Recommender
-from .utils import paginateprodcuts, searchproducts
+from .utils.pagination import paginate_products
+from .utils.search import search_products
 
 logger = logging.getLogger("main")
 
 
 def index(request: HttpRequest):
-    products, search_query = searchproducts(request)
+    products, search_query = search_products(request)
     reviews = Review.objects.all()
     context = {
         "title": "| Products",
@@ -32,7 +35,7 @@ def index(request: HttpRequest):
 
 def products(request: HttpRequest):
     logger.info("products")
-    products, search_query = searchproducts(request)
+    products, search_query = search_products(request)
 
     discount = request.GET.get("discount")
     order = request.GET.get("order")
@@ -116,7 +119,7 @@ def products(request: HttpRequest):
         )
     )
 
-    custom_range, products = paginateprodcuts(request, products, 6)
+    custom_range, products = paginate_products(request, products, 6)
     context = {
         "title": "| Products",
         "products": products,

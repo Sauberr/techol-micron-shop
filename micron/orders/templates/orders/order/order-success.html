@@ -2,33 +2,33 @@
 {% load static %}
 
 {% block title %}
-Thank you
+    Thank you
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/orders/order-success.css' %}">
+    <link rel="stylesheet" href="{% static 'css/orders/order-success.css' %}">
 {% endblock %}
 
 {% block content %}
-{% include 'navbar.html' %}
+    {% include 'navbar.html' %}
 
-<section class="thank-you-section">
-    <div class="thank-you-container">
-        <i class="fas fa-check-circle success-icon"></i>
-        <h1 class="thank-you-title">Thank you!</h1>
-        <p class="thank-you-message">
-            Your order has been successfully completed.<br>
-            Your order number is:
-        </p>
-        <div class="order-number">
-            #{{ order.id }}
+    <section class="thank-you-section">
+        <div class="thank-you-container">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h1 class="thank-you-title">Thank you!</h1>
+            <p class="thank-you-message">
+                Your order has been successfully completed.<br>
+                Your order number is:
+            </p>
+            <div class="order-number">
+                #{{ order.id }}
+            </div>
+            <a href="{% url 'products:products' %}" class="return-btn">
+                <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
+            </a>
         </div>
-        <a href="{% url 'products:products' %}" class="return-btn">
-            <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
-        </a>
-    </div>
-</section>
+    </section>
 
-{% include 'footer.html' %}
+    {% include 'footer.html' %}
 
 {% endblock %}

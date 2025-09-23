@@ -3,7 +3,6 @@
     "use strict";
 
     var searchPopup = function() {
-      // open search box
       $('#header-nav').on('click', '.search-button', function(e) {
         $('.search-popup').toggleClass('is-visible');
       });
@@ -112,6 +111,6 @@
         },
       });
 
-    }); // End of a document ready
+    });
 
 })(jQuery);

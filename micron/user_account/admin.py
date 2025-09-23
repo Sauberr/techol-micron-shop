@@ -1,9 +1,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from user_account.models import Contact, EmailVerification, Profile, User
+from user_account.models.email_verification import EmailVerification
+from user_account.models.profile import Profile
+from user_account.models.contact import Contact
+
+from django.contrib.auth import get_user_model
 
 
-@admin.register(User)
+@admin.register(get_user_model())
 class UserAdmin(admin.ModelAdmin):
     def thumbnail(self, object):
         if object.image and hasattr(object.image, 'url'):

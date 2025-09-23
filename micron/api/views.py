@@ -1,11 +1,13 @@
 from orders.models import Order
-from orders.serializers import OrderSerializer
-from products.models import Category, Product
-from products.serializers import CategorySerializer, ProductSerializer
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
+from products.models.category import Category
+from products.models.product import Product
+from api.serializers.product import ProductSerializer
+from api.serializers.category import CategorySerializer
+from api.serializers.order import OrderSerializer
 from .permissions import IsAdminOrReadOnly
 
 

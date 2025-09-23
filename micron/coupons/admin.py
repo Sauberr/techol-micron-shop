@@ -1,6 +1,5 @@
 from django.contrib import admin
-
-from .models import Coupon
+from coupons.models.coupon import Coupon
 
 
 @admin.register(Coupon)

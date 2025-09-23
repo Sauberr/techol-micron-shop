@@ -1,30 +1,11 @@
 from django.contrib.auth import get_user_model
 
-from products.models import Category, Product, Review
 from rest_framework import serializers
+from products.models.category import Category
+from products.models.product import Product
+from api.serializers.review import ReviewSerializer
 
 User = get_user_model()
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = "__all__"
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ("name", "slug")
-
-
-class ReviewSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(
-        slug_field="username", queryset=User.objects.all()
-    )
-
-    class Meta:
-        model = Review
-        fields = "__all__"
 
 
 class ProductSerializer(serializers.ModelSerializer):

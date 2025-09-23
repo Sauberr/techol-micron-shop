@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from .forms import CouponApplyForm
-from .models import Coupon
+from coupons.models.coupon import Coupon
 
 
 @require_POST

@@ -5,8 +5,8 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-
-from .models import Order, OrderItem
+from orders.models.order import Order
+from orders.models.order_item import OrderItem
 
 
 def export_to_csv(modeladmin, request, queryset):

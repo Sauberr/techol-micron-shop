@@ -1,11 +1,10 @@
 from celery import shared_task
 from django.core.mail import send_mail
-
-from .models import Order
+from orders.models.order import Order
 
 
 @shared_task
-def order_created(order_id: int):
+def order_created(order_id: int) -> int:
     order = Order.objects.get(id=order_id)
     subject = f"Order nr. {order.id}"
     message = (

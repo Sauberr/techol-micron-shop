@@ -40,21 +40,21 @@ class Order(models.Model):
             models.Index(fields=["-created"]),
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Order {self.id}"
 
-    def get_total_cost_before_discount(self):
-        return sum(item.get_cost() for item in self.items.all())
-
-    def get_discount(self):
+    def get_discount(self) -> Decimal:
         total_cost = self.get_total_cost_before_discount()
         if self.discount:
             return total_cost * (self.discount / Decimal(100))
         return Decimal(0)
 
-    def get_total_cost(self):
+    def get_total_cost(self) -> Decimal:
         total_cost = self.get_total_cost_before_discount()
         return total_cost - self.get_discount()
+
+    def get_total_cost_before_discount(self) -> int:
+        return sum(item.get_cost() for item in self.items.all())
 
     def get_stripe_url(self):
         if not self.stripe_id:
@@ -64,23 +64,3 @@ class Order(models.Model):
         else:
             path = "/"
         return f"https://dashboard.stripe.com{path}payments/{self.stripe_id}"
-
-
-class OrderItem(models.Model):
-    order = models.ForeignKey("Order", related_name="items", on_delete=models.CASCADE)
-    product = models.ForeignKey(
-        "products.Product", related_name="order_items", on_delete=models.CASCADE
-    )
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField(default=1)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
-
-    class Meta:
-        verbose_name = "order item"
-        verbose_name_plural = "order items"
-
-    def __str__(self):
-        return str(self.id)
-
-    def get_cost(self):
-        return self.price * self.quantity

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 
 from common.views import TitleMixin
@@ -25,11 +26,12 @@ from user_account.forms import (
     UserRegistrationForm,
     UserUpdateForm,
 )
-from user_account.models import EmailVerification, Profile, User
+from user_account.models.email_verification import EmailVerification
+from user_account.models.profile import Profile
 
 
 class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
-    model = User
+    model = get_user_model()
     template_name = "user_account/login.html"
     form_class = UserLoginForm
     success_message = _("You were successfully logged in")
@@ -94,7 +96,7 @@ def profile_management(request: HttpRequest):
 
 @login_required
 def delete_account(request: HttpRequest):
-    user = get_object_or_404(User, id=request.user.id)
+    user = get_object_or_404(get_user_model(), id=request.user.id)
     if request.method == "POST":
         messages.success(request, _("Your account was successfully deleted"))
         user.delete()
@@ -104,7 +106,7 @@ def delete_account(request: HttpRequest):
 
 
 class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
-    model = User
+    model = get_user_model()
     form_class = UserRegistrationForm
     template_name = "user_account/registration/registration.html"
     success_url = reverse_lazy("user_account:login")
@@ -140,7 +142,7 @@ class EmailVerificationView(TitleMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         code = kwargs["code"]
-        user = User.objects.get(email=kwargs["email"])
+        user = get_user_model().objects.get(email=kwargs["email"])
         email_verifications = EmailVerification.objects.filter(user=user, code=code)
         if (email_verifications.exists() and
                 not email_verifications.first().is_expired()):

@@ -1,13 +1,15 @@
 from captcha.fields import CaptchaField
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import (
     AuthenticationForm,
     PasswordChangeForm,
     UserChangeForm,
     UserCreationForm,
 )
-from user_account.models import Contact, Profile, User
 from user_account.tasks import send_email_verification
+from user_account.models.contact import Contact
+from user_account.models.profile import Profile
 
 
 class UserLoginForm(AuthenticationForm):
@@ -29,7 +31,7 @@ class UserLoginForm(AuthenticationForm):
     )
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = "__all__"
 
 
@@ -114,7 +116,7 @@ class UserUpdateForm(forms.ModelForm):
     def clean_email(self):
         data = self.cleaned_data["email"]
 
-        if User.objects.filter(email=data).exists():
+        if get_user_model().objects.filter(email=data).exists():
             raise forms.ValidationError("Email already in use.")
         if len(data) >= 350:
             raise forms.ValidationError("Your email is too long")
@@ -181,7 +183,7 @@ class UserRegistrationForm(UserCreationForm):
     captcha = CaptchaField()
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = (
             "first_name",
             "last_name",
@@ -202,7 +204,7 @@ class UserRegistrationForm(UserCreationForm):
     def clean_email(self):
         data = self.cleaned_data["email"]
 
-        if User.objects.filter(email=data).exists():
+        if get_user_model().objects.filter(email=data).exists():
             raise forms.ValidationError("Email already in use.")
         if len(data) >= 350:
             raise forms.ValidationError("Your email is too long")
@@ -235,5 +237,5 @@ class PasswordChangingForm(PasswordChangeForm):
     )
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ("old_password", "new_password1", "new_password2")

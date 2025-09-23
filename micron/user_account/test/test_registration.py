@@ -1,27 +1,10 @@
-from abc import ABC
 from http import HTTPStatus
 
-from django.contrib import auth
-from django.core import mail
-from django.test import TestCase
-from django.urls import reverse
-from user_account.models import User
+from django.contrib.auth import get_user_model
 
+from user_account.test.common_test import BaseViewTestCase
 
-class BaseViewTestCase(ABC, TestCase):
-    path_name = None
-    template_name = None
-    title = None
-
-    def setUp(self):
-        self.path = reverse(self.path_name) if self.path_name is not None else None
-
-    def test_get(self):
-        if self.path is not None:
-            response = self.client.get(self.path)
-            self.assertEqual(response.status_code, HTTPStatus.OK)
-            self.assertEqual(response.context['title'], self.title)
-            self.assertTemplateUsed(response, self.template_name)
+User = get_user_model()
 
 
 class UserRegistrationViewTestCase(BaseViewTestCase):
@@ -44,27 +27,6 @@ class UserRegistrationViewTestCase(BaseViewTestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertContains(response, 'A user with that username already exists.', html=True)
 
-
-class UserLoginViewTestCase(BaseViewTestCase):
-    path_name = 'user_account:login'
-    template_name = 'user_account/login.html'
-    title = '| Login'
-
-    def setUp(self):
-        super().setUp()
-        self.user = User.objects.create_user(username='swagerfeed', password='swagerfeed123')
-
-    def test_login_with_valid_credentials(self):
-        response = self.client.post(self.path, {'username': 'swagerfeed', 'password': 'swagerfeed123'})
-        self.assertEqual(response.status_code, HTTPStatus.FOUND)
-        user = auth.get_user(self.client)
-        self.assertTrue(user.is_authenticated)
-
-    def test_login_with_invalid_credentials(self):
-        response = self.client.post(self.path, {'username': 'swagerfeed', 'password': 'swagerfeed1234'})
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        user = auth.get_user(self.client)
-        self.assertFalse(user.is_authenticated)
 
 
 class ResetPasswordViewTestCase(BaseViewTestCase):

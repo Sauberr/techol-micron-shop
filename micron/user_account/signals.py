@@ -1,9 +1,9 @@
 from django.db.models.signals import post_delete, post_save
+from user_account.models.profile import Profile
+from user_account.models.user import User
 
-from .models import Profile, User
 
-
-def profile_create(sender, instance, created, **kwargs):
+def profile_create(sender, instance, created, **kwargs) -> None:
     if created:
         user = instance
         profile = Profile.objects.create(
@@ -17,7 +17,7 @@ def profile_create(sender, instance, created, **kwargs):
         )
 
 
-def update_profile(sender, instance, created, **kwargs):
+def update_profile(sender, instance, created, **kwargs) -> None:
     profile = instance
     user = profile.user
 
@@ -31,7 +31,7 @@ def update_profile(sender, instance, created, **kwargs):
         user.save()
 
 
-def delete_profile(sender, instance, **kwargs):
+def delete_profile(sender, instance, **kwargs) -> None:
     try:
         user = instance.user
         user.delete()

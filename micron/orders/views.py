@@ -11,7 +11,8 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 
 from .forms import OrderCreateForm
-from .models import Order, OrderItem
+from orders.models.order import Order
+from orders.models.order_item import OrderItem
 from .tasks import order_created
 
 
