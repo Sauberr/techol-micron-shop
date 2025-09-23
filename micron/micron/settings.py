@@ -59,6 +59,7 @@ DOMAIN_NAME = env("DOMAIN_NAME")
 # Application definition
 
 INSTALLED_APPS: Tuple[str, ...] = (
+    # Local apps
     "jazzmin",
     "django_ckeditor_5",
     "django.contrib.admin",
@@ -72,7 +73,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "django.contrib.humanize",
     "social_django",
 
-
+    # Third party apps
     "rest_framework",
     "rest_framework.authtoken",
     "captcha",
@@ -82,7 +83,9 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "rosetta",
     "parler",
     "taggit",
+    "drf_spectacular",
 
+    # My apps
     "products.apps.ProductsConfig",
     "user_account.apps.UserAccountConfig",
     "cart.apps.CartConfig",
@@ -338,6 +341,8 @@ REST_FRAMEWORK: Dict[str, ...] = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 
+    "EXCEPTION_HANDLER": "api.custom_exceptions.custom_exception_handler",
+
     "DEFAULT+FILTER_BACKENDS": [
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
@@ -351,7 +356,7 @@ REST_FRAMEWORK: Dict[str, ...] = {
     "DEFAULT_VERSION": "v1",
     "ALLOWED_VERSIONS": ["v1", "v2"],
     "VERSION_PARAM": "version",
-    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_METADATA_CLASS": "rest_framework.metadata.SimpleMetadata",
     "DEFAULT_CONTENT_NEGOTIATION_CLASS": "rest_framework.negotiation.DefaultContentNegotiation",
 
@@ -424,6 +429,15 @@ SIMPLE_JWT: Dict[str, ...] = {
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+}
+
+# drf-spectacular settings
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Micron API',
+    'DESCRIPTION': 'API documentation for Micron project',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 # Jazzmin settings

@@ -6,6 +6,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import include, path
 from django.utils.translation import gettext_lazy as _
 from payment import webhooks
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = i18n_patterns(
     path("i18n/", include("django.conf.urls.i18n")),
@@ -22,8 +23,6 @@ urlpatterns = i18n_patterns(
     path("captcha/", include("captcha.urls")),
     # Social account
     path("social-auth/", include("social_django.urls", namespace="social")),
-    # Orders App
-    path(_("orders/"), include("orders.urls", namespace="orders")),
     # Payment App
     path(_("payment/"), include("payment.urls", namespace="payment")),
     # Coupons App
@@ -50,10 +49,23 @@ urlpatterns = i18n_patterns(
     path("api/<str:version>/auth/", include("djoser.urls.authtoken")),
     # Shop API
     path("api/<str:version>/", include("api.urls", namespace="api")),
+    # Swagger
+    path("api/<str:version>/schema/", SpectacularAPIView.as_view(), name="schema"),
+    # Optional UI:
+    path(
+        "api/<str:version>/schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "api/<str:version>/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
+    ),
     # Add rosetta
     path("rosetta/", include("rosetta.urls")),
     # Add CKEditor
-    path("ckeditor5/", include('django_ckeditor_5.urls')),
+    path("ckeditor5/", include("django_ckeditor_5.urls")),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [
