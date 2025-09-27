@@ -104,7 +104,7 @@
                                             {% endif %}
                                         </div>
 
-                                        <form action="{% url 'products:add_to_favorites' product.id %}" method="post">
+                                        <form class="favorite-product-form" action="{% url 'products:add_to_favorites' product.id %}" method="post">
                                             {% csrf_token %}
                                             <button type="submit" class="favorite-btn">
                                                 <i class="fa-solid fa-heart fa-beat"></i>
@@ -213,5 +213,9 @@
     </script>
 
     {% include 'footer.html' %}
+
+<script src="{% static 'js/cookie.js' %}"></script>
+<script src="{% static 'js/ajax/add-to-favorite-product.js' %}"></script>
+<script src="{% static 'js/show-messages.js' %}"></script>
 
 {% endblock %}

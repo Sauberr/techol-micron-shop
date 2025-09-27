@@ -10,6 +10,7 @@ from products.models.review import Review
 @admin.register(Category)
 class CategoryAdmin(TranslatableAdmin):
     list_display = ["name", "slug"]
+    readonly_fields = ["created_at", "updated_at"]
 
     def get_prepopulated_fields(self, request, obj=None):
         return {"slug": ("name",)}
@@ -34,13 +35,14 @@ class ProductAdmin(TranslatableAdmin):
         "quantity",
         "available",
         "discount",
-        "created",
-        "updated",
+        "created_at",
+        "updated_at",
     ]
-    list_filter = ["available", "created", "updated"]
+    list_filter = ["available", "created_at", "updated_at"]
     list_editable = ["price", "available"]
     list_display_links = ("name", "thumbnail", "slug")
     inlines = [ProductImageInline]
+    readonly_fields = ["created_at", "updated_at"]
 
     def get_prepopulated_fields(self, request, obj=None):
         return {"slug": ("name",)}
@@ -50,5 +52,6 @@ class ProductAdmin(TranslatableAdmin):
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ("user", "product", "stars", "text", "created_at")
     fields = ("user", "product", "stars", "text",)
-    readonly_fields = ("created_at",)
+    readonly_fields = ("created_at", "updated_at")
+
 

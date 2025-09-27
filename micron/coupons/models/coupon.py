@@ -4,8 +4,10 @@ from faker import Faker
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+from common.model import TimeStampedModel
 
-class Coupon(models.Model):
+
+class Coupon(TimeStampedModel):
     code = models.CharField(max_length=50, unique=True, help_text=_("Unique coupon code (for example: SAVE20, SUMMER2024)"))
     valid_from = models.DateTimeField(help_text=_("Start date and time when the coupon becomes valid"))
     valid_to = models.DateTimeField(help_text=_("End date and time when the coupon expires"))

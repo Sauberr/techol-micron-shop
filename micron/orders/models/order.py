@@ -7,20 +7,20 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from common.model import TimeStampedModel
+
 STATUS = (
     ("paid", _("Paid")),
     ("unpaid", _("Unpaid")),
 )
 
-class Order(models.Model):
+class Order(TimeStampedModel):
     first_name = models.CharField(_("first_name"), max_length=50)
     last_name = models.CharField(_("last_name"), max_length=50)
     email = models.EmailField(_("email"))
     address = models.CharField(_("address"), max_length=250)
     postal_code = models.CharField(_("postal_code"), max_length=20)
     city = models.CharField(_("city"), max_length=100)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
     paid = models.CharField(choices=STATUS, max_length=10, default="unpaid")
     stripe_id = models.CharField(max_length=250, blank=True)
     coupon = models.ForeignKey(
@@ -35,10 +35,7 @@ class Order(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
-        ordering = ["-created"]
-        indexes = [
-            models.Index(fields=["-created"]),
-        ]
+        ordering = ["-created_at", "-updated_at"]
 
     def __str__(self) -> str:
         return f"Order {self.id}"

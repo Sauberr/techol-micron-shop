@@ -90,7 +90,7 @@ class UserProfileForm(UserChangeForm):
 
     class Meta:
         model = Profile
-        fields = ("first_name", "last_name", "image", "username", "email", "is_email_verified", "created_at")
+        fields = ("first_name", "last_name", "image", "username", "email", "is_email_verified")
 
 
 class UserUpdateForm(forms.ModelForm):

@@ -6,12 +6,14 @@ from django_ckeditor_5.fields import CKEditor5Field
 from faker import Faker
 from parler.models import TranslatableModel, TranslatedFields
 from taggit.managers import TaggableManager
+
+from common.model import TimeStampedModel
 from products.models.category import Category
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
 
-class Product(TranslatableModel):
+class Product(TimeStampedModel, TranslatableModel):
     translations = TranslatedFields(
         name=models.CharField(
             max_length=200,
@@ -77,19 +79,8 @@ class Product(TranslatableModel):
         blank=True,
         help_text=_("Product tags for categorization")
     )
-    created = models.DateTimeField(
-        auto_now_add=True,
-        help_text=_("Date and time when product was created")
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-        help_text=_("Date and time when product was last updated")
-    )
 
     class Meta:
-        indexes = [
-            models.Index(fields=["-created"]),
-        ]
         verbose_name = "product"
         verbose_name_plural = "products"
 

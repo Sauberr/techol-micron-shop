@@ -75,12 +75,13 @@ class OrderAdmin(admin.ModelAdmin):
         "postal_code",
         "city",
         "paid",
-        "created",
-        "updated",
+        "created_at",
+        "updated_at",
         order_detail,
         order_pdf,
     ]
-    list_filter = ["paid", "created", "updated"]
+    list_filter = ["paid", "created_at", "updated_at"]
     inlines = [OrderItemInLine]
     actions = [export_to_csv]
     list_display_links = ("id", "first_name", "last_name", "email")
+    readonly_fields = ["created_at", "updated_at"]

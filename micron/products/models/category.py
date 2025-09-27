@@ -3,8 +3,10 @@ from django.urls import reverse
 from faker import Faker
 from parler.models import TranslatableModel, TranslatedFields
 
+from common.model import TimeStampedModel
 
-class Category(TranslatableModel):
+
+class Category(TimeStampedModel, TranslatableModel):
     translations = TranslatedFields(
         name=models.CharField(max_length=200, help_text="Category name"),
         slug=models.SlugField(max_length=200, unique=True, help_text="Category slug"),

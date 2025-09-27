@@ -3,11 +3,13 @@ from django.db import models
 
 from django_ckeditor_5.fields import CKEditor5Field
 from faker import Faker
+
+from common.model import TimeStampedModel
 from user_account.models import User
 from products.models.product import Product
 
 
-class Review(models.Model):
+class Review(TimeStampedModel):
     STARS_CHOICES = (
         (1, "★☆☆☆☆"),
         (2, "★★☆☆☆"),
@@ -20,14 +22,10 @@ class Review(models.Model):
     product = models.ForeignKey("Product", on_delete=models.CASCADE)
     stars = models.IntegerField(choices=STARS_CHOICES)
     text = CKEditor5Field(config_name='extends')
-    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "review"
         verbose_name_plural = "reviews"
-        indexes = [
-            models.Index(fields=["-created_at"]),
-        ]
 
     def __str__(self):
         return f"{self.user}"

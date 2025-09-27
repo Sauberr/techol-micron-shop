@@ -47,6 +47,6 @@ class ProfileAdmin(admin.ModelAdmin):
             )
         else:
             return 'No Image'
-    list_display = ("user", "first_name", "last_name", "email", "thumbnail", 'is_email_verified', 'created_at')
+    list_display = ("user", "first_name", "last_name", "email", "thumbnail", "is_email_verified", "created_at", "updated_at")
     list_display_links = ("user", "first_name", "email")
     fields = ("user", "first_name", "username", "last_name", "email", "image", "is_email_verified", 'created_at')
