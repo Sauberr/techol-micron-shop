@@ -1,4 +1,4 @@
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 
 from coupons.forms import CouponApplyForm
 from django.shortcuts import get_object_or_404, redirect, render
@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from products.models import Product
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
+from http import HTTPStatus
 
 from .cart import Cart
 from .forms import CartAddProductForm
@@ -55,39 +56,112 @@ def cart_summary(request: HttpRequest):
 def cart_add(request: HttpRequest, product_id: int):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
     if product.quantity == 0:
+        if is_ajax:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": str(_("Product is out of stock")),
+                    "message_type": "error",
+                },
+                status=HTTPStatus.BAD_REQUEST,
+            )
         messages.error(request, _("Product is out of stock"))
         return redirect(product.get_absolute_url())
 
     form = CartAddProductForm(request.POST)
+    if not form.is_valid():
+        if is_ajax:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": str(_("Invalid form data")),
+                    "message_type": "error",
+                },
+                status=HTTPStatus.BAD_REQUEST,
+            )
+        messages.error(request, _("Invalid form data"))
+        return redirect(product.get_absolute_url())
 
-    if form.is_valid():
-        cd = form.cleaned_data
-        quantity = cd["quantity"]
+    quantity = form.cleaned_data["quantity"]
+    if quantity > product.quantity:
+        if is_ajax:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": str(_("Not enough stock available")),
+                    "message_type": "error",
+                },
+                status=HTTPStatus.BAD_REQUEST,
+            )
+        messages.error(request, _("Not enough stock available"))
+        return redirect(product.get_absolute_url())
 
-        if quantity > product.quantity:
-            messages.error(request, _("Not enough stock available"))
-            return redirect(product.get_absolute_url())
+    cart.add(
+        product=product,
+        quantity=quantity,
+        override_quantity=form.cleaned_data["override"],
+    )
 
-        cart.add(
-            product=product,
-            quantity=cd["quantity"],
-            override_quantity=cd["override"]
+    if is_ajax:
+        return JsonResponse(
+            {
+                "success": True,
+                "message": str(_("Product added to cart successfully")),
+                "message_type": "success",
+                "cart_total": len(cart),
+                "subtotal": str(cart.get_total_price()),
+                "total_bonus_points": str(cart.get_total_bonus_points()),
+                "total_after_discount": str(cart.get_total_price_after_discount())
+                if cart.coupon else None,
+            }
         )
-    return redirect("cart:cart_summary")
+
+    messages.success(request, _("Product added to cart successfully"))
+    return redirect(product.get_absolute_url())
 
 
 @require_POST
 def cart_remove(request: HttpRequest, product_id: int):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
     cart.remove(product)
+
+    if is_ajax:
+        return JsonResponse(
+            {
+                "success": True,
+                "message": str(_("Product removed from cart successfully")),
+                "message_type": "success",
+                "cart_total": len(cart),
+            }
+        )
+    messages.success(request, _("Product removed from cart successfully"))
+
     return redirect("cart:cart_summary")
 
 
 @require_POST
 def cart_clear(request: HttpRequest):
     cart = Cart(request)
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+    if is_ajax:
+        cart.clear()
+        return JsonResponse(
+            {
+                "success": True,
+                "message": str(_("Cart cleared successfully")),
+                "message_type": "success",
+                "cart_total": 0,
+            }
+        )
+
+    messages.success(request, _("Cart cleared successfully"))
+
     cart.clear()
     return redirect("cart:cart_summary")
