@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
 from orders.models import Order
 from http import HTTPStatus
+from django.db import transaction
 
 from .tasks import payment_completed
 
@@ -27,12 +28,26 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
         session = event.data.object
         if session.mode == "payment" and session.payment_status == "paid":
             try:
-                order = Order.objects.get(id=session.client_reference_id)
+                with transaction.atomic():
+                    try:
+                        order = Order.objects.get(
+                            id=session.client_reference_id
+                        )
+                    except Order.DoesNotExist:
+                        return HttpResponse(status=HTTPStatus.BAD_REQUEST)
+
+                    if order.paid == "paid":
+                        return HttpResponse(status=HTTPStatus.OK)
+
+                    order.paid = "paid"
+                    order.stripe_id = session.payment_intent
+                    order.save()
+
+                    transaction.on_commit(lambda: payment_completed.delay(order.id))
+
             except Order.DoesNotExist:
                 return HttpResponse(status=HTTPStatus.BAD_REQUEST)
-            order.paid = "paid"
-            order.stripe_id = session.payment_intent
-            order.save()
-            payment_completed.delay(order.id)
+            except Exception:
+                return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
     return HttpResponse(status=HTTPStatus.OK)

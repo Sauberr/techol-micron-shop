@@ -1,4 +1,6 @@
 import weasyprint
+from django.db import transaction
+
 from cart.cart import Cart
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
@@ -21,58 +23,64 @@ def order_create(request: HttpRequest):
     cart = Cart(request)
 
     try:
-        shipping = Order.objects.filter(user=request.user.id).latest("created")
+        shipping = Order.objects.filter(user=request.user.id).latest("created_at")
     except Order.DoesNotExist:
         shipping = None
 
     if request.method == "POST":
         form = OrderCreateForm(request.POST)
         if form.is_valid():
-            order = form.save(commit=False)
-            order.user = request.user
-            if cart.coupon:
-                order.coupon = cart.coupon
-                order.discount = cart.coupon.discount
+            try:
+                with transaction.atomic():
+                    order = form.save(commit=False)
+                    order.user = request.user
+                    if cart.coupon:
+                        order.coupon = cart.coupon
+                        order.discount = cart.coupon.discount
 
-            order.bonus_points = cart.get_total_bonus_points()
+                    order.bonus_points = cart.get_total_bonus_points()
+                    order.save()
 
-            order.save()
+                    for item in cart:
+                        product = item["product"]
+                        quantity = item["quantity"]
 
-            for item in cart:
+                        if product.quantity < quantity:
+                            messages.error(
+                                request,
+                                _(
+                                    "Sorry, only {0} units of {1} are available now. Please update your cart."
+                                ).format(product.quantity, product.name),
+                            )
+                            raise ValueError(_("Insufficient product quantity"))
 
-                product = item['product']
-                quantity = item['quantity']
+                        product.quantity -= quantity
+                        product.save()
 
-                if product.quantity < quantity:
-                    messages.error(
-                        request,
-                        _(
-                            "Sorry, only {0} units of {1} are available now. Please update your cart."
-                        ).format(product.quantity, product.name),
-                    )
+                        OrderItem.objects.create(
+                            order=order,
+                            product=item["product"],
+                            price=item["price"],
+                            quantity=item["quantity"],
+                            user=request.user,
+                        )
 
-                    order.delete()
-                    return redirect("cart:cart_summary")
+                cart.clear()
+                order_created.delay(order.id)
+                request.session["order_id"] = order.id
+                return redirect(reverse("payment:process"))
 
-                product.quantity -= quantity
-                product.save()
-
-                OrderItem.objects.create(
-                    order=order,
-                    product=item["product"],
-                    price=item["price"],
-                    quantity=item["quantity"],
-                    user=request.user,
+            except (ValueError, Exception):
+                messages.error(
+                    request, _("An error occurred while processing your order.")
                 )
-            cart.clear()
-            order_created.delay(order.id)
-            request.session["order_id"] = order.id
-            return redirect(reverse("payment:process"))
+                return redirect("cart:cart_summary")
     else:
         if shipping:
             form = OrderCreateForm(instance=shipping)
         else:
             form = OrderCreateForm()
+
     return render(request, "orders/order/checkout.html", {"cart": cart, "form": form})
 
 
@@ -98,7 +106,7 @@ def admin_order_pdf(request: HttpRequest, order_id: int):
 
 @login_required(login_url=reverse_lazy("user_account:login"))
 def orders(request: HttpRequest):
-    orders = Order.objects.filter(user=request.user).order_by("-created")
+    orders = Order.objects.filter(user=request.user).order_by("-created_at")
     return render(
         request, "orders/order/orders.html", {"orders": orders, "title": "| Orders"}
     )
