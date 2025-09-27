@@ -1,4 +1,4 @@
-from api.views import CategoryModelViewSet, OrderModelViewSet, ProductModelViewSet
+from api.views import CategoryModelViewSet, OrderModelViewSet, ProductModelViewSet, UserModelViewSet
 from django.urls import include, path
 from rest_framework import routers
 from rest_framework_simplejwt.views import (
@@ -14,6 +14,7 @@ router = routers.DefaultRouter()
 router.register(r"categories", CategoryModelViewSet, basename="categories")
 router.register(r"products", ProductModelViewSet, basename="products")
 router.register(r"orders", OrderModelViewSet, basename="orders")
+router.register(r"users", UserModelViewSet, basename="users")
 
 urlpatterns = [
     path("", include(router.urls)),

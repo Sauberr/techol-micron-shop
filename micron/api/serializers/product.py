@@ -21,6 +21,7 @@ class ProductSerializer(TranslatableModelSerializer):
         queryset=Category.objects.all()
     )
     reviews = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -30,3 +31,6 @@ class ProductSerializer(TranslatableModelSerializer):
         reviews = obj.review_set.all()
         serializer = ReviewSerializer(reviews, many=True)
         return serializer.data
+
+    def get_tags(self, obj):
+        return [tag.name for tag in obj.tags.all()]

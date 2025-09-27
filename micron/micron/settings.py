@@ -84,6 +84,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "parler",
     "taggit",
     "drf_spectacular",
+    "django_filters",
 
     # My apps
     "products.apps.ProductsConfig",
@@ -208,6 +209,7 @@ USE_TZ: bool = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 CRISPY_TEMPLATE_PACK: str = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS: str = "bootstrap5"
 
 STATIC_URL: str = "/static/"
 
@@ -343,9 +345,10 @@ REST_FRAMEWORK: Dict[str, ...] = {
 
     "EXCEPTION_HANDLER": "api.custom_exceptions.custom_exception_handler",
 
-    "DEFAULT+FILTER_BACKENDS": [
+    "DEFAULT_FILTER_BACKENDS": [
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
+        "django_filters.rest_framework.DjangoFilterBackend",
     ],
 
     "SEARCH_PARAM": "search",
