@@ -1,6 +1,7 @@
 import logging
 
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
+from django.views.decorators.http import require_POST
 
 from cart.forms import CartAddProductForm
 from django.contrib import messages
@@ -208,13 +209,36 @@ def list_category(request: HttpRequest, category_slug=None):
 
 
 @login_required
+@require_POST
 def add_to_favorite(request: HttpRequest, product_id: int):
     try:
         product = Product.objects.get(pk=product_id)
+
+        if request.user.favorite_products.filter(pk=product_id).exists():
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": f"{product.name} is already in favorites!",
+                    "message_type": "info",
+                    "already_favorited": True,
+                }
+            )
+
         request.user.favorite_products.add(product)
+        return JsonResponse(
+            {
+                "success": True,
+                "message": f"{product.name} added to favorites!",
+                "message_type": "success",
+            }
+        )
+
     except Product.DoesNotExist:
-        pass
-    return redirect("products:products")
+        return JsonResponse({
+            "success": False,
+            "message": "Product not found",
+            "message_type": "error",
+        })
 
 
 @login_required

@@ -493,15 +493,12 @@ var i,
 	pseudos = ":(" + identifier + ")(?:\\((" +
 
 		"('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|" +
-
-		// 2. simple (capture 6)
+)
 		"((?:\\\\.|[^\\\\()[\\]]|" + attributes + ")*)|" +
-
-		// 3. anything else (capture 2)
+)
 		".*" +
 		")\\)|)",
 
-	// Leading and non-escaped trailing whitespace, capturing some non-whitespace characters preceding the latter
 	rwhitespace = new RegExp( whitespace + "+", "g" ),
 	rtrim = new RegExp( "^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" +
 		whitespace + "+$", "g" ),
@@ -557,24 +554,17 @@ var i,
 	fcssescape = function( ch, asCodePoint ) {
 		if ( asCodePoint ) {
 
-			// U+0000 NULL becomes U+FFFD REPLACEMENT CHARACTER
 			if ( ch === "\0" ) {
 				return "\uFFFD";
 			}
 
-			// Control characters and (dependent upon position) numbers get escaped as code points
 			return ch.slice( 0, -1 ) + "\\" +
 				ch.charCodeAt( ch.length - 1 ).toString( 16 ) + " ";
 		}
 
-		// Other potentially-special ASCII characters get backslash-escaped
 		return "\\" + ch;
 	},
 
-	// Used for iframes
-	// See setDocument()
-	// Removing the function wrapper causes a "Permission Denied"
-	// error in IE
 	unloadHandler = function() {
 		setDocument();
 	},
@@ -586,32 +576,24 @@ var i,
 		{ dir: "parentNode", next: "legend" }
 	);
 
-// Optimize for push.apply( _, NodeList )
 try {
 	push.apply(
 		( arr = slice.call( preferredDoc.childNodes ) ),
 		preferredDoc.childNodes
 	);
 
-	// Support: Android<4.0
-	// Detect silently failing push.apply
-	// eslint-disable-next-line no-unused-expressions
 	arr[ preferredDoc.childNodes.length ].nodeType;
 } catch ( e ) {
 	push = { apply: arr.length ?
 
-		// Leverage slice if possible
 		function( target, els ) {
 			pushNative.apply( target, slice.call( els ) );
 		} :
 
-		// Support: IE<9
-		// Otherwise append directly
 		function( target, els ) {
 			var j = target.length,
 				i = 0;
 
-			// Can't trust NodeList.length
 			while ( ( target[ j++ ] = els[ i++ ] ) ) {}
 			target.length = j - 1;
 		}
@@ -622,39 +604,29 @@ function Sizzle( selector, context, results, seed ) {
 	var m, i, elem, nid, match, groups, newSelector,
 		newContext = context && context.ownerDocument,
 
-		// nodeType defaults to 9, since context defaults to document
 		nodeType = context ? context.nodeType : 9;
 
 	results = results || [];
 
-	// Return early from calls with invalid selector or context
 	if ( typeof selector !== "string" || !selector ||
 		nodeType !== 1 && nodeType !== 9 && nodeType !== 11 ) {
 
 		return results;
 	}
 
-	// Try to shortcut find operations (as opposed to filters) in HTML documents
 	if ( !seed ) {
 		setDocument( context );
 		context = context || document;
 
 		if ( documentIsHTML ) {
 
-			// If the selector is sufficiently simple, try using a "get*By*" DOM method
-			// (excepting DocumentFragment context, where the methods don't exist)
 			if ( nodeType !== 11 && ( match = rquickExpr.exec( selector ) ) ) {
 
-				// ID selector
 				if ( ( m = match[ 1 ] ) ) {
 
-					// Document context
 					if ( nodeType === 9 ) {
 						if ( ( elem = context.getElementById( m ) ) ) {
 
-							// Support: IE, Opera, Webkit
-							// TODO: identify versions
-							// getElementById can match elements by name instead of ID
 							if ( elem.id === m ) {
 								results.push( elem );
 								return results;
@@ -663,12 +635,8 @@ function Sizzle( selector, context, results, seed ) {
 							return results;
 						}
 
-					// Element context
 					} else {
 
-						// Support: IE, Opera, Webkit
-						// TODO: identify versions
-						// getElementById can match elements by name instead of ID
 						if ( newContext && ( elem = newContext.getElementById( m ) ) &&
 							contains( context, elem ) &&
 							elem.id === m ) {
@@ -678,12 +646,10 @@ function Sizzle( selector, context, results, seed ) {
 						}
 					}
 
-				// Type selector
 				} else if ( match[ 2 ] ) {
 					push.apply( results, context.getElementsByTagName( selector ) );
 					return results;
 
-				// Class selector
 				} else if ( ( m = match[ 3 ] ) && support.getElementsByClassName &&
 					context.getElementsByClassName ) {
 
@@ -692,37 +658,23 @@ function Sizzle( selector, context, results, seed ) {
 				}
 			}
 
-			// Take advantage of querySelectorAll
 			if ( support.qsa &&
 				!nonnativeSelectorCache[ selector + " " ] &&
 				( !rbuggyQSA || !rbuggyQSA.test( selector ) ) &&
 
-				// Support: IE 8 only
-				// Exclude object elements
 				( nodeType !== 1 || context.nodeName.toLowerCase() !== "object" ) ) {
 
 				newSelector = selector;
 				newContext = context;
 
-				// qSA considers elements outside a scoping root when evaluating child or
-				// descendant combinators, which is not what we want.
-				// In such cases, we work around the behavior by prefixing every selector in the
-				// list with an ID selector referencing the scope context.
-				// The technique has to be used as well when a leading combinator is used
-				// as such selectors are not recognized by querySelectorAll.
-				// Thanks to Andrew Dupont for this technique.
 				if ( nodeType === 1 &&
 					( rdescend.test( selector ) || rcombinators.test( selector ) ) ) {
 
-					// Expand context for sibling selectors
 					newContext = rsibling.test( selector ) && testContext( context.parentNode ) ||
 						context;
 
-					// We can use :scope instead of the ID hack if the browser
-					// supports it & if we're not changing the context.
 					if ( newContext !== context || !support.scope ) {
 
-						// Capture the context ID, setting it first if necessary
 						if ( ( nid = context.getAttribute( "id" ) ) ) {
 							nid = nid.replace( rcssescape, fcssescape );
 						} else {
@@ -730,7 +682,6 @@ function Sizzle( selector, context, results, seed ) {
 						}
 					}
 
-					// Prefix every selector in the list
 					groups = tokenize( selector );
 					i = groups.length;
 					while ( i-- ) {
@@ -756,22 +707,13 @@ function Sizzle( selector, context, results, seed ) {
 		}
 	}
 
-	// All others
 	return select( selector.replace( rtrim, "$1" ), context, results, seed );
 }
 
-/**
- * Create key-value caches of limited size
- * @returns {function(string, object)} Returns the Object data after storing it on itself with
- *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
- *	deleting the oldest entry
- */
 function createCache() {
 	var keys = [];
 
 	function cache( key, value ) {
-
-		// Use (key + " ") to avoid collision with native prototype properties (see Issue #157)
 		if ( keys.push( key + " " ) > Expr.cacheLength ) {
 
 			// Only keep the most recent entries
@@ -1695,25 +1637,19 @@ Expr = Sizzle.selectors = {
 				return null;
 			}
 
-			// Accept quoted arguments as-is
 			if ( match[ 3 ] ) {
 				match[ 2 ] = match[ 4 ] || match[ 5 ] || "";
 
-			// Strip excess characters from unquoted arguments
 			} else if ( unquoted && rpseudo.test( unquoted ) &&
 
-				// Get excess from tokenize (recursively)
 				( excess = tokenize( unquoted, true ) ) &&
 
-				// advance to the next closing parenthesis
 				( excess = unquoted.indexOf( ")", unquoted.length - excess ) - unquoted.length ) ) {
 
-				// excess is a negative index
 				match[ 0 ] = match[ 0 ].slice( 0, excess );
 				match[ 2 ] = unquoted.slice( 0, excess );
 			}
 
-			// Return only captures needed by the pseudo filter method (type and argument)
 			return match.slice( 0, 3 );
 		}
 	},
@@ -1818,17 +1754,11 @@ Expr = Sizzle.selectors = {
 
 						start = [ forward ? parent.firstChild : parent.lastChild ];
 
-						// non-xml :nth-child(...) stores cache data on `parent`
 						if ( forward && useCache ) {
 
-							// Seek `elem` from a previously-cached index
-
-							// ...in a gzip-friendly way
 							node = parent;
 							outerCache = node[ expando ] || ( node[ expando ] = {} );
 
-							// Support: IE <9 only
-							// Defend against cloned attroperties (jQuery gh-1709)
 							uniqueCache = outerCache[ node.uniqueID ] ||
 								( outerCache[ node.uniqueID ] = {} );
 
@@ -1851,7 +1781,6 @@ Expr = Sizzle.selectors = {
 
 						} else {
 
-							// Use previously-cached element index if available
 							if ( useCache ) {
 
 								// ...in a gzip-friendly way
