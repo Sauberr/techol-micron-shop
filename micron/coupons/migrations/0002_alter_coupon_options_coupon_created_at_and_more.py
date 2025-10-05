@@ -20,7 +20,6 @@ class Migration(migrations.Migration):
             field=models.DateTimeField(
                 auto_now_add=True,
                 db_index=True,
-                default="exit",
                 help_text="Date and time when product was created",
             ),
             preserve_default=False,

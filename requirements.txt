@@ -27,10 +27,12 @@ django-crispy-forms==2.3
 django-debug-toolbar==4.4.6
 django-environ==0.11.2
 django-extensions==3.2.3
+django-filter==25.1
 django-jazzmin==3.0.1
 django-js-asset==3.0.1
 django-multiselectfield==0.1.13
 django-parler==2.3
+django-parler-rest==2.2
 django-ranged-response==0.2.0
 django-redis==5.4.0
 django-rosetta==0.10.1
@@ -56,11 +58,12 @@ MarkupSafe==3.0.2
 matplotlib-inline==0.1.7
 oauthlib==3.2.2
 parso==0.8.4
-parso==0.8.4
+pexpect==4.9.0
 pillow==11.1.0
 polib==1.2.0
 prompt_toolkit==3.0.48
 psycopg2-binary==2.9.10
+ptyprocess==0.7.0
 pure_eval==0.2.3
 pycparser==2.22
 pydyf==0.11.0
