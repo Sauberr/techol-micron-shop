@@ -1,16 +1,26 @@
-FROM python:3.11
+FROM python:3.12-slim
 
-RUN apt update
-RUN mkdir /micron
+WORKDIR /app
 
-WORKDIR /micron
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgdk-pixbuf2.0-0 \
+    libcairo2 \
+    fonts-liberation \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY ./micron ./micron
-COPY ./commands ./commands
+RUN groupadd -r micron && useradd -r -g micron micron
 
-COPY ./requirements.txt ./requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN python -m pip install --upgrade pip
-RUN pip install -r ./requirements.txt
+COPY ./micron .
 
-CMD ["bash"]
+RUN chown -R micron:micron /app
+USER micron
+
+EXPOSE 8000
+
+CMD ["gunicorn", "micron.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4"]

@@ -1,112 +1,108 @@
-version: "3"
-
 services:
-  backend:
-    build: ./
-    container_name: micron_container
-    working_dir: /micron
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - 8000:8000
+  web:
+    build: .
+    container_name: micron_web
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             gunicorn micron.wsgi:application --bind 0.0.0.0:8000 --workers 4"
     volumes:
-      - ./micron:/micron/micron
-      - static_content:/micron/micron/static
-      - media_content:/micron/micron/media
+      - static_volume:/app/staticfiles
+      - media_volume:/app/static/images
+    expose:
+      - 8000
     env_file:
-      - .env
+      - ./micron/.env
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: micron_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_volume:/app/staticfiles:ro
+      - media_volume:/app/static/images:ro
+    depends_on:
+      - web
+    restart: unless-stopped
 
   postgres:
-    image: postgres:15
-    ports:
-      - 5432:5432
+    image: postgres:16-alpine
+    container_name: micron_postgres
     volumes:
-      - pg_data:/var/lib/postgresql/data
-    env_file:
-      - .env
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-micron_db}
+      POSTGRES_USER: ${POSTGRES_USER:-micron_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-micron_password}
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-micron_user} -d ${POSTGRES_DB:-micron_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   pgadmin:
-    container_name: pgadmin_container
     image: dpage/pgadmin4
-    restart: always
-    env_file:
-      - .env
+    container_name: micron_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
     ports:
-      - 5000:80
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - "5050:80"
     depends_on:
       - postgres
+    restart: unless-stopped
 
   redis:
-    image: redis
-    env_file:
-      - .env
-    restart: on-failure
-    depends_on:
-      - backend
+    image: redis:7-alpine
+    container_name: micron_redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
 
   celery:
-    build: ./
-    command: celery -A micron.celery.app worker -l info
-    restart: always
+    build: .
+    container_name: micron_celery
+    command: celery -A micron worker -l INFO
     volumes:
-      - ./micron:/micron/micron
+      - static_volume:/app/staticfiles
+      - media_volume:/app/static/images
     env_file:
-      - .env
-    working_dir: /micron/micron
+      - ./micron/.env
     depends_on:
-      - redis
-      - backend
-
-  celerybeat:
-    build: ./
-    command: celery -A micron.celery.app beat -l info -S django
-    restart: always
-    volumes:
-      - ./micron:/micron/micron
-    env_file:
-      - .env
-    working_dir: /micron/micron
-    depends_on:
-      - redis
-      - backend
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
 
   flower:
-    build: ./
-    command: celery -A micron.celery.app flower
-    restart: always
-    volumes:
-      - ./micron:/micron/micron
-    env_file:
-      - .env
+    build: .
+    container_name: micron_flower
+    command: celery -A micron flower --port=5555
     ports:
-      - 5556:5555
+      - "5555:5555"
+    env_file:
+      - ./micron/.env
     depends_on:
       - redis
-      - backend
-
-  redisadmin:
-    image: redislabs/redisinsight
-    container_name: redisadmin
-    restart: on-failure
-    ports:
-      - 8001:8001
-    env_file: .env
-
-  redisadminold:
-    image: rediscommander/redis-commander:latest
-    container_name: redisadminold
-    hostname: redisadminold
-    restart: always
-    ports:
-      - 8092:8081
-    env_file:
-      - .env
+      - celery
+    restart: unless-stopped
 
 volumes:
-  static_content: {}
-  media_content: {}
-  pg_data: {}
-  pgadmin_data: {}
+  postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:
