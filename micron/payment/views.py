@@ -15,6 +15,8 @@ stripe.api_version = settings.STRIPE_API_VERSION
 
 
 def payment_process(request: HttpRequest):
+    """Process payment via Stripe checkout session."""
+
     order_id = request.session.get("order_id", None)
     order = get_object_or_404(Order, id=order_id)
     if request.method == "POST":
@@ -52,10 +54,14 @@ def payment_process(request: HttpRequest):
 
 
 class SuccessTemplateView(TitleMixin, TemplateView):
+    """Display payment success confirmation page."""
+
     template_name = "payment/completed.html"
     title = "Payment Success"
 
 
 class CanceledTemplateView(TitleMixin, TemplateView):
+    """Display payment cancellation page."""
+
     template_name = "payment/canceled.html"
     title = "Payment Canceled"

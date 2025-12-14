@@ -13,6 +13,8 @@ from .forms import CartAddProductForm
 
 
 def cart_summary(request: HttpRequest):
+    """Display shopping cart with items, quantities and coupon form."""
+
     cart = Cart(request)
     cart_updated = False
 
@@ -54,6 +56,8 @@ def cart_summary(request: HttpRequest):
 
 @require_POST
 def cart_add(request: HttpRequest, product_id: int):
+    """Add product to cart with stock validation (supports AJAX)."""
+
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
@@ -106,18 +110,18 @@ def cart_add(request: HttpRequest, product_id: int):
     )
 
     if is_ajax:
-        return JsonResponse(
-            {
-                "success": True,
-                "message": str(_("Product added to cart successfully")),
-                "message_type": "success",
-                "cart_total": len(cart),
-                "subtotal": str(cart.get_total_price()),
-                "total_bonus_points": str(cart.get_total_bonus_points()),
-                "total_after_discount": str(cart.get_total_price_after_discount())
-                if cart.coupon else None,
-            }
-        )
+        response_data = {
+            "success": True,
+            "message": str(_("Cart updated successfully")),
+            "message_type": "success",
+            "cart_total": len(cart),
+            "subtotal": str(cart.get_total_price()),
+            "total_bonus_points": str(cart.get_total_bonus_points()),
+        }
+        if cart.coupon:
+            response_data["discount"] = str(cart.get_discount())
+            response_data["total_after_discount"] = str(cart.get_total_price_after_discount())
+        return JsonResponse(response_data)
 
     messages.success(request, _("Product added to cart successfully"))
     return redirect(product.get_absolute_url())
@@ -125,6 +129,8 @@ def cart_add(request: HttpRequest, product_id: int):
 
 @require_POST
 def cart_remove(request: HttpRequest, product_id: int):
+    """Remove product from cart (supports AJAX)."""
+
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
@@ -147,6 +153,8 @@ def cart_remove(request: HttpRequest, product_id: int):
 
 @require_POST
 def cart_clear(request: HttpRequest):
+    """Remove all items from cart (supports AJAX)."""
+
     cart = Cart(request)
     is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 

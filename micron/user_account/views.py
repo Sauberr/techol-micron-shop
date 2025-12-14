@@ -31,6 +31,8 @@ from user_account.models.profile import Profile
 
 
 class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
+    """Handle user authentication and login with remember me option."""
+
     model = get_user_model()
     template_name = "user_account/login.html"
     form_class = UserLoginForm
@@ -39,6 +41,7 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
     success_url = reverse_lazy("products:products")
 
     def form_valid(self, form):
+        """Process valid login form and handle remember me functionality."""
         remember_me = form.cleaned_data["remember_me"]
         if not remember_me:
             self.request.session.set_expiry(0)
@@ -48,6 +51,8 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
 
 @login_required
 def profile(request: HttpRequest, profile_id: int):
+    """Display and update user profile information."""
+
     profile = get_object_or_404(Profile, id=profile_id)
     user = profile.user
 
@@ -65,6 +70,8 @@ def profile(request: HttpRequest, profile_id: int):
 
 @login_required
 def manage_shipping(request: HttpRequest):
+    """Manage user shipping address and delivery preferences."""
+
     try:
         shipping = Order.objects.filter(user=request.user.id).latest("created")
     except Order.DoesNotExist:
@@ -84,6 +91,8 @@ def manage_shipping(request: HttpRequest):
 
 @login_required
 def profile_management(request: HttpRequest):
+    """Update user profile settings and preferences."""
+
     user_form = UserUpdateForm(instance=request.user.profile)
     if request.method == "POST":
         user_form = UserUpdateForm(request.POST, instance=request.user.profile)
@@ -96,6 +105,8 @@ def profile_management(request: HttpRequest):
 
 @login_required
 def delete_account(request: HttpRequest):
+    """Permanently delete user account and all associated data."""
+
     user = get_object_or_404(get_user_model(), id=request.user.id)
     if request.method == "POST":
         messages.success(request, _("Your account was successfully deleted"))
@@ -106,6 +117,8 @@ def delete_account(request: HttpRequest):
 
 
 class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
+    """Handle new user registration and account creation."""
+
     model = get_user_model()
     form_class = UserRegistrationForm
     template_name = "user_account/registration/registration.html"
@@ -115,6 +128,8 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
 
 
 class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
+    """Send password reset email to user."""
+
     template_name = "user_account/password/password_reset.html"
     email_template_name = "user_account/password/password_reset_email.txt"
     subject_template_name = "user_account/password/password_reset_subject.html"
@@ -129,6 +144,8 @@ class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
 
 
 class ChangePasswordView(TitleMixin, SuccessMessageMixin, PasswordChangeView):
+    """Allow authenticated user to change their password."""
+
     template_name = "user_account/password/password_change.html"
     form_class = PasswordChangingForm
     success_message = _("Your password was successfully changed")
@@ -137,10 +154,14 @@ class ChangePasswordView(TitleMixin, SuccessMessageMixin, PasswordChangeView):
 
 
 class EmailVerificationView(TitleMixin, TemplateView):
+    """Verify user email address via confirmation link."""
+
     title = "| Email Verification"
     template_name = "user_account/registration/email_verification.html"
 
     def get(self, request, *args, **kwargs):
+        """Validate email verification code and activate user email."""
+
         code = kwargs["code"]
         user = get_user_model().objects.get(email=kwargs["email"])
         email_verifications = EmailVerification.objects.filter(user=user, code=code)
@@ -156,6 +177,8 @@ class EmailVerificationView(TitleMixin, TemplateView):
 
 
 def logout(request: HttpRequest) -> HttpResponseRedirect:
+    """Log out user and clear session data."""
+
     try:
         for key in list(request.session.keys()):
             if key == "session_key":
@@ -170,6 +193,8 @@ def logout(request: HttpRequest) -> HttpResponseRedirect:
 
 
 def contact(request: HttpRequest):
+    """Handle contact form submission and save user messages."""
+
     form = ContactForm()
     if request.method == "POST":
         form = ContactForm(request.POST)

@@ -19,6 +19,8 @@ from .serializers.user import UserSerializer
 
 
 class CategoryModelViewSet(ModelViewSet):
+    """API endpoint for CRUD operations on product categories."""
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnly, IsAuthenticated)
@@ -26,6 +28,8 @@ class CategoryModelViewSet(ModelViewSet):
 
 
 class ProductModelViewSet(ModelViewSet):
+    """API endpoint for CRUD operations on products."""
+
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (IsAdminOrReadOnly, IsAuthenticated)
@@ -34,6 +38,8 @@ class ProductModelViewSet(ModelViewSet):
 
 
 class UserModelViewSet(ModelViewSet):
+    """API endpoint for CRUD operations on users (admin only for write)."""
+
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAdminOrReadOnly, IsAuthenticated)
@@ -42,6 +48,8 @@ class UserModelViewSet(ModelViewSet):
 
 
 class OrderModelViewSet(ModelViewSet):
+    """API endpoint for CRUD operations on orders."""
+
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = (IsAdminOrReadOnly, IsAuthenticated)

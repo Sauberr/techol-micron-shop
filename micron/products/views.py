@@ -6,7 +6,7 @@ from django.views.decorators.http import require_POST
 from cart.forms import CartAddProductForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg, Case, DecimalField, F, Max, Min, When
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404, redirect, render
 from products.models.category import Category
 from products.models.product import Product
@@ -16,6 +16,13 @@ from taggit.models import Tag
 from django.utils.translation import gettext_lazy as _
 from .forms import ReviewForm
 from .recommender import Recommender
+from .utils.filters import (
+    apply_ordering,
+    filter_by_discount,
+    filter_by_price_range,
+    get_price_range,
+    get_user_favorite_ids,
+)
 from .utils.pagination import paginate_products
 from .utils.search import search_products
 
@@ -23,6 +30,8 @@ logger = logging.getLogger("main")
 
 
 def index(request: HttpRequest):
+    """Render homepage with featured products and reviews."""
+
     products, search_query = search_products(request)
     reviews = Review.objects.all()
     context = {
@@ -35,106 +44,46 @@ def index(request: HttpRequest):
 
 
 def products(request: HttpRequest):
+    """Display product listing with filters, sorting and pagination."""
+
     logger.info("products")
-    products, search_query = search_products(request)
 
     discount = request.GET.get("discount")
     order = request.GET.get("order")
     min_price = request.GET.get("min_price")
     max_price = request.GET.get("max_price")
 
-    if discount in ["true", "false"]:
-        products = products.filter(discount=(discount == "true"))
+    products_qs, search_query = search_products(request)
+    products_qs = filter_by_discount(products_qs, discount)
+    products_qs = filter_by_price_range(products_qs, min_price, max_price)
+    products_qs = apply_ordering(products_qs, order)
 
-    if min_price and max_price:
-        try:
-            min_price = float(min_price)
-            max_price = float(max_price)
-            products = products.annotate(
-                effective_price=Case(
-                    When(
-                        discount=True,
-                        price_with_discount__isnull=False,
-                        then=F('price_with_discount')
-                    ),
-                    default=F('price'),
-                    output_field=DecimalField()
-                )
-            ).filter(
-                effective_price__gte=min_price,
-                effective_price__lte=max_price
-            )
-        except (ValueError, TypeError):
-            pass
+    custom_range, products_qs = paginate_products(request, products_qs, 6)
+    favorite_ids = get_user_favorite_ids(request.user)
 
-    order_fields = {
-        "price": "price",
-        "-price": "-price",
-        "date": "created",
-        "-date": "-created",
-    }
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        html = render(request, "products/ajax/products_list.html", {
+            "products": products_qs,
+            "custom_range": custom_range,
+            "favorite_ids": favorite_ids,
+        }).content.decode('utf-8')
+        return JsonResponse({"success": True, "html": html})
 
-    if order in order_fields:
-        if 'price' in order_fields[order]:
-            products = products.annotate(
-                effective_price=Case(
-                    When(
-                        discount=True,
-                        price_with_discount__isnull=False,
-                        then=F('price_with_discount')
-                    ),
-                    default=F('price'),
-                    output_field=DecimalField()
-                )
-            )
-
-            if order == '-price':
-                products = products.order_by('-effective_price')
-            else:
-                products = products.order_by('effective_price')
-        else:
-            products = products.order_by(order_fields[order])
-
-    price_range = products.aggregate(
-        min_price=Min(
-            Case(
-                When(
-                    discount=True,
-                    price_with_discount__isnull=False,
-                    then='price_with_discount'
-                ),
-                default='price',
-                output_field=DecimalField()
-            )
-        ),
-        max_price=Max(
-            Case(
-                When(
-                    discount=True,
-                    price_with_discount__isnull=False,
-                    then='price_with_discount'
-                ),
-                default='price',
-                output_field=DecimalField()
-            )
-        )
-    )
-
-    custom_range, products = paginate_products(request, products, 6)
+    price_range = get_price_range()
     context = {
         "title": "| Products",
-        "products": products,
+        "products": products_qs,
         "search_query": search_query,
         "custom_range": custom_range,
-        "min_price": float(price_range['min_price'] or 0),
-        "max_price": float(price_range['max_price'] or 1000),
-        "selected_min_price": min_price or price_range['min_price'] or 0,
-        "selected_max_price": max_price or price_range['max_price'] or 1000,
+        "favorite_ids": favorite_ids,
+        **price_range,
     }
     return render(request, "products/products.html", context)
 
 
 def product_detail(request: HttpRequest, product_slug: str):
+    """Display single product details with reviews and recommendations."""
+
     language = request.LANGUAGE_CODE
     try:
         product = Product.objects.get(
@@ -178,6 +127,8 @@ def product_detail(request: HttpRequest, product_slug: str):
 
 
 def tag_list(request: HttpRequest, tag_slug=None):
+    """Filter and display products by tag."""
+
     products = Product.objects.all().order_by("-id")
 
     tag = None
@@ -191,6 +142,8 @@ def tag_list(request: HttpRequest, tag_slug=None):
 
 
 def list_category(request: HttpRequest, category_slug=None):
+    """Display products filtered by category with translation support."""
+
     if category_slug:
         language = request.LANGUAGE_CODE
         category = get_object_or_404(
@@ -211,6 +164,8 @@ def list_category(request: HttpRequest, category_slug=None):
 @login_required
 @require_POST
 def add_to_favorite(request: HttpRequest, product_id: int):
+    """Add product to user favorites via AJAX."""
+
     try:
         product = Product.objects.get(pk=product_id)
 
@@ -243,6 +198,8 @@ def add_to_favorite(request: HttpRequest, product_id: int):
 
 @login_required
 def favorite_products(request: HttpRequest):
+    """Display list of user favorite products."""
+
     if request.user.is_authenticated:
         favorite_products = request.user.favorite_products.all()
         context = {
@@ -256,6 +213,8 @@ def favorite_products(request: HttpRequest):
 
 @login_required
 def delete_from_favorites(request: HttpRequest, product_id: int):
+    """Remove product from user favorites."""
+
     try:
         product = Product.objects.get(pk=product_id)
         request.user.favorite_products.remove(product)
@@ -266,6 +225,8 @@ def delete_from_favorites(request: HttpRequest, product_id: int):
 
 @login_required
 def add_review(request: HttpRequest, product_id: int):
+    """Create new product review (one per user per product)."""
+
     product = get_object_or_404(Product, id=product_id)
 
     existing_review = Review.objects.filter(user=request.user, product=product).first()
@@ -292,6 +253,8 @@ def add_review(request: HttpRequest, product_id: int):
 
 @login_required
 def delete_review(request: HttpRequest, review_id: int):
+    """Delete user's own product review."""
+
     review = get_object_or_404(Review, id=review_id)
 
     if request.user != review.user:
@@ -305,6 +268,8 @@ def delete_review(request: HttpRequest, review_id: int):
 
 @login_required
 def update_review(request: HttpRequest, review_id: int):
+    """Update user's own product review."""
+
     review = get_object_or_404(Review, id=review_id)
 
     if request.user != review.user:

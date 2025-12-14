@@ -20,6 +20,7 @@ from .tasks import order_created
 
 @login_required(login_url=reverse_lazy("user_account:login"))
 def order_create(request: HttpRequest):
+    """Create new order from cart items with stock validation."""
     cart = Cart(request)
 
     try:
@@ -87,6 +88,7 @@ def order_create(request: HttpRequest):
 @login_required(login_url=reverse_lazy("user_account:login"))
 @staff_member_required
 def admin_order_detail(request: HttpRequest, order_id: int):
+    """Display order details in admin panel (staff only)."""
     order = get_object_or_404(Order, id=order_id)
     return render(request, "admin/orders/order/detail.html", {"order": order})
 
@@ -94,6 +96,7 @@ def admin_order_detail(request: HttpRequest, order_id: int):
 @login_required(login_url=reverse_lazy("user_account:login"))
 @staff_member_required
 def admin_order_pdf(request: HttpRequest, order_id: int):
+    """Generate PDF invoice for order (staff only)."""
     order = get_object_or_404(Order, id=order_id)
     html = render_to_string("orders/order/pdf.html", {"order": order})
     response = HttpResponse(content_type="application/pdf")
@@ -106,6 +109,7 @@ def admin_order_pdf(request: HttpRequest, order_id: int):
 
 @login_required(login_url=reverse_lazy("user_account:login"))
 def orders(request: HttpRequest):
+    """Display list of user orders sorted by date."""
     orders = Order.objects.filter(user=request.user).order_by("-created_at")
     return render(
         request, "orders/order/orders.html", {"orders": orders, "title": "| Orders"}
@@ -114,6 +118,7 @@ def orders(request: HttpRequest):
 
 @login_required(login_url=reverse_lazy("user_account:login"))
 def delete_order(request: HttpRequest, order_id: int):
+    """Delete user order by ID."""
     order = get_object_or_404(Order, id=order_id)
     order.delete()
     return redirect("orders:orders")
@@ -121,6 +126,7 @@ def delete_order(request: HttpRequest, order_id: int):
 
 @login_required(login_url=reverse_lazy("user_account:login"))
 def detail_order(request: HttpRequest, order_id: int):
+    """Display detailed order information with items."""
     order = get_object_or_404(Order, id=order_id)
     detail_order = OrderItem.objects.filter(user=request.user, order=order)
     return render(
