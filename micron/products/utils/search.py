@@ -7,6 +7,8 @@ from products.models.product import Product
 
 
 def search_products(request: HttpRequest) -> tuple[Product, str]:
+    """Search products by name containing the search query."""
+
     search_query = ""
     if request.GET.get("search_query"):
         search_query = request.GET["search_query"]

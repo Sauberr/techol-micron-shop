@@ -1,9 +1,17 @@
 function updateCartTotals(response) {
-        $('.total-section .d-flex:contains("Subtotal:") span:last-child').text('$' + response.subtotal);
+    // Update subtotal
+    $('#cart-subtotal').text('$' + response.subtotal);
 
-        $('.total-section .me-1').text(response.total_bonus_points);
+    // Update bonus points
+    $('#cart-bonus-points').text(response.total_bonus_points);
 
-        if (response.total_after_discount) {
-            $('.total-amount').text('$' + response.total_after_discount);
-        }
+    // Update discount if coupon applied
+    if (response.discount) {
+        $('#discount-amount').text('– $' + response.discount);
     }
+
+    // Update total after discount
+    if (response.total_after_discount) {
+        $('#cart-total').text('$' + response.total_after_discount);
+    }
+}

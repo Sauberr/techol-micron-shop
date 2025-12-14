@@ -1,0 +1,58 @@
+{% load i18n %}
+{% load static humanize %}
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+    {% for product in products %}
+        <div class="col">
+            <div class="product-card card">
+                {% if product.discount %}
+                    <div class="sale-badge badge position-absolute" style="top: 1rem; right: 1rem">
+                        {% trans 'Sale' %}
+                    </div>
+                {% endif %}
+
+                <div class="product-image-wrapper">
+                    <a href="{{ product.get_absolute_url }}">
+                        <img class="product-image" src="{{ product.image.url }}"
+                             alt="{{ product.name }}"/>
+                    </a>
+                </div>
+
+                <div class="card-body text-center">
+                    <a href="{{ product.get_absolute_url }}" class="text-decoration-none">
+                        <h5 class="product-title">{{ product.name|capfirst }}</h5>
+                    </a>
+
+                    <div class="price-section">
+                        {% if product.discount %}
+                            <span class="original-price">${{ product.price|intcomma }}</span>
+                            <span class="discounted-price">${{ product.price_with_discount|intcomma }}</span>
+                        {% else %}
+                            <span class="discounted-price">${{ product.price|intcomma }}</span>
+                        {% endif %}
+                    </div>
+
+                    {% if product.id not in favorite_ids %}
+                        <form class="favorite-product-form" action="{% url 'products:add_to_favorites' product.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="favorite-btn">
+                                <i class="fa-solid fa-heart fa-beat"></i>
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    <a href="{{ product.get_absolute_url }}"
+                       class="detail-btn text-decoration-none">
+                        {% trans 'More detail' %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">{% trans 'No products found matching your criteria.' %}</p>
+        </div>
+    {% endfor %}
+</div>
+
+{% include 'pagination.html' with queryset=products custom_range=custom_range %}

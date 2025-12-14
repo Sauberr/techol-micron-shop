@@ -4,6 +4,8 @@ from products.models.product import Product
 
 
 def paginate_products(request: HttpRequest, products: Product, results) -> tuple[range, Page]:
+    """Paginate products queryset."""
+
     page = request.GET.get("page")
     paginator = Paginator(products, results)
     try:

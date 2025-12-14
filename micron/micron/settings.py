@@ -571,3 +571,11 @@ sentry_sdk.init(
     dsn="https://e549dfbc552e81ce8984800090e73f96@o4505772443172864.ingest.us.sentry.io/4506842888601600",
     enable_tracing=True,
 )
+
+# Celery
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
