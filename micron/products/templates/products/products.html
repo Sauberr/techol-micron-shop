@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load static humanize cache %}
+{% load static %}
 
 {% block title %} {{ title }} {% endblock %}
 
@@ -22,15 +22,17 @@
     <section class="py-5">
         <div class="container">
             <div class="filter-section">
-                <form method="get" class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div id="filter-form" class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                     <div class="form-group price-range-group">
                         <label class="mb-2">Price Range:</label>
                         <div class="range-container">
                             <div class="range-track"></div>
                             <div class="range-input">
-                                <input type="range" id="min_range" name="min_price" class="price-range min-price"
-                                       step="0.01">
-                                <input type="range" id="max_range" name="max_price" class="price-range max-price"
+                                <input type="range" id="min_range" class="price-range min-price"
+                                       step="0.01"
+                                       data-min-price="{{ min_price }}"
+                                       data-max-price="{{ max_price }}">
+                                <input type="range" id="max_range" class="price-range max-price"
                                        step="0.01">
                             </div>
                         </div>
@@ -43,7 +45,7 @@
                     <div class="other-filters d-flex gap-3">
                         <div class="form-group">
                             <label for="discount" class="mb-2">Discount:</label>
-                            <select name="discount" id="discount" class="form-select">
+                            <select id="discount" class="form-select">
                                 <option value="">All</option>
                                 <option value="true">Discounted</option>
                                 <option value="false">Not discounted</option>
@@ -52,7 +54,7 @@
 
                         <div class="form-group">
                             <label for="order" class="mb-2">Order by:</label>
-                            <select name="order" id="order" class="form-select">
+                            <select id="order" class="form-select">
                                 <option value="price">Price (Low to High)</option>
                                 <option value="-price">Price (High to Low)</option>
                                 <option value="date">New to Old</option>
@@ -60,162 +62,26 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <button type="submit" class="filter-btn" id="price-filter-btn">
-                                <i class="fas fa-filter me-2"></i> Filter
-                            </button>
-                            <button type="button" class="reset-btn ms-2" id="reset-filter-btn">
+                        <div class="form-group d-flex align-items-end">
+                            <button type="button" class="reset-btn" id="reset-filter-btn">
                                 <i class="fas fa-undo me-2"></i> Reset
                             </button>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="product-grid">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-                    {% cache 3 in products %}
-                        {% for product in products %}
-                            <div class="col">
-                                <div class="product-card card">
-                                    {% if product.discount %}
-                                        <div class="sale-badge badge position-absolute" style="top: 1rem; right: 1rem">
-                                            {% trans 'Sale' %}
-                                        </div>
-                                    {% endif %}
-
-                                    <div class="product-image-wrapper">
-                                        <a href="{{ product.get_absolute_url }}">
-                                            <img class="product-image" src="{{ product.image.url }}"
-                                                 alt="{{ product.name }}"/>
-                                        </a>
-                                    </div>
-
-                                    <div class="card-body text-center">
-                                        <a href="{{ product.get_absolute_url }}" class="text-decoration-none">
-                                            <h5 class="product-title">{{ product.name|capfirst }}</h5>
-                                        </a>
-
-                                        <div class="price-section">
-                                            {% if product.discount %}
-                                                <span class="original-price">${{ product.price|intcomma }}</span>
-                                                <span class="discounted-price">${{ product.price_with_discount|intcomma }}</span>
-                                            {% else %}
-                                                <span class="discounted-price">${{ product.price|intcomma }}</span>
-                                            {% endif %}
-                                        </div>
-
-                                        <form class="favorite-product-form" action="{% url 'products:add_to_favorites' product.id %}" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="favorite-btn">
-                                                <i class="fa-solid fa-heart fa-beat"></i>
-                                            </button>
-                                        </form>
-
-                                        <a href="{{ product.get_absolute_url }}"
-                                           class="detail-btn text-decoration-none">
-                                            {% trans 'More detail' %}
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endcache %}
                 </div>
             </div>
-
-            {% include 'pagination.html' with queryset=products custom_range=custom_range %}
+            <div class="product-grid" id="product-grid">
+                {% include 'products/ajax/products_list.html' %}
+            </div>
         </div>
     </section>
 
     <hr>
 
-    <script>
-        $(document).ready(function () {
-            const minRange = document.getElementById('min_range');
-            const maxRange = document.getElementById('max_range');
-            const minLabel = document.getElementById('min_price_label');
-            const maxLabel = document.getElementById('max_price_label');
-            const resetBtn = document.getElementById('reset-filter-btn');
-
-            const initialMinPrice = parseFloat('{{ min_price|escapejs }}') || 0;
-            const initialMaxPrice = parseFloat('{{ max_price|escapejs }}') || 1000;
-            const globalMinPrice = initialMinPrice;
-            const globalMaxPrice = initialMaxPrice;
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const selectedMinPrice = parseFloat(urlParams.get('min_price')) || initialMinPrice;
-            const selectedMaxPrice = parseFloat(urlParams.get('max_price')) || initialMaxPrice;
-
-            function initializeSliders(min = globalMinPrice, max = globalMaxPrice, value_min = selectedMinPrice, value_max = selectedMaxPrice) {
-                minRange.min = min;
-                minRange.max = max;
-                maxRange.min = min;
-                maxRange.max = max;
-
-                minRange.value = value_min;
-                maxRange.value = value_max;
-
-                updatePriceLabels();
-            }
-
-            function updatePriceLabels() {
-                const minValue = parseFloat(minRange.value);
-                const maxValue = parseFloat(maxRange.value);
-
-                minLabel.textContent = minValue.toFixed(2);
-                maxLabel.textContent = maxValue.toFixed(2);
-
-                const percent1 = ((minValue - minRange.min) / (minRange.max - minRange.min)) * 100;
-                const percent2 = ((maxValue - minRange.min) / (minRange.max - minRange.min)) * 100;
-
-                $('.range-track').css('background',
-                    `linear-gradient(to right,
-            #ddd ${percent1}%,
-            #212529 ${percent1}%,
-            #212529 ${percent2}%,
-            #ddd ${percent2}%)`
-                );
-            }
-
-            minRange.addEventListener('input', function () {
-                const minValue = parseFloat(this.value);
-                const maxValue = parseFloat(maxRange.value);
-
-                if (minValue > maxValue) {
-                    this.value = maxValue;
-                }
-                updatePriceLabels();
-            });
-
-            maxRange.addEventListener('input', function () {
-                const maxValue = parseFloat(this.value);
-                const minValue = parseFloat(minRange.value);
-
-                if (maxValue < minValue) {
-                    this.value = minValue;
-                }
-                updatePriceLabels();
-            });
-
-            resetBtn.addEventListener('click', function () {
-                initializeSliders();
-
-
-                const url = new URL(window.location.href);
-                url.searchParams.delete('min_price');
-                url.searchParams.delete('max_price');
-
-                window.location.href = url.toString();
-            });
-
-            initializeSliders();
-        });
-    </script>
-
     {% include 'footer.html' %}
 
 <script src="{% static 'js/cookie.js' %}"></script>
-<script src="{% static 'js/ajax/add-to-favorite-product.js' %}"></script>
 <script src="{% static 'js/show-messages.js' %}"></script>
+<script src="{% static 'js/ajax/filter-products.js' %}"></script>
 
 {% endblock %}

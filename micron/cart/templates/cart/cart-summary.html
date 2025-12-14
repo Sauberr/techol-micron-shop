@@ -49,15 +49,11 @@
                                                     {{ product.name }}
                                                 </a>
                                                 <div class="quantity-control">
-                                                    <form class="update-cart-form" id="inputQuantity"
+                                                    <form class="update-cart-form"
                                                           action="{% url 'cart:cart_add' product.id %}" method="post">
                                                         {% csrf_token %}
                                                         {{ item.update_quantity_form.quantity }}
                                                         {{ item.update_quantity_form.override }}
-                                                        <button type="submit" class="update-btn"
-                                                                style="margin-top: 10px;">
-                                                            <i class="fas fa-sync-alt me-2"></i>Update
-                                                        </button>
                                                     </form>
                                                     <form class="delete-from-cart-form" action="{% url 'cart:cart_remove' product.id %}"
                                                           method="post">
@@ -76,30 +72,33 @@
                     </div>
 
                     <div class="cart-summary">
-                        <div class="coupon-section">
-                            {% if cart.coupon %}
-                                <div class="coupon-badge">
-                                    <span class="coupon-code">{{ cart.coupon.code }}</span>
-                                    <span>({{ cart.coupon.discount }}% off)</span>
-                                    <div class="discount-amount">– ${{ cart.get_discount|floatformat:2 }}</div>
-                                </div>
-                                <form method="POST" action="{% url 'coupons:remove' %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="delete-btn">Remove Coupon</button>
-                                </form>
-                            {% else %}
-                                <form action="{% url 'coupons:apply' %}" method="post" class="d-flex gap-2">
-                                    {% csrf_token %}
-                                    {{ coupon_apply_form.code }}
-                                    <button class="update-btn" type="submit">Apply Coupon</button>
-                                </form>
-                            {% endif %}
-                        </div>
+<div class="coupon-section"
+     data-apply-url="{% url 'coupons:apply' %}"
+     data-remove-url="{% url 'coupons:remove' %}">
+    {% if cart.coupon %}
+        <div class="coupon-badge">
+            <span class="coupon-code">{{ cart.coupon.code }}</span>
+            <span>({{ cart.coupon.discount }}% off)</span>
+            <div class="discount-amount" id="discount-amount">– ${{ cart.get_discount|floatformat:2 }}</div>
+        </div>
+        <form method="POST" action="{% url 'coupons:remove' %}" id="coupon-remove-form">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn">Remove Coupon</button>
+        </form>
+    {% else %}
+        <form action="{% url 'coupons:apply' %}" method="post" class="d-flex gap-2" id="coupon-apply-form">
+            {% csrf_token %}
+            {{ coupon_apply_form.code }}
+            <button class="update-btn" type="submit">Apply Coupon</button>
+        </form>
+    {% endif %}
+</div>
+
 
                         <div class="total-section">
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Subtotal:</span>
-                                <span>${{ cart.get_total_price|intcomma }}</span>
+                                <span id="cart-subtotal">${{ cart.get_total_price|intcomma }}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Subtotal bonus points:</span>
@@ -108,15 +107,13 @@
                                          width="16px"
                                          height="16px"
                                          alt="micron points">
-                                    <span class="me-1">{{ cart.get_total_bonus_points|intcomma }}</span>
+                                    <span class="me-1" id="cart-bonus-points">{{ cart.get_total_bonus_points|intcomma }}</span>
                                 </div>
                             </div>
-                            {% if cart.coupon %}
-                                <div class="d-flex justify-content-between">
-                                    <span>Total:</span>
-                                    <span class="total-amount">${{ cart.get_total_price_after_discount|floatformat:2 }}</span>
-                                </div>
-                            {% endif %}
+                            <div class="d-flex justify-content-between" id="cart-total-row" {% if not cart.coupon %}style="display: none;"{% endif %}>
+                                <span>Total:</span>
+                                <span class="total-amount" id="cart-total">${{ cart.get_total_price_after_discount|floatformat:2 }}</span>
+                            </div>
                         </div>
 
                         <div class="action-buttons">
@@ -141,13 +138,16 @@
 
     {% include 'footer.html' %}
 
-<script src="{% static 'js/ajax/remove-from-cart.js' %}"></script>
-<script src="{% static 'js/update-cart-total.js' %}"></script>
-<script src="{% static 'js/ajax/update-cart.js' %}"></script>
+{% endblock %}
+
+{% block scripts %}
 <script src="{% static 'js/cookie.js' %}"></script>
-<script src="{% static 'js/ajax/clear-cart.js' %}"></script>
-<script src="{% static 'js/update-count-goods-in-cart.js' %}"></script>
 <script src="{% static 'js/show-messages.js' %}"></script>
-
-
+<script src="{% static 'js/update-cart-total.js' %}"></script>
+<script src="{% static 'js/update-count-goods-in-cart.js' %}"></script>
+<script src="{% static 'js/ajax/update-cart.js' %}"></script>
+<script src="{% static 'js/ajax/remove-from-cart.js' %}"></script>
+<script src="{% static 'js/ajax/apply-coupon.js' %}"></script>
+<script src="{% static 'js/ajax/remove-coupon.js' %}"></script>
+<script src="{% static 'js/ajax/clear-cart.js' %}"></script>
 {% endblock %}
