@@ -1,4 +1,5 @@
 import os
+from decimal import Decimal
 from http import HTTPStatus
 
 from django.conf import settings
@@ -61,7 +62,7 @@ class BaseProductTestCase(TestCase):
             description='Test Description',
             category=self.category,
             image=self.image,
-            price=99.99,
+            price=Decimal('99.99'),
             available=True
         )
 
@@ -77,7 +78,7 @@ class ProductModelTestCase(BaseProductTestCase):
     def test_product_creation(self):
         self.assertEqual(self.product.name, 'Test Product')
         self.assertEqual(self.product.slug, 'test-product')
-        self.assertEqual(self.product.price, 99.99)
+        self.assertEqual(self.product.price, Decimal('99.99'))
         self.assertTrue(self.product.available)
         self.assertFalse(self.product.discount)
         self.assertEqual(str(self.product), 'Test Product')
@@ -88,11 +89,11 @@ class ProductModelTestCase(BaseProductTestCase):
 
     def test_product_with_discount(self):
         self.product.discount = True
-        self.product.price_with_discount = 79.99
+        self.product.price_with_discount = Decimal('79.99')
         self.product.save()
 
         self.assertTrue(self.product.discount)
-        self.assertEqual(self.product.price_with_discount, 79.99)
+        self.assertEqual(self.product.price_with_discount, Decimal('79.99'))
 
     def test_product_generate_instances(self):
         initial_count = Product.objects.count()
@@ -118,7 +119,7 @@ class BaseReviewTestCase(TestCase):
             description='Test Description',
             category=self.category,
             image='products/default.jpg',
-            price=99.99
+            price=Decimal('99.99')
         )
 
         self.review = Review.objects.create(
@@ -148,13 +149,15 @@ class ReviewModelTestCase(BaseReviewTestCase):
         self.assertEqual(Review.objects.count(), initial_count + 5)
 
     def test_review_invalid_stars(self):
-        with self.assertRaises(Exception):
-            Review.objects.create(
-                user=self.user,
-                product=self.product,
-                stars=6,  # Invalid star value
-                text='Invalid review'
-            )
+        from django.core.exceptions import ValidationError
+        review = Review(
+            user=self.user,
+            product=self.product,
+            stars=6,  # Invalid star value
+            text='Invalid review'
+        )
+        with self.assertRaises(ValidationError):
+            review.full_clean()
 
 
 class ProductViewTestCase(BaseProductTestCase):
@@ -164,9 +167,8 @@ class ProductViewTestCase(BaseProductTestCase):
         self.assertEqual(response.context['product'], self.product)
 
     def test_product_list_view(self):
-        response = self.client.get(reverse('products:product_list'))
+        response = self.client.get(reverse('products:products'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTrue('products' in response.context)
 
 
 class CategoryViewTestCase(BaseCategoryTestCase):

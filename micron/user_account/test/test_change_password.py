@@ -14,6 +14,7 @@ class ChangePasswordViewTestCase(BaseViewTestCase):
     title = '| Change Password'
 
     def setUp(self):
+        super().setUp()
         self.user = User.objects.create_user(username='testuser', password='swagerfeed123')
         self.client.login(username='testuser', password='swagerfeed123')
 

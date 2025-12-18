@@ -107,7 +107,7 @@ class Product(TimeStampedModel, TranslatableModel):
                 name=faker.name(),
                 slug=faker.slug(),
                 description=faker.text(),
-                price=faker.random_int(10, 100),
+                price=Decimal(faker.random_int(10, 100)),
                 image="products/default.jpg",
                 category=Category.objects.first(),
             )
