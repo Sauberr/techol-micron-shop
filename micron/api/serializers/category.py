@@ -14,3 +14,21 @@ class CategorySerializer(TranslatableModelSerializer):
         model = Category
         fields = ("id", "name", "slug")
         read_only_fields = ("id",)
+
+    def validate_slug(self, value) -> str:
+        instance = self.instance
+        language = self.context.get('request').LANGUAGE_CODE if 'request' in self.context else 'en'
+
+        query = Category.objects.filter(
+            translations__slug=value,
+            translations__language_code=language
+        )
+
+        if instance:
+            query = query.exclude(pk=instance.pk)
+
+        if query.exists():
+            raise serializers.ValidationError("Category with this slug already exists.")
+
+        return value
+

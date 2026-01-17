@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
 
 from orders.models import Order
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from products.models.category import Category
 from products.models.product import Product
@@ -26,6 +28,21 @@ class CategoryModelViewSet(ModelViewSet):
     permission_classes = (IsAdminOrReadOnly, IsAuthenticated)
     filterset_class = CategoryFilter
 
+    def get_queryset(self):
+        qs = Category.objects.all()
+        if self.request.query_params.get('show_deleted') == 'true' and self.request.user.is_staff:
+            qs = Category.all_objects.all()
+        return qs
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+    def undelete(self, request, pk=None):
+        category = Category.all_objects.get(pk=pk)
+        if category.deleted:
+            category.undelete()
+            serializer = self.get_serializer(category)
+            return Response({'status': 'restored', 'data': serializer.data})
+        return Response({'status': 'not deleted', 'message': 'Category is not deleted'})
+
 
 class ProductModelViewSet(ModelViewSet):
     """API endpoint for CRUD operations on products."""
@@ -35,6 +52,21 @@ class ProductModelViewSet(ModelViewSet):
     permission_classes = (IsAdminOrReadOnly, IsAuthenticated)
     filterset_class = ProductFilter
     ordering_fields = ["translations__name", "created_at"]
+
+    def get_queryset(self):
+        qs = Product.objects.all()
+        if self.request.query_params.get('show_deleted') == 'true' and self.request.user.is_staff:
+            qs = Product.all_objects.all()
+        return qs
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+    def undelete(self, request, pk=None):
+        product = Product.all_objects.get(pk=pk)
+        if product.deleted:
+            product.undelete()
+            serializer = self.get_serializer(product)
+            return Response({'status': 'restored', 'data': serializer.data})
+        return Response({'status': 'not deleted', 'message': 'Product is not deleted'})
 
 
 class UserModelViewSet(ModelViewSet):
@@ -46,6 +78,21 @@ class UserModelViewSet(ModelViewSet):
     ordering_fields = ["username"]
     filterset_class = UserFilter
 
+    def get_queryset(self):
+        qs = get_user_model().objects.all()
+        if self.request.query_params.get('show_deleted') == 'true' and self.request.user.is_staff:
+            qs = get_user_model().all_objects.all()
+        return qs
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+    def undelete(self, request, pk=None):
+        user = get_user_model().all_objects.get(pk=pk)
+        if user.deleted:
+            user.undelete()
+            serializer = self.get_serializer(user)
+            return Response({'status': 'restored', 'data': serializer.data})
+        return Response({'status': 'not deleted', 'message': 'User is not deleted'})
+
 
 class OrderModelViewSet(ModelViewSet):
     """API endpoint for CRUD operations on orders."""
@@ -55,3 +102,18 @@ class OrderModelViewSet(ModelViewSet):
     permission_classes = (IsAdminOrReadOnly, IsAuthenticated)
     ordering_fields = ["username", "created_at", "first_name", "last_name", "email"]
     filterset_class = OrderFilter
+
+    def get_queryset(self):
+        qs = Order.objects.all()
+        if self.request.query_params.get('show_deleted') == 'true' and self.request.user.is_staff:
+            qs = Order.all_objects.all()
+        return qs
+
+    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+    def undelete(self, request, pk=None):
+        order = Order.all_objects.get(pk=pk)
+        if order.deleted:
+            order.undelete()
+            serializer = self.get_serializer(order)
+            return Response({'status': 'restored', 'data': serializer.data})
+        return Response({'status': 'not deleted', 'message': 'Order is not deleted'})

@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from safedelete.admin import SafeDeleteAdmin, SafeDeleteAdminFilter, highlight_deleted
 from orders.models.order import Order
 from orders.models.order_item import OrderItem
 
@@ -39,6 +40,10 @@ class OrderItemInLine(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ["product"]
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return OrderItem.all_objects.filter(order=self.instance) if hasattr(self, 'instance') else qs
+
 
 def order_stripe_payment(obj):
     url = obj.get_stripe_url()
@@ -65,7 +70,8 @@ order_pdf.short_description = "Invoice"
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(SafeDeleteAdmin):
+    """Order Admin"""
     list_display = [
         "id",
         "first_name",
@@ -79,9 +85,20 @@ class OrderAdmin(admin.ModelAdmin):
         "updated_at",
         order_detail,
         order_pdf,
+        "deleted",
+        highlight_deleted,
     ]
-    list_filter = ["paid", "created_at", "updated_at"]
+    list_filter = ["paid", "created_at", "updated_at", SafeDeleteAdminFilter]
     inlines = [OrderItemInLine]
     actions = [export_to_csv]
     list_display_links = ("id", "first_name", "last_name", "email")
     readonly_fields = ["created_at", "updated_at"]
+
+
+@admin.register(OrderItem)
+class OrderItemAdmin(SafeDeleteAdmin):
+    """OrderItem Admin"""
+    list_display = ("order", "product", "price", "quantity", "deleted")
+    list_filter = (SafeDeleteAdminFilter,)
+    list_select_related = ['order', 'product', 'user']
+

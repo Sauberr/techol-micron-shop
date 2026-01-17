@@ -15,6 +15,7 @@ STATUS = (
 )
 
 class Order(TimeStampedModel):
+    """Order Model"""
     first_name = models.CharField(_("first_name"), max_length=50)
     last_name = models.CharField(_("last_name"), max_length=50)
     email = models.EmailField(_("email"))
@@ -32,10 +33,18 @@ class Order(TimeStampedModel):
     discount = models.IntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     class Meta:
+        verbose_name = _("order")
+        verbose_name_plural = _("orders")
         ordering = ["-created_at", "-updated_at"]
+
 
     def __str__(self) -> str:
         return f"Order {self.id}"
@@ -50,10 +59,10 @@ class Order(TimeStampedModel):
         total_cost = self.get_total_cost_before_discount()
         return total_cost - self.get_discount()
 
-    def get_total_cost_before_discount(self) -> int:
+    def get_total_cost_before_discount(self) -> Decimal:
         return sum(item.get_cost() for item in self.items.all())
 
-    def get_stripe_url(self):
+    def get_stripe_url(self)-> str:
         if not self.stripe_id:
             return ""
         if "_test_" in settings.STRIPE_SECRET_KEY:

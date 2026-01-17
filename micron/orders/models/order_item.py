@@ -2,11 +2,17 @@ from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
+from django.utils.translation import gettext_lazy as _
 
 from django.db import models
+from safedelete.models import SafeDeleteModel
+from safedelete.models import SOFT_DELETE
 
 
-class OrderItem(models.Model):
+class OrderItem(SafeDeleteModel):
+    """Order Item Model"""
+    _safedelete_policy = SOFT_DELETE
+
     order = models.ForeignKey("Order", related_name="items", on_delete=models.CASCADE)
     product = models.ForeignKey(
         "products.Product", related_name="order_items", on_delete=models.CASCADE
@@ -16,8 +22,8 @@ class OrderItem(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
-        verbose_name = "order item"
-        verbose_name_plural = "order items"
+        verbose_name = _("order item")
+        verbose_name_plural = _("order items")
 
     def __str__(self) -> str:
         return str(self.id)

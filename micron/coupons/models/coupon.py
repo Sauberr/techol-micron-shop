@@ -8,7 +8,8 @@ from common.model import TimeStampedModel
 
 
 class Coupon(TimeStampedModel):
-    code = models.CharField(max_length=50, unique=True, help_text=_("Unique coupon code (for example: SAVE20, SUMMER2024)"))
+    """Coupon model"""
+    code = models.CharField(max_length=50, help_text=_("Unique coupon code (for example: SAVE20, SUMMER2024)"))
     valid_from = models.DateTimeField(help_text=_("Start date and time when the coupon becomes valid"))
     valid_to = models.DateTimeField(help_text=_("End date and time when the coupon expires"))
     discount = models.IntegerField(
@@ -18,19 +19,24 @@ class Coupon(TimeStampedModel):
     active = models.BooleanField(default=False, help_text=_("Designates whether this coupon is active"))
 
     class Meta:
-        verbose_name = "coupon"
-        verbose_name_plural = "coupons"
+        verbose_name = _("coupon")
+        verbose_name_plural = _("coupons")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.code
 
-    def clean(self):
+    def clean(self) -> None:
         super().clean()
         if self.valid_to <= self.valid_from:
             raise ValidationError(_("The 'valid_to' date must be after the 'valid_from' date."))
 
+        # Проверяем уникальность кода среди активных (не удалённых) купонов
+        existing_coupon = Coupon.objects.filter(code=self.code).exclude(pk=self.pk)
+        if existing_coupon.exists():
+            raise ValidationError(_("Coupon with this code already exists."))
+
     @classmethod
-    def generate_instances(cls, count: int = 5):
+    def generate_instances(cls, count: int = 5) -> None:
         faker = Faker()
         for _ in range(count):
             cls.objects.create(

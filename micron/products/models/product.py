@@ -9,11 +9,16 @@ from taggit.managers import TaggableManager
 
 from common.model import TimeStampedModel
 from products.models.category import Category
+from products.managers import SafeDeleteTranslatableManager
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
 
 class Product(TimeStampedModel, TranslatableModel):
+    """Product model"""
+
+    objects = SafeDeleteTranslatableManager()
+
     translations = TranslatedFields(
         name=models.CharField(
             max_length=200,
@@ -81,10 +86,10 @@ class Product(TimeStampedModel, TranslatableModel):
     )
 
     class Meta:
-        verbose_name = "product"
-        verbose_name_plural = "products"
+        verbose_name = _("product")
+        verbose_name_plural = _("products")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     def save(self, *args, **kwargs) -> None:

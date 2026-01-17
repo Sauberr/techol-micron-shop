@@ -85,6 +85,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "taggit",
     "drf_spectacular",
     "django_filters",
+    "safedelete",
 
     # My apps
     "products.apps.ProductsConfig",
