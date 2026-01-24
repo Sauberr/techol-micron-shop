@@ -70,13 +70,22 @@ class ProductModelViewSet(ModelViewSet):
 
 
 class UserModelViewSet(ModelViewSet):
-    """API endpoint for CRUD operations on users (admin only for write)."""
+    """API endpoint for CRUD operations on users."""
 
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAdminOrReadOnly, IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     ordering_fields = ["username"]
     filterset_class = UserFilter
+
+    def get_permissions(self):
+        """
+        Instantiate and return the list of permissions that this view requires.
+        List action requires admin, other actions use IsAdminOrReadOnly
+        """
+        if self.action == 'list':
+            return [IsAdminUser()]
+        return [IsAdminOrReadOnly(), IsAuthenticated()]
 
     def get_queryset(self):
         qs = get_user_model().objects.all()
@@ -104,9 +113,20 @@ class OrderModelViewSet(ModelViewSet):
     filterset_class = OrderFilter
 
     def get_queryset(self):
+        """
+        Regular users can only see their own orders.
+        Admins can see all orders.
+        """
         qs = Order.objects.all()
+
+        if not self.request.user.is_staff:
+            qs = qs.filter(user=self.request.user)
+
         if self.request.query_params.get('show_deleted') == 'true' and self.request.user.is_staff:
             qs = Order.all_objects.all()
+            if not self.request.user.is_staff:
+                qs = qs.filter(user=self.request.user)
+
         return qs
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])

@@ -104,7 +104,11 @@ class Cart:
             self.save()
 
     def clear(self) -> None:
-        del self.session[settings.CART_SESSION_ID]
+        self.cart.clear()
+        if settings.CART_SESSION_ID in self.session:
+            del self.session[settings.CART_SESSION_ID]
         if self.coupon_id:
-            del self.session["coupon_id"]
-        self.save()
+            if "coupon_id" in self.session:
+                del self.session["coupon_id"]
+            self.coupon_id = None
+        self.session.modified = True

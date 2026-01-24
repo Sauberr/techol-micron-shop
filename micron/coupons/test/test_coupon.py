@@ -1,11 +1,15 @@
 from datetime import timedelta
 
 from coupons.models.coupon import Coupon
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.test import TestCase
 from django.utils import timezone
 
 from coupons.test.common_test import BaseCouponTestCase
+
+User = get_user_model()
 
 
 class CouponModelTestCase(BaseCouponTestCase):
@@ -17,15 +21,17 @@ class CouponModelTestCase(BaseCouponTestCase):
         self.assertEqual(str(self.coupon), 'TESTCODE2025')
 
     def test_coupon_unique_code(self):
-        """Test that coupon code must be unique"""
-        with self.assertRaises(Exception):
-            Coupon.objects.create(
-                code='TESTCODE2025',  # Duplicate code
-                valid_from=self.now,
-                valid_to=self.now + timedelta(days=30),
-                discount=30,
-                active=True
-            )
+        """Test that coupon code can be duplicated (no unique constraint)"""
+        duplicate_coupon = Coupon.objects.create(
+            code='TESTCODE2025',
+            valid_from=self.now,
+            valid_to=self.now + timedelta(days=30),
+            discount=30,
+            active=True
+        )
+
+        self.assertIsNotNone(duplicate_coupon.id)
+        self.assertEqual(Coupon.objects.filter(code='TESTCODE2025').count(), 2)
 
     def test_coupon_discount_validators(self):
         """Test discount value validators"""

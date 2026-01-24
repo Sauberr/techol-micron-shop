@@ -37,12 +37,16 @@ class Coupon(TimeStampedModel):
 
     @classmethod
     def generate_instances(cls, count: int = 5) -> None:
+        from django.utils import timezone as django_timezone
         faker = Faker()
         for _ in range(count):
+
+            valid_from = django_timezone.make_aware(faker.date_time_this_year())
+            valid_to = django_timezone.make_aware(faker.date_time_this_year())
             cls.objects.create(
                 code=faker.name(),
-                valid_from=faker.date_time_this_year(),
-                valid_to=faker.date_time_this_year(),
+                valid_from=valid_from,
+                valid_to=valid_to,
                 discount=faker.random_int(1, 100),
                 active=faker.boolean(),
             )
