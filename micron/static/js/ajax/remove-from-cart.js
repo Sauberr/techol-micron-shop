@@ -20,6 +20,7 @@ $(document).ready(function() {
                 if (response.success) {
                     showMessage(response.message, response.message_type);
                     updateCartCounter(response.cart_total);
+                    updateCartTotals(response);
                     $form.closest('.cart-item').remove();
 
                     if (response.cart_total === 0) {

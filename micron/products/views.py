@@ -92,19 +92,20 @@ def product_detail(request: HttpRequest, product_slug: str):
             available=True,
         )
     except Product.DoesNotExist:
-        product_in_other_language = get_object_or_404(
-            Product,
-            translations__slug=product_slug,
-            available=True,
-        )
-        product_slug_in_current_language = product_in_other_language.translations.filter(
-            language_code=language).first().slug
-        product = get_object_or_404(
-            Product,
-            translations__language_code=language,
-            translations__slug=product_slug_in_current_language,
-            available=True,
-        )
+        try:
+            product_in_other_language = Product.objects.get(
+                translations__slug=product_slug,
+                available=True,
+            )
+            translation_in_current_language = product_in_other_language.translations.filter(
+                language_code=language
+            ).first()
+
+            if not translation_in_current_language:
+                raise Product.DoesNotExist(f"Product with slug '{product_slug}' has no translation in '{language}'")
+            product = product_in_other_language
+        except Product.DoesNotExist:
+            raise Product.DoesNotExist(f"Product with slug '{product_slug}' not found")
 
     cart_product_form = CartAddProductForm(product=product)
 
