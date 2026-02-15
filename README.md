@@ -86,6 +86,7 @@ This project exemplifies modern e-commerce development practices, offering a dyn
 * Product tags and comments moderation
 * Comprehensive REST API for third-party integrations
 * Multi-language content management
+* SafeDelete implementation - soft delete for products, categories, and reviews to preserve data integrity
 
 ## 🛠️ Local Development
 
