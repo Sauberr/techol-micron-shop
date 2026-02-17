@@ -1,14 +1,13 @@
-import logging
-
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_POST
+from http import HTTPStatus
+import logging
 
 from cart.forms import CartAddProductForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404, redirect, render
-from products.models.category import Category
 from products.models.product import Product
 from products.models.review import Review
 from taggit.models import Tag
@@ -18,6 +17,7 @@ from .forms import ReviewForm
 from .recommender import Recommender
 from .utils.filters import (
     apply_ordering,
+    filter_by_category,
     filter_by_discount,
     filter_by_price_range,
     get_price_range,
@@ -26,7 +26,7 @@ from .utils.filters import (
 from .utils.pagination import paginate_products
 from .utils.search import search_products
 
-logger = logging.getLogger("main")
+logger = logging.getLogger(__name__)
 
 
 def index(request: HttpRequest):
@@ -48,26 +48,34 @@ def products(request: HttpRequest):
 
     logger.info("products")
 
-    discount = request.GET.get("discount")
-    order = request.GET.get("order")
-    min_price = request.GET.get("min_price")
-    max_price = request.GET.get("max_price")
+    try:
+        discount = request.GET.get("discount")
+        order = request.GET.get("order")
+        min_price = request.GET.get("min_price")
+        max_price = request.GET.get("max_price")
+        category_slug = request.GET.get("category")
 
-    products_qs, search_query = search_products(request)
-    products_qs = filter_by_discount(products_qs, discount)
-    products_qs = filter_by_price_range(products_qs, min_price, max_price)
-    products_qs = apply_ordering(products_qs, order)
+        products_qs, search_query = search_products(request)
 
-    custom_range, products_qs = paginate_products(request, products_qs, 6)
-    favorite_ids = get_user_favorite_ids(request.user)
+        products_qs = filter_by_category(products_qs, category_slug, request.LANGUAGE_CODE)
+        products_qs = filter_by_discount(products_qs, discount)
+        products_qs = filter_by_price_range(products_qs, min_price, max_price)
+        products_qs = apply_ordering(products_qs, order)
 
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        html = render(request, "products/ajax/products_list.html", {
-            "products": products_qs,
-            "custom_range": custom_range,
-            "favorite_ids": favorite_ids,
-        }).content.decode('utf-8')
-        return JsonResponse({"success": True, "html": html})
+        custom_range, products_qs = paginate_products(request, products_qs, 5)
+        favorite_ids = get_user_favorite_ids(request.user)
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            html = render(request, "products/ajax/products_list.html", {
+                "products": products_qs,
+                "custom_range": custom_range,
+                "favorite_ids": favorite_ids,
+            }).content.decode('utf-8')
+            return JsonResponse({"success": True, "html": html})
+    except Exception as e:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({"success": False, "error": str(e)}, status=HTTPStatus.BAD_REQUEST)
+        raise
 
     price_range = get_price_range()
     context = {
@@ -140,26 +148,6 @@ def tag_list(request: HttpRequest, tag_slug=None):
     context = {"products": products, "tag": tag, "title": "| Tags"}
 
     return render(request, "products/tag_list.html", context)
-
-
-def list_category(request: HttpRequest, category_slug=None):
-    """Display products filtered by category with translation support."""
-
-    if category_slug:
-        language = request.LANGUAGE_CODE
-        category = get_object_or_404(
-            Category,
-            translations__slug=category_slug,
-        )
-        category_slug_in_new_language = category.translations.filter(language_code=language).first().slug
-        category = get_object_or_404(
-            Category,
-            translations__language_code=language,
-            translations__slug=category_slug_in_new_language,
-        )
-        products = Product.objects.filter(category=category)
-        context = {"products": products, "category": category}
-    return render(request, "products/list_category.html", context)
 
 
 @login_required

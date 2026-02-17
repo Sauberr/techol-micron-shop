@@ -1,0 +1,195 @@
+2026-02-17 22:26:39,637 views INFO main products
+2026-02-17 22:26:48,563 views INFO main products
+2026-02-17 22:31:10,151 views INFO main products
+2026-02-17 22:34:07,378 views INFO main products
+2026-02-17 22:35:06,270 views INFO main products
+2026-02-17 22:35:13,566 views INFO main products
+2026-02-17 22:35:19,238 views INFO main products
+2026-02-17 22:37:46,264 views INFO main products
+2026-02-17 22:37:49,379 views INFO main products
+2026-02-17 22:37:52,766 views INFO main products
+2026-02-17 22:42:57,453 views INFO main products
+2026-02-17 22:43:05,101 views INFO main products
+2026-02-17 22:43:09,928 views INFO main products
+2026-02-17 22:43:09,943 views ERROR main Error in products view: Cannot resolve keyword 'created' into field. Choices are: additional_images, available, bonus_points, category, category_id, created_at, deleted, deleted_by_cascade, discount, effective_price, id, image, order_items, price, price_with_discount, quantity, review, tagged_items, tags, translations, updated_at, user
+Traceback (most recent call last):
+  File "/Users/macbook/techol-micron-shop/micron/products/views.py", line 74, in products
+    products_qs = apply_ordering(products_qs, order)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/macbook/techol-micron-shop/micron/products/utils/filters.py", line 87, in apply_ordering
+    return queryset.order_by(order_map[order])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 1768, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'created' into field. Choices are: additional_images, available, bonus_points, category, category_id, created_at, deleted, deleted_by_cascade, discount, effective_price, id, image, order_items, price, price_with_discount, quantity, review, tagged_items, tags, translations, updated_at, user
+2026-02-17 22:43:29,808 views INFO main products
+2026-02-17 22:43:39,144 views INFO main products
+2026-02-17 22:43:42,448 views INFO main products
+2026-02-17 22:43:42,463 views ERROR main Error in products view: Cannot resolve keyword 'created' into field. Choices are: additional_images, available, bonus_points, category, category_id, created_at, deleted, deleted_by_cascade, discount, effective_price, id, image, order_items, price, price_with_discount, quantity, review, tagged_items, tags, translations, updated_at, user
+Traceback (most recent call last):
+  File "/Users/macbook/techol-micron-shop/micron/products/views.py", line 74, in products
+    products_qs = apply_ordering(products_qs, order)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/macbook/techol-micron-shop/micron/products/utils/filters.py", line 87, in apply_ordering
+    return queryset.order_by(order_map[order])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 1768, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'created' into field. Choices are: additional_images, available, bonus_points, category, category_id, created_at, deleted, deleted_by_cascade, discount, effective_price, id, image, order_items, price, price_with_discount, quantity, review, tagged_items, tags, translations, updated_at, user
+2026-02-17 22:45:03,634 views INFO main products
+2026-02-17 22:45:08,249 views INFO main products
+2026-02-17 22:45:12,128 views INFO main products
+2026-02-17 22:45:12,532 views INFO main products
+2026-02-17 22:45:18,129 views INFO main products
+2026-02-17 22:45:35,692 views INFO main products
+2026-02-17 22:45:43,449 views INFO main products
+2026-02-17 22:46:09,712 views INFO main products
+2026-02-17 22:46:09,713 views INFO main Filters - category: macbook, discount: None, order: price, min_price: 0, max_price: 10000
+2026-02-17 22:46:09,846 views INFO main Products before category filter: 8
+2026-02-17 22:46:09,846 views INFO main Filtering by category: macbook, language: en
+2026-02-17 22:46:09,857 views INFO main Category found: macbook
+2026-02-17 22:46:09,859 views INFO main Products after category filter: 1
+2026-02-17 22:46:15,926 views INFO main products
+2026-02-17 22:46:15,926 views INFO main Filters - category: None, discount: true, order: price, min_price: 249, max_price: 1999
+2026-02-17 22:46:15,952 views INFO main Products before category filter: 8
+2026-02-17 22:46:23,289 views INFO main products
+2026-02-17 22:46:23,290 views INFO main Filters - category: None, discount: true, order: price, min_price: 249, max_price: 1999
+2026-02-17 22:46:23,305 views INFO main Products before category filter: 8
+2026-02-17 22:46:48,970 views INFO main products
+2026-02-17 22:46:48,980 views INFO main Filters - category: None, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:46:49,090 views INFO main Products before category filter: 8
+2026-02-17 22:47:06,638 views INFO main products
+2026-02-17 22:47:06,638 views INFO main Filters - category: None, discount: true, order: price, min_price: 249, max_price: 1999
+2026-02-17 22:47:06,655 views INFO main Products before category filter: 8
+2026-02-17 22:47:19,367 views INFO main products
+2026-02-17 22:47:19,371 views INFO main Filters - category: None, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:47:19,397 views INFO main Products before category filter: 1
+2026-02-17 22:49:09,582 views INFO main products
+2026-02-17 22:49:09,582 views INFO main Filters - category: None, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:49:09,712 views INFO main Products before category filter: 1
+2026-02-17 22:49:11,315 views INFO main products
+2026-02-17 22:49:11,316 views INFO main Filters - category: None, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:49:11,344 views INFO main Products before category filter: 1
+2026-02-17 22:49:12,492 views INFO main products
+2026-02-17 22:49:12,496 views INFO main Filters - category: None, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:49:12,526 views INFO main Products before category filter: 8
+2026-02-17 22:49:20,926 views INFO main products
+2026-02-17 22:49:20,936 views INFO main Filters - category: airpods, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:49:20,955 views INFO main Products before category filter: 8
+2026-02-17 22:49:20,956 views INFO main Filtering by category: airpods, language: en
+2026-02-17 22:49:20,960 views INFO main Category found: airpods
+2026-02-17 22:49:20,962 views INFO main Products after category filter: 1
+2026-02-17 22:50:19,814 views INFO main products
+2026-02-17 22:50:19,819 views INFO main Filters - category: airpods, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:50:19,846 views INFO main Products before category filter: 8
+2026-02-17 22:50:19,846 views INFO main Filtering by category: airpods, language: en
+2026-02-17 22:50:19,857 views INFO main Category found: airpods
+2026-02-17 22:50:19,860 views INFO main Products after category filter: 1
+2026-02-17 22:50:21,682 views INFO main products
+2026-02-17 22:50:21,682 views INFO main Filters - category: None, discount: None, order: price, min_price: 249, max_price: 1999
+2026-02-17 22:50:21,697 views INFO main Products before category filter: 8
+2026-02-17 22:52:45,507 views INFO main products
+2026-02-17 22:52:45,507 views INFO main Filters - category: None, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:52:45,539 views INFO main Products before category filter: 8
+2026-02-17 22:52:52,059 views INFO main products
+2026-02-17 22:52:52,059 views INFO main Filters - category: ipad, discount: None, order: price, min_price: 249, max_price: 1999
+2026-02-17 22:52:52,076 views INFO main Products before category filter: 8
+2026-02-17 22:52:52,076 views INFO main Filtering by category: ipad, language: en
+2026-02-17 22:52:52,084 views INFO main Category found: ipad
+2026-02-17 22:52:52,086 views INFO main Products after category filter: 1
+2026-02-17 22:52:56,586 views INFO main products
+2026-02-17 22:52:56,587 views INFO main Filters - category: ipad, discount: true, order: price, min_price: 249, max_price: 1999
+2026-02-17 22:52:56,604 views INFO main Products before category filter: 8
+2026-02-17 22:52:56,604 views INFO main Filtering by category: ipad, language: en
+2026-02-17 22:52:56,609 views INFO main Category found: ipad
+2026-02-17 22:52:56,612 views INFO main Products after category filter: 1
+2026-02-17 22:53:00,338 views INFO main products
+2026-02-17 22:53:00,339 views INFO main Filters - category: ipad, discount: true, order: date, min_price: 249, max_price: 1999
+2026-02-17 22:53:00,357 views INFO main Products before category filter: 8
+2026-02-17 22:53:00,357 views INFO main Filtering by category: ipad, language: en
+2026-02-17 22:53:00,362 views INFO main Category found: ipad
+2026-02-17 22:53:00,364 views INFO main Products after category filter: 1
+2026-02-17 22:53:00,365 views ERROR main Error in products view: Cannot resolve keyword 'created' into field. Choices are: additional_images, available, bonus_points, category, category_id, created_at, deleted, deleted_by_cascade, discount, effective_price, id, image, order_items, price, price_with_discount, quantity, review, tagged_items, tags, translations, updated_at, user
+Traceback (most recent call last):
+  File "/Users/macbook/techol-micron-shop/micron/products/views.py", line 80, in products
+    products_qs = apply_ordering(products_qs, order)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/macbook/techol-micron-shop/micron/products/utils/filters.py", line 87, in apply_ordering
+    return queryset.order_by(order_map[order])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 1768, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'created' into field. Choices are: additional_images, available, bonus_points, category, category_id, created_at, deleted, deleted_by_cascade, discount, effective_price, id, image, order_items, price, price_with_discount, quantity, review, tagged_items, tags, translations, updated_at, user
+2026-02-17 22:53:09,612 views INFO main products
+2026-02-17 22:53:09,613 views INFO main Filters - category: ipad, discount: true, order: -price, min_price: 249, max_price: 1999
+2026-02-17 22:53:09,630 views INFO main Products before category filter: 8
+2026-02-17 22:53:09,630 views INFO main Filtering by category: ipad, language: en
+2026-02-17 22:53:09,637 views INFO main Category found: ipad
+2026-02-17 22:53:09,640 views INFO main Products after category filter: 1
+2026-02-17 22:53:12,903 views INFO main products
+2026-02-17 22:53:12,903 views INFO main Filters - category: iphone, discount: true, order: -price, min_price: 249, max_price: 1999
+2026-02-17 22:53:12,920 views INFO main Products before category filter: 8
+2026-02-17 22:53:12,920 views INFO main Filtering by category: iphone, language: en
+2026-02-17 22:53:12,925 views INFO main Category found: iphone
+2026-02-17 22:53:12,927 views INFO main Products after category filter: 2
+2026-02-17 22:54:17,233 views INFO main products
+2026-02-17 22:54:17,235 views INFO main Filters - category: None, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:54:17,364 views INFO main Products before category filter: 8
+2026-02-17 22:54:19,653 views INFO main products
+2026-02-17 22:54:19,654 views INFO main Filters - category: None, discount: None, order: None, min_price: None, max_price: None
+2026-02-17 22:54:19,673 views INFO main Products before category filter: 8
+2026-02-17 22:56:03,638 views INFO main products
+2026-02-17 22:56:05,902 views INFO main products
+2026-02-17 22:56:05,915 views INFO main Filtering by category: macbook, language: en
+2026-02-17 22:56:05,923 views INFO main Category found: macbook
+2026-02-17 22:56:05,925 views INFO main Products after category filter: 1
+2026-02-17 22:56:11,933 views INFO main products
+2026-02-17 22:56:11,948 views INFO main Filtering by category: macbook, language: en
+2026-02-17 22:56:11,953 views INFO main Category found: macbook
+2026-02-17 22:56:11,957 views INFO main Products after category filter: 1
+2026-02-17 22:56:11,958 views ERROR main Error in products view: Cannot resolve keyword 'created' into field. Choices are: additional_images, available, bonus_points, category, category_id, created_at, deleted, deleted_by_cascade, discount, effective_price, id, image, order_items, price, price_with_discount, quantity, review, tagged_items, tags, translations, updated_at, user
+Traceback (most recent call last):
+  File "/Users/macbook/techol-micron-shop/micron/products/views.py", line 76, in products
+    products_qs = apply_ordering(products_qs, order)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/macbook/techol-micron-shop/micron/products/utils/filters.py", line 87, in apply_ordering
+    return queryset.order_by(order_map[order])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/query.py", line 1701, in order_by
+    obj.query.add_ordering(*field_names)
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 2249, in add_ordering
+    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)
+  File "/Users/macbook/techol-micron-shop/.venv/lib/python3.12/site-packages/django/db/models/sql/query.py", line 1768, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'created' into field. Choices are: additional_images, available, bonus_points, category, category_id, created_at, deleted, deleted_by_cascade, discount, effective_price, id, image, order_items, price, price_with_discount, quantity, review, tagged_items, tags, translations, updated_at, user
+2026-02-17 22:59:24,160 views INFO main products
+2026-02-17 22:59:27,883 views INFO main products
+2026-02-17 22:59:29,571 views INFO main products
+2026-02-17 23:00:34,345 views INFO main products
+2026-02-17 23:00:41,141 views INFO main products
+2026-02-17 23:00:44,574 views INFO main products
+2026-02-17 23:00:46,133 views INFO main products
+2026-02-17 23:03:01,776 views INFO main products
+2026-02-17 23:03:04,905 views INFO main products
+2026-02-17 23:03:19,830 views INFO main products
+2026-02-17 23:03:29,959 views INFO main products
+2026-02-17 23:05:31,857 views INFO main products
+2026-02-17 23:12:55,182 views INFO main products
+2026-02-17 23:13:12,365 views INFO main products
+2026-02-17 23:14:40,720 views INFO main products
+2026-02-17 23:15:41,423 views INFO main products
+2026-02-17 23:15:42,631 views INFO main products
+2026-02-17 23:15:44,848 views INFO main products
+2026-02-17 23:18:52,522 views INFO main products

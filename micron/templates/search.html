@@ -18,7 +18,7 @@
         <ul class="cat-list">
             {% for category in all_categories %}
             <li class="cat-list-item">
-                <a href="{{ category.get_absolute_url }}">{{ category.name|capfirst }}</a>
+                <a href="{% url 'products:products' %}?category={{ category.slug }}">{{ category.name|capfirst }}</a>
             </li>
             {% endfor %}
         </ul>

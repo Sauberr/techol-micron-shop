@@ -16,13 +16,12 @@
 
     {% include 'navbar.html' %}
 
-    {% include 'search.html' %}
-
 
     <section class="py-5">
         <div class="container">
             <div class="filter-section">
                 <div id="filter-form" class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
                     <div class="form-group price-range-group">
                         <label class="mb-2">Price Range:</label>
                         <div class="range-container">
@@ -43,6 +42,16 @@
                     </div>
 
                     <div class="other-filters d-flex gap-3">
+                        <div class="form-group">
+                            <label for="category" class="mb-2">Category:</label>
+                            <select id="category" class="form-select">
+                                <option value="">All Categories</option>
+                                {% for category in all_categories %}
+                                <option value="{{ category.slug }}">{{ category.name|capfirst }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="discount" class="mb-2">Discount:</label>
                             <select id="discount" class="form-select">

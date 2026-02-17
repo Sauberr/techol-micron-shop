@@ -3,28 +3,39 @@
     "use strict";
 
     var searchPopup = function() {
+      // Toggle search popup when clicking search button
       $('#header-nav').on('click', '.search-button', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         $('.search-popup').toggleClass('is-visible');
       });
 
+      // Close button handler (if exists)
       $('#header-nav').on('click', '.btn-close-search', function(e) {
-        $('.search-popup').toggleClass('is-visible');
+        e.preventDefault();
+        e.stopPropagation();
+        $('.search-popup').removeClass('is-visible');
       });
 
-      $(".search-popup-trigger").on("click", function(b) {
-          b.preventDefault();
-          $(".search-popup").addClass("is-visible"),
-          setTimeout(function() {
-              $(".search-popup").find("#search-popup").focus()
-          }, 350)
-      }),
-      $(".search-popup").on("click", function(b) {
-          ($(b.target).is(".search-popup-close") || $(b.target).is(".search-popup-close svg") || $(b.target).is(".search-popup-close path") || $(b.target).is(".search-popup")) && (b.preventDefault(),
-          $(this).removeClass("is-visible"))
-      }),
-      $(document).keyup(function(b) {
-          "27" === b.which && $(".search-popup").removeClass("is-visible")
-      })
+      // Prevent clicks inside the search popup container from closing it
+      $(".search-popup-container").on("click", function(e) {
+        e.stopPropagation();
+      });
+
+      // Close when clicking on the overlay (background), but not on the content
+      $(".search-popup").on("click", function(e) {
+        if ($(e.target).is(".search-popup")) {
+          e.preventDefault();
+          $(this).removeClass("is-visible");
+        }
+      });
+
+      // Close on ESC key
+      $(document).keyup(function(e) {
+        if (e.which === 27) {
+          $(".search-popup").removeClass("is-visible");
+        }
+      });
     }
 
     var initProductQty = function(){

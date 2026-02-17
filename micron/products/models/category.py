@@ -44,7 +44,7 @@ class Category(TimeStampedModel, TranslatableModel):
                 })
 
     def get_absolute_url(self) -> str:
-        return reverse("products:list_category", args=[self.slug])
+        return reverse("products:products") + f"?category={self.slug}"
 
     @classmethod
     def generate_instances(cls, count: int = 5) -> None:

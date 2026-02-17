@@ -1,6 +1,7 @@
 from django.db.models import Case, DecimalField, F, Max, Min, QuerySet, When
 
 from products.models.product import Product
+from products.models.category import Category
 
 
 def get_effective_price_expr():
@@ -49,6 +50,22 @@ def filter_by_discount(queryset: QuerySet, discount: str) -> QuerySet:
     return queryset
 
 
+def filter_by_category(queryset: QuerySet, category_slug: str, language_code: str) -> QuerySet:
+    """Filter products by category slug and language."""
+
+    if not category_slug:
+        return queryset
+
+    try:
+        category = Category.objects.get(
+            translations__slug=category_slug,
+            translations__language_code=language_code,
+        )
+        return queryset.filter(category=category)
+    except Category.DoesNotExist:
+        return queryset
+
+
 def filter_by_price_range(queryset: QuerySet, min_price: str, max_price: str) -> QuerySet:
     """Filter products by price range."""
 
@@ -74,8 +91,8 @@ def apply_ordering(queryset: QuerySet, order: str) -> QuerySet:
     order_map = {
         "price": "effective_price",
         "-price": "-effective_price",
-        "date": "created",
-        "-date": "-created",
+        "date": "created_at",
+        "-date": "-created_at",
     }
 
     if order not in order_map:

@@ -6,7 +6,6 @@ from products.views import (
     delete_review,
     favorite_products,
     index,
-    list_category,
     product_detail,
     products,
     tag_list,
@@ -27,9 +26,6 @@ urlpatterns = [
 
     # Tags
     path("products/tag/<slug:tag_slug>/", tag_list, name="tag_products"),
-
-    # Individual category
-    path("category/<slug:category_slug>/", list_category, name="list_category"),
 
     # Add to favorite
     path(

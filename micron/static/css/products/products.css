@@ -22,12 +22,20 @@
     background-color: #fff;
     transition: all 0.3s ease;
     cursor: pointer;
+    min-width: 200px;
 }
 
 .filter-section select:focus {
     border-color: #212529;
     outline: none;
     box-shadow: 0 0 0 3px rgba(33, 37, 41, 0.1);
+}
+
+#category,
+#discount,
+#order {
+    min-width: 220px;
+    width: auto;
 }
 
 .filter-section label {
@@ -37,6 +45,7 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
 
 /* Price Range */
 .price-range-group {

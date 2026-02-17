@@ -5,15 +5,15 @@ from safedelete.queryset import SafeDeleteQueryset
 
 class SafeDeleteTranslatableQuerySet(SafeDeleteQueryset, TranslatableQuerySet):
     """
-    Кастомный QuerySet, объединяющий SafeDelete и Parler.
-    Позволяет использовать мягкое удаление с переводами моделей.
+    A custom QuerySet combining SafeDelete and Parler.
+    Use soft delete with model translations.
     """
     pass
 
 
 class SafeDeleteTranslatableManager(SafeDeleteManager, TranslatableManager):
     """
-    Кастомный Manager, объединяющий SafeDelete и Parler.
-    Используется для моделей Product и Category.
+    A custom manager that integrates SafeDelete and Parler.
+    Used for the Product and Category models.
     """
     _queryset_class = SafeDeleteTranslatableQuerySet

@@ -5,8 +5,15 @@ $(document).ready(function() {
     const maxLabel = document.getElementById('max_price_label');
     const resetBtn = document.getElementById('reset-filter-btn');
     const discountSelect = document.getElementById('discount');
+    const categorySelect = document.getElementById('category');
     const orderSelect = document.getElementById('order');
     const productGrid = document.getElementById('product-grid');
+
+    if (!minRange || !maxRange || !minLabel || !maxLabel || !resetBtn || !discountSelect || !categorySelect || !orderSelect || !productGrid) {
+        console.error('Required filter elements not found');
+        return;
+    }
+
 
     const initialMinPrice = parseFloat(minRange.dataset.minPrice) || 0;
     const initialMaxPrice = parseFloat(minRange.dataset.maxPrice) || 1000;
@@ -50,6 +57,7 @@ $(document).ready(function() {
         const minPrice = parseFloat(minRange.value);
         const maxPrice = parseFloat(maxRange.value);
         const discount = discountSelect.value;
+        const category = categorySelect.value;
         const order = orderSelect.value;
 
         const params = new URLSearchParams();
@@ -60,15 +68,31 @@ $(document).ready(function() {
         if (discount) {
             params.append('discount', discount);
         }
+        if (category) {
+            params.append('category', category);
+        }
         if (order) {
             params.append('order', order);
         }
 
+        // Keep search query from URL if it exists
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('search_query');
+        if (searchQuery) {
+            params.append('search_query', searchQuery);
+        }
+
+
         productGrid.style.opacity = '0.5';
+
+        // Get the current language prefix from URL
+        const pathParts = window.location.pathname.split('/');
+        const langPrefix = pathParts[1] ? '/' + pathParts[1] : '';
+        const productsUrl = langPrefix + '/products/';
 
         $.ajax({
             type: 'GET',
-            url: '/products/',
+            url: productsUrl,
             data: params.toString(),
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -83,11 +107,22 @@ $(document).ready(function() {
 
                     const newUrl = window.location.pathname + '?' + params.toString();
                     window.history.pushState({}, '', newUrl);
+                } else {
+                    console.error('Filter error:', response.error);
+                    productGrid.style.opacity = '1';
+                    alert('Error filtering products: ' + (response.error || 'Unknown error'));
                 }
             },
             error: function(xhr) {
                 console.error('Error filtering products:', xhr);
+                console.error('Response:', xhr.responseText);
                 productGrid.style.opacity = '1';
+
+                let errorMsg = 'Error filtering products';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMsg += ': ' + xhr.responseJSON.error;
+                }
+                alert(errorMsg);
             }
         });
     }
@@ -172,6 +207,7 @@ $(document).ready(function() {
         e.preventDefault();
         initializeSliders();
         discountSelect.value = '';
+        categorySelect.value = '';
         orderSelect.value = 'price';
         filterProducts(1);
 
@@ -183,6 +219,10 @@ $(document).ready(function() {
         filterProducts(1);
     });
 
+    categorySelect.addEventListener('change', function() {
+        filterProducts(1);
+    });
+
     orderSelect.addEventListener('change', function() {
         filterProducts(1);
     });
@@ -191,10 +231,12 @@ $(document).ready(function() {
     const selectedMinPrice = parseFloat(urlParams.get('min_price')) || initialMinPrice;
     const selectedMaxPrice = parseFloat(urlParams.get('max_price')) || initialMaxPrice;
     const selectedDiscount = urlParams.get('discount') || '';
+    const selectedCategory = urlParams.get('category') || '';
     const selectedOrder = urlParams.get('order') || 'price';
 
     initializeSliders(globalMinPrice, globalMaxPrice, selectedMinPrice, selectedMaxPrice);
     discountSelect.value = selectedDiscount;
+    categorySelect.value = selectedCategory;
     orderSelect.value = selectedOrder;
 
     bindPaginationEvents();

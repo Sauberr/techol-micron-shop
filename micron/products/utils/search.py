@@ -15,7 +15,7 @@ def search_products(request: HttpRequest) -> tuple[Product, str]:
 
     products = Product.objects.distinct().filter(
         Q(translations__name__icontains=search_query)
-    )
+    ).order_by('-id')
 
     if not products.exists():
         messages.error(request, _("No search results found. Please try again."))

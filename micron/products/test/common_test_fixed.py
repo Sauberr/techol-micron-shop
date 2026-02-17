@@ -9,7 +9,6 @@ from django.urls import reverse
 
 from products.models.category import Category
 from products.models.product import Product
-from products.models.product_image import ProductImage
 from products.models.review import Review
 
 User = get_user_model()

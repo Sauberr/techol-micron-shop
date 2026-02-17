@@ -3,9 +3,7 @@ from decimal import Decimal
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.db import IntegrityError
 from django.urls import reverse
-from safedelete.models import HARD_DELETE
 
 from products.models.category import Category
 from products.models.product import Product
