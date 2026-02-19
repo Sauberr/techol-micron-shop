@@ -15,7 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from .forms import OrderCreateForm
 from orders.models.order import Order
 from orders.models.order_item import OrderItem
-from .tasks import order_created
+from .tasks import order_created_email, order_created_telegram
 
 
 @login_required(login_url=reverse_lazy("user_account:login"))
@@ -67,7 +67,8 @@ def order_create(request: HttpRequest):
                         )
 
                 cart.clear()
-                order_created.delay(order.id)
+                order_created_email.delay(order.id)
+                order_created_telegram.delay(order.id)
                 request.session["order_id"] = order.id
                 return redirect(reverse("payment:process"))
 

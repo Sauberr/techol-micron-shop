@@ -3,6 +3,7 @@ from django.conf import settings
 from django.http import HttpResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
 from orders.models import Order
+from orders.tasks import send_telegram_order_paid
 from http import HTTPStatus
 from django.db import transaction
 
@@ -44,6 +45,7 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
                     order.save()
 
                     transaction.on_commit(lambda: payment_completed.delay(order.id))
+                    transaction.on_commit(lambda: send_telegram_order_paid.delay(order.id))
 
             except Order.DoesNotExist:
                 return HttpResponse(status=HTTPStatus.BAD_REQUEST)
@@ -51,3 +53,5 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
                 return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
     return HttpResponse(status=HTTPStatus.OK)
+
+

@@ -106,6 +106,19 @@ services:
       - celery
     restart: unless-stopped
 
+  tg_bot:
+    build: .
+    container_name: micron_tg_bot
+    command: python tg_bot/main.py
+    env_file:
+      - ./micron/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   redis_data:
