@@ -83,6 +83,7 @@ This project exemplifies modern e-commerce development practices, offering a dyn
 * Coupon and promotion management system
 * Bonus points system administration
 * Email notification management
+* Automated Telegram bot for instant order tracking and admin alerts
 * Product tags and comments moderation
 * Comprehensive REST API for third-party integrations
 * Multi-language content management
