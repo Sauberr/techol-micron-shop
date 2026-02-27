@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static humanize %}
+{% load currency_tags %}
 
 {% block title %}
     {{ title }}
@@ -12,7 +13,9 @@
 {% block content %}
     {% include 'navbar.html' %}
 
-    <section class="cart-section">
+    <section class="cart-section"
+             data-language="{{ current_language }}"
+             data-uah-rate="{{ usd_to_uah_rate|default:'' }}">
         <div class="cart-container">
             <h1 class="page-title">Shopping Cart</h1>
 
@@ -79,7 +82,7 @@
         <div class="coupon-badge">
             <span class="coupon-code">{{ cart.coupon.code }}</span>
             <span>({{ cart.coupon.discount }}% off)</span>
-            <div class="discount-amount" id="discount-amount">– ${{ cart.get_discount|floatformat:2 }}</div>
+            <div class="discount-amount" id="discount-amount">– {% price_display cart.get_discount %}</div>
         </div>
         <form method="POST" action="{% url 'coupons:remove' %}" id="coupon-remove-form">
             {% csrf_token %}
@@ -98,7 +101,7 @@
                         <div class="total-section">
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Subtotal:</span>
-                                <span id="cart-subtotal">${{ cart.get_total_price|intcomma }}</span>
+                                <span id="cart-subtotal">{% price_display cart.get_total_price %}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Subtotal bonus points:</span>
@@ -112,7 +115,7 @@
                             </div>
                             <div class="d-flex justify-content-between" id="cart-total-row" {% if not cart.coupon %}style="display: none;"{% endif %}>
                                 <span>Total:</span>
-                                <span class="total-amount" id="cart-total">${{ cart.get_total_price_after_discount|floatformat:2 }}</span>
+                                <span class="total-amount" id="cart-total">{% price_display cart.get_total_price_after_discount %}</span>
                             </div>
                         </div>
 
@@ -141,6 +144,22 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+    window.CURRENCY_LANGUAGE = "{{ current_language }}";
+    window.CURRENCY_UAH_RATE = {{ usd_to_uah_rate|default:"null" }};
+
+    function formatPrice(usdAmount) {
+        var language = window.CURRENCY_LANGUAGE || 'en';
+        var rate = window.CURRENCY_UAH_RATE || null;
+        var amount = parseFloat(usdAmount);
+        if (isNaN(amount)) return usdAmount;
+        if (language === 'uk' && rate) {
+            var uah = Math.round(amount * rate);
+            return '₴' + uah.toLocaleString('uk-UA');
+        }
+        return '$' + amount.toFixed(2);
+    }
+</script>
 <script src="{% static 'js/cookie.js' %}"></script>
 <script src="{% static 'js/show-messages.js' %}"></script>
 <script src="{% static 'js/update-cart-total.js' %}"></script>

@@ -36,7 +36,7 @@ $(document).ready(function() {
                         <div class="coupon-badge">
                             <span class="coupon-code">${response.coupon.code}</span>
                             <span>(${response.coupon.discount}% off)</span>
-                            <div class="discount-amount" id="discount-amount">– $${response.discount_amount.toFixed(2)}</div>
+                            <div class="discount-amount" id="discount-amount">– ${formatPrice(response.discount_amount)}</div>
                         </div>
                         <form method="POST" action="${removeUrl}" id="coupon-remove-form">
                             ${$form.find('[name="csrfmiddlewaretoken"]').prop('outerHTML')}
@@ -45,7 +45,7 @@ $(document).ready(function() {
                     `;
 
                     $('.coupon-section').html(couponHtml);
-                    $('#cart-total').text('$' + response.total_after_discount.toFixed(2));
+                    $('#cart-total').text(formatPrice(response.total_after_discount));
                     $('#cart-total-row').show();
                 } else {
                     showMessage(response.message || 'Invalid coupon code', 'error');

@@ -1,7 +1,6 @@
 import os
 from datetime import timedelta
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 import environ
 import sentry_sdk
@@ -60,7 +59,7 @@ DOMAIN_NAME = env("DOMAIN_NAME")
 
 # Application definition
 
-INSTALLED_APPS: Tuple[str, ...] = (
+INSTALLED_APPS: tuple[str, ...] = (
     # Local apps
     "jazzmin",
     "django_ckeditor_5",
@@ -115,7 +114,7 @@ PARLER_LANGUAGES = {
 }
 
 
-MIDDLEWARE: Tuple[str, ...] = (
+MIDDLEWARE: tuple[str, ...] = (
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -147,6 +146,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "products.context_processors.categories",
+                "products.context_processors.currency_rate",
                 "django.contrib.messages.context_processors.messages",
                 "cart.context_processors.cart",
             ],
@@ -263,7 +263,7 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
 CART_SESSION_ID: str = "cart"
 
-AUTHENTICATION_BACKENDS: List[str] = [
+AUTHENTICATION_BACKENDS: list[str] = [
     "django.contrib.auth.backends.ModelBackend",
     "user_account.authentication.EmailAuthBackend",
     "social_core.backends.google.GoogleOAuth2",
@@ -290,7 +290,7 @@ ADMIN_TELEGRAM_ID = env("ADMIN_TELEGRAM_ID")
 
 # Logger
 
-LOGGING: Dict[str, ...] = {
+LOGGING: dict[str, ...] = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
@@ -320,7 +320,7 @@ LOGGING: Dict[str, ...] = {
 
 # DRF
 
-REST_FRAMEWORK: Dict[str, ...] = {
+REST_FRAMEWORK: dict[str, ...] = {
 
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 3,
@@ -408,7 +408,7 @@ REST_FRAMEWORK: Dict[str, ...] = {
     "NUM_PROXIES": None,
 }
 
-SIMPLE_JWT: Dict[str, ...] = {
+SIMPLE_JWT: dict[str, ...] = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
@@ -453,7 +453,7 @@ SPECTACULAR_SETTINGS = {
 
 # Jazzmin settings
 
-JAZZMIN_SETTINGS: Dict[str, ...] = {
+JAZZMIN_SETTINGS: dict[str, ...] = {
     "site_title": "Micron Admin",
     "site_header": "Micron",
     "site_brand": "Shopping made easy....",
@@ -512,7 +512,7 @@ customColorPalette = [
     },
 ]
 
-CKEDITOR_5_CONFIGS: Dict[str, ...] = {
+CKEDITOR_5_CONFIGS: dict[str, ...] = {
     'default': {
         'toolbar': ['heading', '|', 'bold', 'italic', 'link',
                     'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],

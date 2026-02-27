@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static humanize %}
+{% load currency_tags %}
 
 {% block title %}
 {{ title }}
@@ -40,7 +41,7 @@
 
                     <div class="card-body">
                         <h5 class="product-title">{{ product.name }}</h5>
-                        <h6>${{ product.price|intcomma }}</h6>
+                        <h6>{% price_display product.price %}</h6>
                         <p class="product-description">
                             {{ product.description|safe|truncatewords:15 }}
                         </p>

@@ -1,14 +1,12 @@
 function updateCartTotals(response) {
-    $('#cart-subtotal').text('$' + response.subtotal);
-
+    $('#cart-subtotal').text(formatPrice(response.subtotal));
     $('#cart-bonus-points').text(response.total_bonus_points);
 
     if (response.discount) {
-        $('#discount-amount').text('– $' + response.discount);
+        $('#discount-amount').text('– ' + formatPrice(response.discount));
+        $('#cart-total').text(formatPrice(response.total_after_discount));
         $('#cart-total-row').show();
-    }
-
-    if (response.total_after_discount) {
-        $('#cart-total').text('$' + response.total_after_discount);
+    } else {
+        $('#cart-total-row').hide();
     }
 }

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static humanize crispy_forms_tags %}
+{% load currency_tags %}
 
 {% block title %}
     Checkout
@@ -29,7 +30,7 @@
                                 <span class="item-quantity">{{ item.quantity }}x</span>
                                 <span class="item-name">{{ item.product.name }}</span>
                             </div>
-                            <span class="item-price">${{ item.total_price|intcomma }}</span>
+                            <span class="item-price">{% price_display item.total_price %}</span>
                         </li>
                     {% endfor %}
                 </ul>
@@ -40,12 +41,12 @@
                             <span class="coupon-code">{{ cart.coupon.code }}</span>
                             <span>({{ cart.coupon.discount }}% off)</span>
                         </div>
-                        <span class="discount-amount">- ${{ cart.get_discount|floatformat:2 }}</span>
+                            <span class="discount-amount">- {% price_display cart.get_discount %}</span>
                     </div>
                 {% endif %}
 
                 <div class="total-amount">
-                    Total: ${{ cart.get_total_price_after_discount|floatformat:2 }}
+                    Total: {% price_display cart.get_total_price_after_discount %}
                 </div>
                 <div class="total-amount">
                 <span class="bonus-points">

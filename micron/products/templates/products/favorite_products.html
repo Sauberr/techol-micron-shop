@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static humanize %}
+{% load currency_tags %}
 
 {% block title %}
 {{ title }}
@@ -35,7 +36,7 @@
                         <a href="{{ product.get_absolute_url }}" class="text-decoration-none">
                             <h5 class="product-title">{{ product.name }}</h5>
                         </a>
-                        <div class="product-price">${{ product.price|intcomma }}</div>
+                        <div class="product-price">{% price_display product.price %}</div>
                         <a href="{% url 'products:delete_from_favorites' product.id %}" class="remove-favorite-btn remove-btn text-decoration-none">
                             <i class="fas fa-trash me-2"></i>{% trans 'Remove from Favorites' %}
                         </a>

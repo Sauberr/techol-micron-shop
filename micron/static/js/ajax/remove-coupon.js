@@ -42,6 +42,9 @@ $(document).ready(function() {
 
                     $('.coupon-section').html(applyFormHtml);
                     $('#cart-total-row').hide();
+                    if (response.total_price) {
+                        $('#cart-subtotal').text(formatPrice(response.total_price));
+                    }
                 } else {
                     resetButton($button, originalContent);
                 }

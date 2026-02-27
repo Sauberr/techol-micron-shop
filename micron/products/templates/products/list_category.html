@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static humanize %}
+{% load currency_tags %}
 
 {% block title %}
 | {{ category.name|capfirst }}
@@ -47,10 +48,10 @@
 
                             <div class="price-section">
                                 {% if product.discount %}
-                                <span class="original-price">${{ product.price|intcomma }}</span>
-                                <span class="discounted-price">${{ product.price_with_discount|intcomma }}</span>
+                                <span class="original-price">{% price_display product.price %}</span>
+                                <span class="discounted-price">{% price_display product.price_with_discount %}</span>
                                 {% else %}
-                                <span class="discounted-price">${{ product.price|intcomma }}</span>
+                                <span class="discounted-price">{% price_display product.price %}</span>
                                 {% endif %}
                             </div>
 

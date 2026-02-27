@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static humanize %}
+{% load currency_tags %}
 
 {% block title %}
     {{ title }}
@@ -35,7 +36,7 @@
                         <tr>
                             <td>{{ item.product.name }}</td>
                             <td>{{ item.quantity }}</td>
-                            <td>${{ item.price|intcomma }}</td>
+                            <td>{% price_display item.price %}</td>
                             <td>{{ item.user }}</td>
                         </tr>
                     {% endfor %}

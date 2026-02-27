@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static humanize %}
+{% load currency_tags %}
 
 {% block title %}
 {{ title }}
@@ -62,9 +63,9 @@
 
                         <div class="product-price">
                             {% if product.discount %}
-                            ${{ product.price_with_discount|intcomma }}
+                            {% price_display product.price_with_discount %}
                             {% else %}
-                            ${{ product.price|intcomma }}
+                            {% price_display product.price %}
                             {% endif %}
                         </div>
 
@@ -184,7 +185,7 @@
                         </a>
                         <div class="card-body">
                             <h5 class="card-title">{{ p.name|capfirst }}</h5>
-                            <p class="card-text">${{ p.price|intcomma }}</p>
+                            <p class="card-text">{% price_display p.price %}</p>
                             <a href="{{ p.get_absolute_url }}" class="add-to-cart-btn w-100">
                                 {% trans 'View Details' %}
                             </a>
