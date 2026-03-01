@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
+from django.db.models import F, Sum
 
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -60,7 +61,8 @@ class Order(TimeStampedModel):
         return total_cost - self.get_discount()
 
     def get_total_cost_before_discount(self) -> Decimal:
-        return sum(item.get_cost() for item in self.items.all())
+        result = self.items.aggregate(total=Sum(F("price") * F("quantity")))
+        return result["total"] or Decimal(0)
 
     def get_stripe_url(self)-> str:
         if not self.stripe_id:

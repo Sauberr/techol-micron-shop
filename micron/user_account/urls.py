@@ -2,12 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.urls import path
 from user_account.views import (
     ChangePasswordView,
+    ContactView,
+    DeleteAccountView,
     EmailVerificationView,
     ResetPasswordView,
     UserLoginView,
     UserRegistrationView,
-    contact,
-    delete_account,
     logout,
     manage_shipping,
     profile,
@@ -24,7 +24,7 @@ urlpatterns = [
     # Profile page
     path("profile/<int:profile_id>/", profile, name="profile"),
     # Delete account page
-    path("delete-account/", delete_account, name="delete_account"),
+    path("delete-account/", DeleteAccountView.as_view(), name="delete_account"),
     # Registration page
     path("registration/", UserRegistrationView.as_view(), name="registration"),
     # Password reset page
@@ -46,5 +46,5 @@ urlpatterns = [
         name="email_verification",
     ),
     # Contact
-    path("contact/", contact, name="contact"),
+    path("contact/", ContactView.as_view(), name="contact"),
 ]

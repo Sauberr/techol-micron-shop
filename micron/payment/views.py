@@ -1,6 +1,7 @@
 from decimal import Decimal
 from http import HTTPStatus
 
+from django.utils.translation import gettext_lazy as _
 import stripe
 from django.http import HttpRequest
 
@@ -57,11 +58,11 @@ class SuccessTemplateView(TitleMixin, TemplateView):
     """Display payment success confirmation page."""
 
     template_name = "payment/completed.html"
-    title = "Payment Success"
+    title = _("Payment Success")
 
 
 class CanceledTemplateView(TitleMixin, TemplateView):
     """Display payment cancellation page."""
 
     template_name = "payment/canceled.html"
-    title = "Payment Canceled"
+    title = _("Payment Canceled")

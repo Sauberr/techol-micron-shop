@@ -33,7 +33,7 @@ def index(request: HttpRequest):
     """Render homepage with featured products and reviews."""
 
     products, search_query = search_products(request)
-    reviews = Review.objects.all()
+    reviews = Review.objects.all().select_related("user", "product")
     context = {
         "title": "| Products",
         "products": products,
@@ -119,7 +119,7 @@ def product_detail(request: HttpRequest, product_slug: str):
 
     r = Recommender()
     recommended_products = r.suggest_products_for([product], 4)
-    reviews = Review.objects.filter(product=product)
+    reviews = Review.objects.filter(product=product).select_related("user")
     if reviews:
         average_stars = reviews.aggregate(Avg("stars"))["stars__avg"]
     else:
@@ -190,7 +190,7 @@ def favorite_products(request: HttpRequest):
     """Display list of user favorite products."""
 
     if request.user.is_authenticated:
-        favorite_products = request.user.favorite_products.all()
+        favorite_products = request.user.favorite_products.all().prefetch_related("tags").select_related("category")
         context = {
             "favorite_products": favorite_products,
             "title": "| Favorite products",

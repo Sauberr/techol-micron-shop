@@ -144,22 +144,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    window.CURRENCY_LANGUAGE = "{{ current_language }}";
-    window.CURRENCY_UAH_RATE = {{ usd_to_uah_rate|default:"null" }};
-
-    function formatPrice(usdAmount) {
-        var language = window.CURRENCY_LANGUAGE || 'en';
-        var rate = window.CURRENCY_UAH_RATE || null;
-        var amount = parseFloat(usdAmount);
-        if (isNaN(amount)) return usdAmount;
-        if (language === 'uk' && rate) {
-            var uah = Math.round(amount * rate);
-            return '₴' + uah.toLocaleString('uk-UA');
-        }
-        return '$' + amount.toFixed(2);
-    }
-</script>
+<script src="{% static 'js/format-price.js' %}"></script>
 <script src="{% static 'js/cookie.js' %}"></script>
 <script src="{% static 'js/show-messages.js' %}"></script>
 <script src="{% static 'js/update-cart-total.js' %}"></script>

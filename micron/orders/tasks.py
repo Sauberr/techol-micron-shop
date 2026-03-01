@@ -11,7 +11,12 @@ logger = logging.getLogger(__name__)
 @shared_task
 def order_created_email(order_id: int) -> int:
     """Send email notification when order is created."""
-    order = Order.objects.get(id=order_id)
+    order = (
+        Order.objects
+        .select_related("coupon", "user")
+        .prefetch_related("items__product")
+        .get(id=order_id)
+    )
     subject = f"Order nr. {order.id}"
     message = (
         f"Dear {order.first_name}, \n\n"

@@ -14,7 +14,6 @@ $(document).ready(function() {
         return;
     }
 
-
     const initialMinPrice = parseFloat(minRange.dataset.minPrice) || 0;
     const initialMaxPrice = parseFloat(minRange.dataset.maxPrice) || 1000;
     const globalMinPrice = initialMinPrice;
@@ -242,3 +241,4 @@ $(document).ready(function() {
     bindPaginationEvents();
     bindFavoriteEvents();
 });
+

@@ -41,10 +41,9 @@ $(document).ready(function() {
                     `;
 
                     $('.coupon-section').html(applyFormHtml);
-                    $('#cart-total-row').hide();
-                    if (response.total_price) {
-                        $('#cart-subtotal').text(formatPrice(response.total_price));
-                    }
+
+                    // Обновляем все цены через updateCartTotals — discount=0 гарантирует скрытие Total
+                    updateCartTotals(response);
                 } else {
                     resetButton($button, originalContent);
                 }

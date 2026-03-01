@@ -45,6 +45,7 @@ $(document).ready(function() {
                     `;
 
                     $('.coupon-section').html(couponHtml);
+                    $('#cart-subtotal').text(formatPrice(response.subtotal));
                     $('#cart-total').text(formatPrice(response.total_after_discount));
                     $('#cart-total-row').show();
                 } else {

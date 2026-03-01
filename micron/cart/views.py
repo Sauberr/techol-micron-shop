@@ -118,9 +118,8 @@ def cart_add(request: HttpRequest, product_id: int):
             "subtotal": str(cart.get_total_price()),
             "total_bonus_points": str(cart.get_total_bonus_points()),
             "total_after_discount": str(cart.get_total_price_after_discount()),
+            "discount": str(cart.get_discount()),
         }
-        if cart.coupon:
-            response_data["discount"] = str(cart.get_discount())
         return JsonResponse(response_data)
 
     messages.success(request, _("Product added to cart successfully"))
@@ -137,6 +136,10 @@ def cart_remove(request: HttpRequest, product_id: int):
 
     cart.remove(product)
 
+    if len(cart) == 0 and "coupon_id" in request.session:
+        del request.session["coupon_id"]
+        cart.coupon_id = None
+
     if is_ajax:
         response_data = {
             "success": True,
@@ -146,9 +149,8 @@ def cart_remove(request: HttpRequest, product_id: int):
             "subtotal": str(cart.get_total_price()),
             "total_bonus_points": str(cart.get_total_bonus_points()),
             "total_after_discount": str(cart.get_total_price_after_discount()),
+            "discount": str(cart.get_discount()),
         }
-        if cart.coupon:
-            response_data["discount"] = str(cart.get_discount())
         return JsonResponse(response_data)
     messages.success(request, _("Product removed from cart successfully"))
 

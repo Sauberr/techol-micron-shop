@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from common.views import TitleMixin
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import (
@@ -15,7 +16,7 @@ from django.shortcuts import (
 )
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, DeleteView, TemplateView
 from orders.forms import OrderCreateForm
 from orders.models import Order
 from user_account.forms import (
@@ -26,6 +27,7 @@ from user_account.forms import (
     UserRegistrationForm,
     UserUpdateForm,
 )
+from user_account.models.contact import Contact
 from user_account.models.email_verification import EmailVerification
 from user_account.models.profile import Profile
 
@@ -73,7 +75,7 @@ def manage_shipping(request: HttpRequest):
     """Manage user shipping address and delivery preferences."""
 
     try:
-        shipping = Order.objects.filter(user=request.user.id).latest("created")
+        shipping = Order.objects.filter(user=request.user.id).latest("created_at")
     except Order.DoesNotExist:
         shipping = None
     form = OrderCreateForm(instance=shipping)
@@ -103,17 +105,17 @@ def profile_management(request: HttpRequest):
     return render(request, "user_account/profile_management.html", context)
 
 
-@login_required
-def delete_account(request: HttpRequest):
+class DeleteAccountView(LoginRequiredMixin, SuccessMessageMixin, TitleMixin, DeleteView):
     """Permanently delete user account and all associated data."""
 
-    user = get_object_or_404(get_user_model(), id=request.user.id)
-    if request.method == "POST":
-        messages.success(request, _("Your account was successfully deleted"))
-        user.delete()
-        return redirect("products:products")
-    context = {"title": "| Delete account"}
-    return render(request, "user_account/delete_account.html", context)
+    model = get_user_model()
+    template_name = "user_account/delete_account.html"
+    success_url = reverse_lazy("products:products")
+    success_message = _("Your account was successfully deleted")
+    title = _("| Delete account")
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
@@ -124,7 +126,7 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
     template_name = "user_account/registration/registration.html"
     success_url = reverse_lazy("user_account:login")
     success_message = _("Your account was successfully created")
-    title = "| Registration"
+    title = _("| Registration")
 
 
 class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
@@ -140,7 +142,7 @@ class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
         "please make sure you've entered the address you registered with, and check your spam folder."
     )
     success_url = reverse_lazy("user_account:login")
-    title = "| Reset Password"
+    title = _("| Reset Password")
 
 
 class ChangePasswordView(TitleMixin, SuccessMessageMixin, PasswordChangeView):
@@ -156,7 +158,7 @@ class ChangePasswordView(TitleMixin, SuccessMessageMixin, PasswordChangeView):
 class EmailVerificationView(TitleMixin, TemplateView):
     """Verify user email address via confirmation link."""
 
-    title = "| Email Verification"
+    title = _("| Email Verification")
     template_name = "user_account/registration/email_verification.html"
 
     def get(self, request, *args, **kwargs):
@@ -192,17 +194,12 @@ def logout(request: HttpRequest) -> HttpResponseRedirect:
     return redirect("products:products")
 
 
-def contact(request: HttpRequest):
+class ContactView(TitleMixin, SuccessMessageMixin, CreateView):
     """Handle contact form submission and save user messages."""
 
-    form = ContactForm()
-    if request.method == "POST":
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, _("Your message was successfully sent"))
-            return redirect("products:products")
-        else:
-            messages.error(request, _("Please correct the error below"))
-    context = {"title": "| Contact US", "form": form}
-    return render(request, "user_account/contact.html", context)
+    model = Contact
+    form_class = ContactForm
+    template_name = "user_account/contact.html"
+    success_url = reverse_lazy("user_account:contact")
+    success_message = _("Your message was successfully sent")
+    title = _("| Contact US")
