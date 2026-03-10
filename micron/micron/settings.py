@@ -34,6 +34,7 @@ env = environ.Env(
     STRIPE_WEBHOOK_SECRET=(str),
     TELEGRAM_BOT_TOKEN=(str),
     ADMIN_TELEGRAM_ID=(int),
+    SENTRY_DSN=(str),
 )
 
 
@@ -87,6 +88,7 @@ INSTALLED_APPS: tuple[str, ...] = (
     "drf_spectacular",
     "django_filters",
     "safedelete",
+    "django_celery_beat",
 
     # My apps
     "products.apps.ProductsConfig",
@@ -304,9 +306,12 @@ LOGGING: dict[str, ...] = {
             "formatter": "main_format",
         },
         "file": {
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "formatter": "main_format",
             "filename": "logs.log",
+            "maxBytes": 1024 * 1024 * 5,
+            "backupCount": 3,
+            "encoding": "utf-8",
         },
     },
     "loggers": {
@@ -576,7 +581,7 @@ CKEDITOR_5_CONFIGS: dict[str, ...] = {
 # Sentry
 
 sentry_sdk.init(
-    dsn="https://e549dfbc552e81ce8984800090e73f96@o4505772443172864.ingest.us.sentry.io/4506842888601600",
+    dsn=env("SENTRY_DSN"),
     enable_tracing=True,
 )
 
@@ -587,3 +592,15 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BEAT_SCHEDULE = {
+    "clear-expired-sessions": {
+        "task": "common.tasks.clear_expired_sessions",
+        "schedule": 60 * 60 * 24,
+    },
+    "clear-expired-email-verifications": {
+        "task": "common.tasks.clear_expired_email_verifications",
+        "schedule": 60 * 60 * 24,
+    },
+}
+

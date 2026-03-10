@@ -42,3 +42,5 @@ def send_telegram_order_paid(order_id: int) -> None:
     """Send Telegram notification to admin when order is paid."""
     order = Order.objects.prefetch_related("items__product", "coupon").get(id=order_id)
     notify_order_paid(order)
+
+

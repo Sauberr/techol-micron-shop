@@ -132,7 +132,7 @@ def orders(request: HttpRequest):
 @login_required(login_url=reverse_lazy("user_account:login"))
 def delete_order(request: HttpRequest, order_id: int):
     """Delete user order by ID."""
-    order = get_object_or_404(Order, id=order_id)
+    order = get_object_or_404(Order, id=order_id, user=request.user)
     order.delete()
     return redirect("orders:orders")
 

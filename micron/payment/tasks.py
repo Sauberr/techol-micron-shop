@@ -29,6 +29,7 @@ def add_user_bonus_points(order_id: int) -> None:
         order.user.add_bonus_points(order.bonus_points)
 
 
+
 @shared_task
 def payment_completed(order_id: int) -> None:
     send_order_invoice.delay(order_id)

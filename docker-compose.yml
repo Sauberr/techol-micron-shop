@@ -93,6 +93,23 @@ services:
         condition: service_started
     restart: unless-stopped
 
+  celery-beat:
+    build: .
+    container_name: micron_celery_beat
+    command: celery -A micron beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - static_volume:/app/staticfiles
+    env_file:
+      - ./micron/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      celery:
+        condition: service_started
+    restart: unless-stopped
+
   flower:
     build: .
     container_name: micron_flower

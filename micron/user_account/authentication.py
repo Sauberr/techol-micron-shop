@@ -6,7 +6,6 @@ User = get_user_model()
 
 class EmailAuthBackend:
 
-    @staticmethod
     def authenticate(self, request, username=None, password=None) -> User | None:
         try:
             user = User.objects.get(email=username)
@@ -16,7 +15,6 @@ class EmailAuthBackend:
         except (User.DoesNotExist, User.MultipleObjectsReturned):
             return None
 
-    @staticmethod
     def get_user(self, user_id: int) -> User | None:
         try:
             return User.objects.get(pk=user_id)

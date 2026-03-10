@@ -51,7 +51,7 @@ def payment_process(request: HttpRequest):
         session = stripe.checkout.Session.create(**session_data)
         return redirect(session.url, code=HTTPStatus.SEE_OTHER)
     else:
-        return render(request, "payment/process.html", locals())
+        return render(request, "payment/process.html", {"order": order})
 
 
 class SuccessTemplateView(TitleMixin, TemplateView):

@@ -53,6 +53,7 @@ class Coupon(TimeStampedModel):
         if self.max_uses is not None and self.used_count > self.max_uses:
             raise ValidationError(_("Used count cannot exceed max uses."))
 
+    @classmethod
     def generate_instances(cls, count: int = 5) -> None:
         faker = Faker()
         for _ in range(count):
