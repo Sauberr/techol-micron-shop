@@ -68,7 +68,8 @@ This project exemplifies modern e-commerce development practices, offering a dyn
 * Shopping cart management with quantity adjustments
 * Coupon system for discounts and promotions
 * Bonus points system for loyal customers
-* Secure checkout and payment processing via Stripe
+* Multi-Gateway Payment Processing: Secure and flexible checkout supporting multiple payment providers (Stripe, LiqPay, Paypal).
+* Automated Shipping Logistics: Seamless delivery integration and tracking via Nova Poshta API.
 * Order tracking and order history
 * User profile management with password change
 * Product comments and rating system
