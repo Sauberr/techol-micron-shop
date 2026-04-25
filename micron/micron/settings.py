@@ -35,6 +35,11 @@ env = environ.Env(
     TELEGRAM_BOT_TOKEN=(str),
     ADMIN_TELEGRAM_ID=(int),
     SENTRY_DSN=(str),
+    PAYPAL_CLIENT_ID=(str),
+    PAYPAL_SECRET_KEY=(str),
+    LIQPAY_PUBLIC_KEY=(str),
+    LIQPAY_PRIVATE_KEY=(str),
+    NOVA_POSHTA_API_KEY=(str),
 )
 
 
@@ -284,6 +289,20 @@ STRIPE_PUBLISHABLE_KEY = env("STRIPE_PUBLISHABLE_KEY")
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
 STRIPE_API_VERSION = env("STRIPE_API_VERSION")
 STRIPE_WEBHOOK_SECRET = env("STRIPE_WEBHOOK_SECRET")
+
+# Paypal
+
+PAYPAL_CLIENT_ID = env("PAYPAL_CLIENT_ID", default="")
+PAYPAL_SECRET_KEY = env("PAYPAL_SECRET_KEY", default="")
+
+# LiqPay
+
+LIQPAY_PUBLIC_KEY = env("LIQPAY_PUBLIC_KEY", default="")
+LIQPAY_PRIVATE_KEY = env("LIQPAY_PRIVATE_KEY", default="")
+
+# Nova Poshta
+
+NOVA_POSHTA_API_KEY = env("NOVA_POSHTA_API_KEY", default="")
 
 # Telegram Bot
 

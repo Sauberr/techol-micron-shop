@@ -1,7 +1,6 @@
 from django_filters.rest_framework import FilterSet, filters
 from django.contrib.auth import get_user_model
-from orders.models.order import Order
-from coupons.models import Coupon
+from orders.models.order import Order, STATUS
 
 User = get_user_model()
 
@@ -21,33 +20,22 @@ class OrderFilter(FilterSet):
         help_text="Search orders by customer last name",
     )
 
-    email = filters.CharFilter(
-        field_name="email",
-        lookup_expr="icontains",
-        label="Email",
-        help_text="Search orders by customer email",
-    )
+    email = filters.CharFilter(field_name="email", lookup_expr="icontains")
 
+    region = filters.CharFilter(
+        field_name="region",
+        lookup_expr="icontains"
+    )
     city = filters.CharFilter(
         field_name="city",
-        lookup_expr="icontains",
-        label="City",
-        help_text="Search orders by city",
+        lookup_expr="icontains"
+    )
+    post_office = filters.CharFilter(
+        field_name="post_office",
+        lookup_expr="icontains"
     )
 
-    postal_code = filters.CharFilter(
-        field_name="postal_code",
-        lookup_expr="icontains",
-        label="Postal Code",
-        help_text="Search orders by postal code",
-    )
-
-    paid = filters.ChoiceFilter(
-        field_name="paid",
-        choices=[("paid", "Paid"), ("unpaid", "Unpaid")],
-        label="Payment Status",
-        help_text="Filter orders by payment status",
-    )
+    paid = filters.ChoiceFilter(field_name="paid", choices=STATUS)
 
     user = filters.ModelChoiceFilter(
         queryset=get_user_model().objects.all(),
@@ -73,13 +61,15 @@ class OrderFilter(FilterSet):
     class Meta:
         model = Order
         fields = [
+            "id",
             "first_name",
             "last_name",
             "email",
+            "region",
             "city",
-            "postal_code",
+            "post_office",
             "paid",
-            "user",
+            "discount",
             "created_at",
-            "has_coupon",
+            "updated_at",
         ]

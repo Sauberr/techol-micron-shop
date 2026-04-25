@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Select Payment Method
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/payment/process.css' %}">
+    <link rel="stylesheet" href="{% static 'css/payment/select_payment.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% include 'navbar.html' %}
+    <section class="payment-section">
+        <div class="payment-container select-payment-container">
+            <h1 class="page-title">Select Payment Method</h1>
+            <p>Please choose how you would like to pay for your order.</p>
+            <div class="payment-methods">
+                <form action="{% url 'payment:process' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="payment-method-btn btn-stripe">
+                        Pay with Stripe
+                    </button>
+                </form>
+                <form action="{% url 'payment:paypal-process' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="payment-method-btn btn-paypal" style="margin-top: 15px;">
+                        Pay with PayPal
+                    </button>
+                </form>
+                <form action="{% url 'payment:liqpay-process' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="payment-method-btn btn-liqpay" style="margin-top: 15px; background-color: #28a745 !important; border-color: #28a745 !important; color: white !important;">
+                        Pay with LiqPay
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+    {% include 'footer.html' %}
+{% endblock %}

@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
+from django.core.paginator import Paginator
 
 from .forms import OrderCreateForm
 from orders.models.order import Order
@@ -70,7 +71,7 @@ def order_create(request: HttpRequest):
                 order_created_email.delay(order.id)
                 order_created_telegram.delay(order.id)
                 request.session["order_id"] = order.id
-                return redirect(reverse("payment:process"))
+                return redirect(reverse("payment:select-payment"))
 
             except (ValueError, Exception):
                 messages.error(
@@ -117,15 +118,19 @@ def admin_order_pdf(request: HttpRequest, order_id: int):
 @login_required(login_url=reverse_lazy("user_account:login"))
 def orders(request: HttpRequest):
     """Display list of user orders sorted by date."""
-    orders = (
+    orders_list = (
         Order.objects
         .filter(user=request.user)
         .order_by("-created_at")
         .prefetch_related("items__product")
         .select_related("coupon")
     )
+    paginator = Paginator(orders_list, 7)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    
     return render(
-        request, "orders/order/orders.html", {"orders": orders, "title": "| Orders"}
+        request, "orders/order/orders.html", {"orders": page_obj, "page_obj": page_obj, "title": "| Orders"}
     )
 
 

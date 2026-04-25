@@ -7,9 +7,8 @@
 {% endblock %}
 
 {% block css %}
-
     <link rel="stylesheet" href="{% static 'css/orders/checkout.css' %}">
-
+    <link rel="stylesheet" href="{% static 'css/orders/nova_poshta.css' %}">
 {% endblock %}
 
 
@@ -61,10 +60,37 @@
 
             </div>
 
-            <form method="post" class="checkout-form">
+            <form method="post" class="checkout-form" id="checkoutForm">
                 {% csrf_token %}
                 <div class="form-section">
                     {{ form|crispy }}
+
+                    <div id="nova-poshta-section">
+                        <div class="form-group mb-3">
+                            <label for="regionSelect" class="form-label">Select Region:</label>
+                            <select id="regionSelect" class="form-select" required>
+                                <option value="">Loading...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3 city-search-container">
+                            <label for="cityInput" class="form-label">City:</label>
+                            <div class="city-input-wrapper" style="position: relative; display: flex; width: 100%;">
+                                <input type="text" id="cityInput" class="form-control"
+                                       placeholder="Enter city name or choose from list" autocomplete="off">
+                                <button type="button" id="toggleCitySelect" class="toggle-select">▼</button>
+                            </div>
+                            <input type="hidden" id="cityRef" name="cityRef">
+                            <div id="citySearchResults" class="search-results"></div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="officeSelect" class="form-label">Branch:</label>
+                            <select id="officeSelect" class="form-select" required>
+                                <option value="">Select branch</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <button type="submit" class="place-order-btn">
                     <i class="fas fa-shopping-cart me-2"></i>Place Order
@@ -74,5 +100,10 @@
     </section>
 
     {% include 'footer.html' %}
+
+    <script>
+        const NOVA_POSHTA_API_KEY = "{{ settings.NOVA_POSHTA_API_KEY|default:'' }}";
+    </script>
+    <script src="{% static 'js/nova_poshta.js' %}"></script>
 
 {% endblock %}

@@ -30,8 +30,8 @@ class OrderModelTestCase(TestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            address='123 Test Street',
-            postal_code='12345',
+            
+            region="Kyiv", post_office="Branch 1",
             city='Test City',
             user=self.user
         )
@@ -184,8 +184,8 @@ class OrderModelTestCase(TestCase):
             first_name='Jane',
             last_name='Smith',
             email='jane@example.com',
-            address='456 Test Ave',
-            postal_code='67890',
+            
+            region="Lviv", post_office="Branch 2",
             city='Test Town',
             user=self.user
         )
@@ -208,8 +208,8 @@ class OrderItemModelTestCase(TestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            address='123 Test Street',
-            postal_code='12345',
+            
+            region="Kyiv", post_office="Branch 1",
             city='Test City',
             user=self.user
         )
@@ -310,8 +310,8 @@ class OrderViewTestCase(TestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            address='123 Test Street',
-            postal_code='12345',
+            
+            region="Kyiv", post_office="Branch 1",
             city='Test City',
             user=self.user
         )
@@ -338,8 +338,8 @@ class OrderViewTestCase(TestCase):
             'first_name': 'Test',
             'last_name': 'User',
             'email': 'test@example.com',
-            'address': '123 Street',
-            'postal_code': '12345',
+            
+            'region': 'Kyiv', 'post_office': 'Branch 1',
             'city': 'City'
         }
 
@@ -452,8 +452,8 @@ class OrderIntegrationTestCase(TestCase):
             'first_name': 'John',
             'last_name': 'Doe',
             'email': 'john@example.com',
-            'address': '123 Test Street',
-            'postal_code': '12345',
+            'post_office': 'Branch 1', 'region': 'Kyiv',
+            'region': 'Kyiv', 'post_office': 'Branch 1',
             'city': 'Test City'
         }
 
@@ -495,8 +495,8 @@ class OrderIntegrationTestCase(TestCase):
             'first_name': 'Jane',
             'last_name': 'Smith',
             'email': 'jane@example.com',
-            'address': '456 Test Ave',
-            'postal_code': '67890',
+            'post_office': 'Branch 2', 'region': 'Lviv',
+            'region': 'Lviv', 'post_office': 'Branch 2',
             'city': 'Test Town'
         }
 

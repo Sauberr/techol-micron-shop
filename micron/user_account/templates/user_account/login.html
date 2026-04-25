@@ -14,23 +14,21 @@
 {% include 'navbar.html' %}
 
 <div class="contact-section">
-    <div class="container" style="margin-top: -300px;">
+    <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 {% if messages or form.errors %}
                 <div class="alert {% if messages %} alert-success {% else %} alert-danger {% endif %} alert-dismissible fade show"
                      role="alert"
-                     style="margin-top: 50px;">
+                     style="margin-bottom: 30px;">
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    <h6>
-                        {% if messages %}
+                    {% if messages %}
                         {% for message in messages %}
-                        {{ message }}
+                            <strong>{{ message }}</strong><br>
                         {% endfor %}
-                        {% else %}
-                        {{ form.non_field_errors }}
-                        {% endif %}
-                    </h6>
+                    {% else %}
+                        <strong>{{ form.non_field_errors }}</strong>
+                    {% endif %}
                 </div>
                 {% endif %}
                 <div class="form-section">

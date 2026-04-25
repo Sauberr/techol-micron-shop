@@ -1,0 +1,47 @@
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+.select-payment-container {
+    text-align: center;
+}
+.payment-method-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    text-decoration: none;
+    color: white;
+    width: 100%;
+}
+.btn-stripe {
+    background-color: #635bff;
+}
+.btn-stripe:hover {
+    background-color: #4b45c6;
+    color: white;
+}
+.btn-paypal {
+    background-color: #0070ba;
+}
+.btn-paypal:hover {
+    background-color: #005ea6;
+    color: white;
+}
+.btn-liqpay {
+    background: linear-gradient(135deg, #7ebd26 0%, #5fac16 100%);
+}
+.btn-liqpay:hover {
+    background: linear-gradient(135deg, #6bac1f 0%, #4f9111 100%);
+    color: white;
+}

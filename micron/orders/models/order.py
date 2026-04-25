@@ -19,10 +19,10 @@ class Order(TimeStampedModel):
     """Order Model"""
     first_name = models.CharField(_("first_name"), max_length=50)
     last_name = models.CharField(_("last_name"), max_length=50)
-    email = models.EmailField(_("email"))
-    address = models.CharField(_("address"), max_length=250)
-    postal_code = models.CharField(_("postal_code"), max_length=20)
-    city = models.CharField(_("city"), max_length=100)
+    email = models.EmailField(_("e-mail"), max_length=250)
+    region = models.CharField(_("region"), max_length=250, default="Odesa")
+    city = models.CharField(_("city"), max_length=100, default="")
+    post_office = models.CharField(_("post office"), max_length=250, default="")
     paid = models.CharField(choices=STATUS, max_length=10, default="unpaid")
     stripe_id = models.CharField(max_length=250, blank=True)
     coupon = models.ForeignKey(

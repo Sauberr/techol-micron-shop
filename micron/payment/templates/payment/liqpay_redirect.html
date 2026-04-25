@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Redirecting to LiqPay...
+{% endblock %}
+
+{% block content %}
+    <div style="text-action: center; padding: 100px;">
+        <h2>Redirecting to secure payment gateway...</h2>
+        <form id="liqpay_form" method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">
+            <input type="hidden" name="data" value="{{ data }}" />
+            <input type="hidden" name="signature" value="{{ signature }}" />
+            <button type="submit" style="display: none;">Pay</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('liqpay_form').submit();
+    </script>
+{% endblock %}

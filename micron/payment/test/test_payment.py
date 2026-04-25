@@ -46,9 +46,9 @@ class PaymentViewTestCase(TestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            address='123 Test Street',
-            postal_code='12345',
+            region='Test Region',
             city='Test City',
+            post_office='Test Post Office',
             user=self.user
         )
 
@@ -197,9 +197,9 @@ class PaymentIntegrationTestCase(TestCase):
             'first_name': 'John',
             'last_name': 'Doe',
             'email': 'john@example.com',
-            'address': '123 Test Street',
-            'postal_code': '12345',
-            'city': 'Test City'
+            'region': 'Test Region',
+            'city': 'Test City',
+            'post_office': 'Test Post Office'
         }
         response = self.client.post(order_path, order_data)
 
@@ -230,9 +230,9 @@ class StripeWebhookTestCase(TestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            address='123 Test Street',
-            postal_code='12345',
+            region='Test Region',
             city='Test City',
+            post_office='Test Post Office',
             user=self.user,
             stripe_id='pi_test123'
         )

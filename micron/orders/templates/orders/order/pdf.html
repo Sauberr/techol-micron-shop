@@ -10,12 +10,11 @@
 <h3>Bill to</h3>
 <p>
     {{ order.first_name }} {{ order.last_name }}<br>
-    {{ order.email }}<br>
-    {{ order.address }}<br>
-    {{ order.postal_code }}, {{ order.city }}
-</p>
-<h3>Items bought</h3>
-<table>
+    <a href="mailto:{{ order.email }}">{{ order.email }}</a><br>
+    {{ order.region }}, {{ order.city }}<br>
+    {{ order.post_office }}
+  </div>
+  <table class="receipt-table">
     <thead>
     <tr>
         <th>Product</th>

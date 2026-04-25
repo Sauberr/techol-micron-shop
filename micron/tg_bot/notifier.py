@@ -57,7 +57,7 @@ def _build_order_message(order: "Order", paid: bool = False) -> str:
         f"{bonus_line}"
         f"💰 <b>Total:</b> <b>${order.get_total_cost():.2f}</b>\n"
         f"📅 <b>Date:</b> {order.created_at.strftime('%d.%m.%Y %H:%M')}\n"
-        f"📍 <b>Address:</b> {order.city}, {order.address}, {order.postal_code}\n"
+        f"📍 <b>Address:</b> {order.region}, {order.city}, {order.post_office}\n"
     )
 
     if paid and order.stripe_id:
@@ -85,3 +85,15 @@ def notify_order_created(order: "Order") -> None:
 def notify_order_paid(order: "Order") -> None:
     """Called from Celery task when order is paid via Stripe."""
     asyncio.run(_send(_build_order_message(order, paid=True)))
+
+
+def create_customer_message(order):
+    message = (
+        f"<b>New Order #{order.id}!</b>\n"
+        f"👤 <b>Customer:</b> {order.first_name} {order.last_name}\n"
+        f"✉️ <b>Email:</b> {order.email}\n"
+        f"📍 <b>Delivery:</b> {order.region}, {order.city}, {order.post_office}\n"
+        f"💰 <b>Total price:</b> ${order.get_total_cost()}\n"
+    )
+
+    return message

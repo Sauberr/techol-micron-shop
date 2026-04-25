@@ -28,8 +28,9 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Full Name</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">Region</th>
                                     <th scope="col">City</th>
-                                    <th scope="col">Postal Code</th>
+                                    <th scope="col">Branch</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Bonus points</th>
@@ -42,8 +43,9 @@
                                         <th scope="row">{{ order.id }}</th>
                                         <td>{{ order.first_name }} {{ order.last_name }}</td>
                                         <td>{{ order.email }}</td>
+                                        <td>{{ order.region }}</td>
                                         <td>{{ order.city }}</td>
-                                        <td>{{ order.postal_code }}</td>
+                                        <td>{{ order.post_office }}</td>
                                         <td class="date-column">{{ order.created_at|naturaltime }}</td>
                                         <th>{{ order.paid }}</th>
                                         <td> {{ order.bonus_points }}</td>
@@ -60,6 +62,10 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        {% if page_obj.has_other_pages %}
+                            {% include 'pagination.html' with queryset=page_obj custom_range=page_obj.paginator.page_range %}
+                        {% endif %}
                     {% else %}
                         <h2 class="no-orders">No orders</h2>
                     {% endif %}

@@ -68,13 +68,12 @@ Pay your order
             </tbody>
         </table>
 
-        <form action="{% url 'payment:process' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="pay-button">
+        <div style="text-align: center;">
+            <a href="{% url 'payment:select-payment' %}" class="pay-button" style="display: inline-block; text-decoration: none;">
                 <i class="fas fa-credit-card me-2"></i>
                 Pay Now
-            </button>
-        </form>
+            </a>
+        </div>
     </div>
 </section>
 

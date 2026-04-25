@@ -1,8 +1,8 @@
 .shipping-section {
-    padding: 3rem 0;
+    padding: 2rem 0 2rem 0;
     background-color: #f8f9fa;
     min-height: 80vh;
-    margin-top: -80px;
+    margin-top: 0;
 }
 
 .shipping-container {
@@ -95,6 +95,11 @@
 
 .form-control:focus + .form-label {
     color: #212529;
+}
+
+.city-input-wrapper .toggle-select {
+    border-radius: 0 8px 8px 0 !important;
+    border-color: #dee2e6 !important;
 }
 
 @media (max-width: 768px) {

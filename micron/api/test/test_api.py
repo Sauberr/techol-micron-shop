@@ -323,8 +323,8 @@ class APIOrderTestCase(APITestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            address='123 Test Street',
-            postal_code='12345',
+            
+            region="Kyiv", post_office="Branch 1",
             city='Test City',
             user=self.user
         )
@@ -361,9 +361,9 @@ class APIOrderTestCase(APITestCase):
             first_name='Jane',
             last_name='Smith',
             email='jane@example.com',
-            address='456 Test Ave',
-            postal_code='67890',
+            region='Some Region',
             city='Test Town',
+            post_office='Branch 2',
             user=other_user
         )
 

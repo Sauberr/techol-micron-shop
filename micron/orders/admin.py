@@ -77,9 +77,9 @@ class OrderAdmin(SafeDeleteAdmin):
         "first_name",
         "last_name",
         "email",
-        "address",
-        "postal_code",
+        "region",
         "city",
+        "post_office",
         "paid",
         "created_at",
         "updated_at",
@@ -101,4 +101,3 @@ class OrderItemAdmin(SafeDeleteAdmin):
     list_display = ("order", "product", "price", "quantity", "deleted")
     list_filter = (SafeDeleteAdminFilter,)
     list_select_related = ['order', 'product', 'user']
-

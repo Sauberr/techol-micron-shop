@@ -7,6 +7,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/account/manage-shipping.css' %}">
+<link rel="stylesheet" href="{% static 'css/orders/nova_poshta.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -39,20 +40,34 @@
                 {{ form.email|as_crispy_field }}
             </div>
 
-            <div class="form-group">
-                {{ form.address|as_crispy_field }}
-            </div>
+            {{ form.region|as_crispy_field }}
+            {{ form.city|as_crispy_field }}
+            {{ form.post_office|as_crispy_field }}
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.postal_code|as_crispy_field }}
-                    </div>
+            <div id="nova-poshta-section">
+                <div class="form-group mb-3">
+                    <label for="regionSelect" class="form-label">Select Region:</label>
+                    <select id="regionSelect" class="form-select" required>
+                        <option value="">Loading...</option>
+                    </select>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {{ form.city|as_crispy_field }}
+
+                <div class="form-group mb-3 city-search-container">
+                    <label for="cityInput" class="form-label">City:</label>
+                    <div class="city-input-wrapper" style="position: relative; display: flex; width: 100%;">
+                        <input type="text" id="cityInput" class="form-control"
+                               placeholder="Enter city name or choose from list" autocomplete="off">
+                        <button type="button" id="toggleCitySelect" class="toggle-select">▼</button>
                     </div>
+                    <input type="hidden" id="cityRef" name="cityRef">
+                    <div id="citySearchResults" class="search-results"></div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="officeSelect" class="form-label">Branch:</label>
+                    <select id="officeSelect" class="form-select" required>
+                        <option value="">Select branch</option>
+                    </select>
                 </div>
             </div>
 
@@ -66,4 +81,10 @@
 </section>
 
 {% include 'footer.html' %}
+
+<script>
+    const NOVA_POSHTA_API_KEY = "{{ settings.NOVA_POSHTA_API_KEY|default:'' }}";
+</script>
+<script src="{% static 'js/nova_poshta.js' %}"></script>
+
 {% endblock %}
