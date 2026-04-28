@@ -5,11 +5,13 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 from django.utils.translation import gettext_lazy as _
+from orders.admin_views import StoreStatisticsView
 from payment import webhooks
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = i18n_patterns(
     path("i18n/", include("django.conf.urls.i18n")),
+    path("admin/statistics/", StoreStatisticsView.as_view(), name="admin_statistics"),
     path("admin/", admin.site.urls),
     # Products App
     path("", include("products.urls", namespace="products")),

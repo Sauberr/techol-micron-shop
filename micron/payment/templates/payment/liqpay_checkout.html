@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    LiqPay Checkout
+{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; padding: 100px;">
+        <h2>Перенаправление на безопасный платежный шлюз...</h2>
+        <div style="margin-top: 20px; display: none;" id="liqpay-form-wrapper">
+            {{ form_html|safe }}
+        </div>
+        <div style="
+        margin: 20px auto; border: 8px solid #f3f3f3; border-top: 8px solid #3498db; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite;"></div>
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+    </div>
+
+    <script src="//static.liqpay.ua/libjs/checkout.js" async></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var form = document.querySelector('form[action*="liqpay.ua"]');
+            if (form) {
+                // Automatically redirect to LiqPay without waiting
+                form.submit();
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,15 +1,22 @@
+import base64
+import hashlib
+import json
 from decimal import Decimal
 from http import HTTPStatus
-import requests
 
-from django.utils.translation import gettext_lazy as _
+import requests
 import stripe
-from django.http import HttpRequest, JsonResponse, HttpResponse
+from django.conf import settings
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.base import TemplateView
+from liqpay import LiqPay
 
 from common.views import TitleMixin
-from django.conf import settings
-from django.shortcuts import get_object_or_404, redirect, render, reverse
-from django.views.generic.base import TemplateView
 from orders.models import Order
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -61,8 +68,7 @@ def payment_process(request: HttpRequest):
             session_data["discounts"] = [{"coupon": stripe_coupon.id}]
         session = stripe.checkout.Session.create(**session_data)
         return redirect(session.url, code=HTTPStatus.SEE_OTHER)
-    else:
-        return render(request, "payment/process.html", {"order": order})
+    return render(request, "payment/process.html", {"order": order})
 
 
 def get_paypal_access_token():
@@ -99,7 +105,7 @@ def paypal_process(request: HttpRequest):
         cancel_url = request.build_absolute_uri(reverse("payment:canceled"))
         
         total_cost = order.get_total_cost()
-        
+
         data = {
             "intent": "CAPTURE",
             "purchase_units": [{
@@ -124,8 +130,7 @@ def paypal_process(request: HttpRequest):
                     return redirect(link['href'])
         
         return redirect("payment:canceled")
-    else:
-        return redirect("payment:select-payment")
+    return redirect("payment:select-payment")
 
 
 def paypal_execute(request: HttpRequest):
@@ -158,81 +163,90 @@ def paypal_execute(request: HttpRequest):
     return redirect("payment:canceled")
 
 
-def liqpay_process(request: HttpRequest):
+class LiqPayProcessView(View):
     """Process payment via LiqPay checkout."""
-    from liqpay import LiqPay
 
-    order_id = request.session.get("order_id", None)
-    order = get_object_or_404(Order, id=order_id)
-    
-    public_key = getattr(settings, 'LIQPAY_PUBLIC_KEY', '')
-    private_key = getattr(settings, 'LIQPAY_PRIVATE_KEY', '')
-    
-    if not public_key or not private_key:
-        return redirect("payment:canceled")
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return self._process(request)
 
-    liqpay = LiqPay(public_key, private_key)
-    
-    total_cost = order.get_total_cost()
-    result_url = request.build_absolute_uri(reverse("payment:completed"))
-    server_url = request.build_absolute_uri(reverse("payment:liqpay-callback"))
+    def post(self, request: HttpRequest, *args, **kwargs):
+        return self._process(request)
 
-    params = {
-        'action': 'pay',
-        'amount': str(total_cost),
-        'currency': 'USD',
-        'description': f'Order {order.id}',
-        'order_id': str(order.id),
-        'version': '3',
-        'sandbox': 1 if settings.DEBUG else 0,
-        'result_url': result_url,
-        'server_url': server_url,
-    }
-    
-    # We render an intermediate template that submits the form
-    signature = liqpay.cnb_signature(params)
-    data = liqpay.cnb_data(params)
-    
-    context = {
-        'data': data,
-        'signature': signature
-    }
-    return render(request, "payment/liqpay_redirect.html", context)
+    def _process(self, request: HttpRequest):
+        order_id = request.session.get("order_id", None)
+        if not order_id:
+            return redirect("payment:canceled")
+
+        order = get_object_or_404(Order, id=order_id)
+
+        public_key = getattr(settings, 'LIQPAY_PUBLIC_KEY', '')
+        private_key = getattr(settings, 'LIQPAY_PRIVATE_KEY', '')
+
+        if not public_key or not private_key:
+            return redirect("payment:canceled")
+
+        liqpay = LiqPay(public_key, private_key)
+
+        total_cost = order.get_total_cost()
+        result_url = request.build_absolute_uri(reverse("payment:completed"))
+        server_url = request.build_absolute_uri(reverse("payment:liqpay-callback"))
+
+        params = {
+            'action': 'pay',
+            'amount': str(total_cost),
+            'currency': 'USD',
+            'description': f'Order {order.id}',
+            'order_id': str(order.id),
+            'version': '3',
+            'sandbox': 1 if settings.DEBUG else 0,
+            'result_url': result_url,
+            'server_url': server_url,
+        }
+
+        form_html = liqpay.cnb_form(params)
+
+        context = {
+            'order': order,
+            'form_html': form_html
+        }
+        return render(request, "payment/liqpay_checkout.html", context)
 
 
-from django.views.decorators.csrf import csrf_exempt
-
-@csrf_exempt
-def liqpay_callback(request: HttpRequest):
+@method_decorator(csrf_exempt, name='dispatch')
+class LiqPayCallbackView(View):
     """Webhook callback for LiqPay."""
-    from liqpay import LiqPay
 
-    data = request.POST.get('data')
-    signature = request.POST.get('signature')
-    
-    if not data or not signature:
-        return HttpResponse(status=400)
-    
-    public_key = getattr(settings, 'LIQPAY_PUBLIC_KEY', '')
-    private_key = getattr(settings, 'LIQPAY_PRIVATE_KEY', '')
-    
-    liqpay = LiqPay(public_key, private_key)
-    sign = liqpay.str_to_sign(private_key + data + private_key)
-    
-    if sign == signature:
-        response = liqpay.decode_data_from_str(data)
-        if response.get('status') in ['success', 'sandbox']:
-            order_id = response.get('order_id')
-            if order_id:
-                try:
-                    order = Order.objects.get(id=order_id)
-                    order.paid = "paid"
-                    order.save()
-                    return HttpResponse(status=200)
-                except Order.DoesNotExist:
-                    pass
-    
-    return HttpResponse(status=400)
+    def post(self, request, *args, **kwargs):
+        data = request.POST['data']
+        signature = request.POST['signature']
+
+        if not data or not signature:
+            return HttpResponse(status=HTTPStatus.BAD_REQUEST)
+
+        private_key = getattr(settings, 'LIQPAY_PRIVATE_KEY', '')
+        sign_str = private_key + data + private_key
+        sign = base64.b64encode(hashlib.sha1(sign_str.encode('utf-8')).digest()).decode('utf-8')
+
+        if sign != signature:
+            return HttpResponse(status=HTTPStatus.BAD_REQUEST)
+
+        decoded_data = base64.b64decode(data).decode('utf-8')
+        response = json.loads(decoded_data)
+
+        try:
+            order = Order.objects.get(id=response['order_id'])
+        except Order.DoesNotExist:
+            return HttpResponse(status=HTTPStatus.NOT_FOUND)
+
+        if response.get('status') == 'success':
+            order.paid = "paid"
+            order.save()
+        elif response.get('status') in ['sandbox', 'wait_accept', 'processing', 'wait_secure']:
+            if response.get('status') == 'sandbox':
+                order.paid = "paid"
+                order.save()
+
+        return HttpResponse()
 
 
 class SuccessTemplateView(TitleMixin, TemplateView):

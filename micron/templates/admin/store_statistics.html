@@ -1,0 +1,103 @@
+{% extends "admin/base_site.html" %}
+{% load humanize static %}
+
+{% block title %}{{ title }} | {{ site_header|default:"Admin" }}{% endblock %}
+
+{% block content_title %}
+<h1 class="m-0 text-dark pb-2">
+    <i class="fas fa-chart-line text-primary mr-2"></i> Admin Panel Statistics
+    <small class="text-muted border-left ml-2 pl-2" style="font-size: 60%;">Micron Store</small>
+</h1>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'admin/css/store_statistics.css' %}">
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow-sm bg-white mb-0">
+            <div class="card-body p-3 d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <h5 class="m-0 text-secondary font-weight-bold mb-3 mb-md-0">
+                    <i class="fas fa-tachometer-alt mr-2 text-indigo"></i> Performance Overview
+                </h5>
+                <form method="GET" class="form-inline m-0">
+                    <div class="form-group m-0">
+                        <label for="days" class="mr-3 text-muted font-weight-bold">Select Period:</label>
+                        <select name="days" id="days" class="form-control custom-select-ui pl-3 pr-4 py-2" onchange="this.form.submit()">
+                            <option value="7" {% if selected_days == 7 %}selected{% endif %}>Last 7 Days</option>
+                            <option value="30" {% if selected_days == 30 %}selected{% endif %}>Last 30 Days</option>
+                            <option value="90" {% if selected_days == 90 %}selected{% endif %}>Last 90 Days</option>
+                            <option value="365" {% if selected_days == 365 %}selected{% endif %}>Last 365 Days</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-6 col-12">
+        <div class="small-box bg-info shadow-sm position-relative">
+            <div class="inner p-4">
+                <h3 class="stats-kpi-val" title="{{ total_orders }}">{{ total_orders|intcomma }}</h3>
+                <p class="mb-0 text-uppercase font-weight-bold" style="letter-spacing: 1px; opacity: 0.9;">Total Paid Orders</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-shopping-bag text-white" style="opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-12">
+        <div class="small-box bg-success shadow-sm position-relative">
+            <div class="inner p-4">
+                <h3 class="stats-kpi-val" title="${{ total_revenue|floatformat:2|intcomma }}">
+                    ${{ total_revenue|floatformat:2|intcomma }}
+                </h3>
+                <p class="mb-0 text-uppercase font-weight-bold" style="letter-spacing: 1px; opacity: 0.9;">Total Revenue</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-wallet text-white" style="opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white pt-4 pb-3">
+                <h3 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fas fa-chart-area text-primary mr-2"></i> Daily Revenue & Orders
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="chart">
+                    <canvas id="dailyChart" style="min-height: 350px; height: 350px; max-height: 350px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white pt-4 pb-3">
+                <h3 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fas fa-chart-pie text-success mr-2"></i> Status Distribution
+                </h3>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <div class="chart w-100">
+                    <canvas id="statusChart" style="min-height: 350px; height: 350px; max-height: 350px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="chartData" type="application/json">
+    {{ chart_data|safe }}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'admin/js/store_statistics.js' %}"></script>
+{% endblock %}

@@ -39,6 +39,8 @@ env = environ.Env(
     PAYPAL_SECRET_KEY=(str),
     LIQPAY_PUBLIC_KEY=(str),
     LIQPAY_PRIVATE_KEY=(str),
+    LIQPAY_API_URL=(str),
+    LIQPAY_SANDBOX=(bool),
     NOVA_POSHTA_API_KEY=(str),
 )
 
@@ -299,6 +301,8 @@ PAYPAL_SECRET_KEY = env("PAYPAL_SECRET_KEY", default="")
 
 LIQPAY_PUBLIC_KEY = env("LIQPAY_PUBLIC_KEY", default="")
 LIQPAY_PRIVATE_KEY = env("LIQPAY_PRIVATE_KEY", default="")
+LIQPAY_API_URL = env("LIQPAY_API_URL", default="https://www.liqpay.ua/api/3/checkout")
+LIQPAY_SANDBOX = env.bool("LIQPAY_SANDBOX", default=True)
 
 # Nova Poshta
 
@@ -483,6 +487,13 @@ JAZZMIN_SETTINGS: dict[str, ...] = {
     "site_brand": "Shopping made easy....",
     "site_logo": "images/logo.png",
     "copyright": "Micron - All Right Reserved @ Copyright 2024 - Till Date",
+    "custom_links": {
+        "orders": [{
+            "name": "Statistics Dashboard",
+            "url": "admin_statistics",
+            "icon": "fas fa-chart-line",
+        }]
+    },
     "order_with_respect_to": [
         "products",
         "user_account",

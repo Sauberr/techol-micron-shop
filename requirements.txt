@@ -109,3 +109,4 @@ zopfli==0.2.3.post1
 gunicorn==23.0.0
 flower==2.0.1
 httpx==0.28.1
+liqpay-python @ git+https://github.com/liqpay/sdk-python@d6f86a0284a36d689a931110b9ce629ef8b84432
