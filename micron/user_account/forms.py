@@ -116,11 +116,41 @@ class UserUpdateForm(forms.ModelForm):
     def clean_email(self):
         data = self.cleaned_data["email"]
 
+        if self.instance and self.instance.email == data:
+            return data
+
         if get_user_model().objects.filter(email=data).exists():
             raise forms.ValidationError("Email already in use.")
         if len(data) >= 350:
             raise forms.ValidationError("Your email is too long")
         return data
+
+
+class ShippingProfileForm(forms.ModelForm):
+    first_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={"class": "form-control py-2", "placeholder": "First name"}),
+    )
+    last_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={"class": "form-control py-2", "placeholder": "Last name"}),
+    )
+    region = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_region_hidden"}),
+    )
+    city = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_city_hidden"}),
+    )
+    post_office = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_post_office_hidden"}),
+    )
+
+    class Meta:
+        model = Profile
+        fields = ["first_name", "last_name", "region", "city", "post_office"]
 
 
 class ContactForm(forms.ModelForm):

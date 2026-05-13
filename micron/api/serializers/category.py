@@ -17,7 +17,8 @@ class CategorySerializer(TranslatableModelSerializer):
 
     def validate_slug(self, value) -> str:
         instance = self.instance
-        language = self.context.get('request').LANGUAGE_CODE if 'request' in self.context else 'en'
+        request = self.context.get('request')
+        language = request.LANGUAGE_CODE if request is not None else 'en'
 
         query = Category.objects.filter(
             translations__slug=value,

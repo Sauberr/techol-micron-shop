@@ -1,6 +1,6 @@
 import logging
-from datetime import datetime
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.utils import timezone
 from django.http import Http404, HttpRequest
 from django.db import IntegrityError
 from rest_framework import status
@@ -65,7 +65,7 @@ def build_error_response(exc, original_data, request, error_id):
     error_response = {
         'error': True,
         'error_id': error_id,
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': timezone.now().isoformat(),
         'path': request.path if request else None,
         'method': request.method if request else None,
     }
@@ -194,7 +194,7 @@ def handle_django_validation_error(exc, request, error_id):
         'details': exc.message_dict if hasattr(exc, 'message_dict') else [
             str(exc)],
         'code': _('django_validation_error'),
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': timezone.now().isoformat(),
         'path': request.path if request else None,
     }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -223,7 +223,7 @@ def handle_integrity_error(exc, request, error_id):
         'message': message,
         'code': code,
         'help': _('Check the data being submitted'),
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': timezone.now().isoformat(),
         'path': request.path if request else None,
     }, status=status_code)
 
@@ -239,7 +239,7 @@ def handle_http_404(exc, request, error_id):
         'message': _('The requested resource was not found'),
         'code': _('not_found'),
         'help': _('Check that the URL and request parameters are correct.'),
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': timezone.now().isoformat(),
         'path': request.path if request else None,
     }, status=status.HTTP_404_NOT_FOUND)
 
@@ -254,7 +254,7 @@ def handle_unexpected_error(exc, request, error_id):
         'message': _('An unexpected error occurred on the server'),
         'code': _('internal_server_error'),
         'help': _('Please contact support with the error ID'),
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': timezone.now().isoformat(),
         'path': request.path if request else None,
     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

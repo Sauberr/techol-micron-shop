@@ -62,6 +62,8 @@ class PaymentViewTestCase(TestCase):
 
     def test_payment_process_view_get(self):
         """Test payment process GET request"""
+        self.client.login(username='testuser', password='testpass123')
+
         session = self.client.session
         session['order_id'] = self.order.id
         session.save()
@@ -75,7 +77,8 @@ class PaymentViewTestCase(TestCase):
     @patch('stripe.checkout.Session.create')
     def test_payment_process_view_post(self, mock_stripe_session):
         """Test payment process POST request with Stripe"""
-        # Mock Stripe session
+        self.client.login(username='testuser', password='testpass123')
+
         mock_session = Mock()
         mock_session.url = 'https://checkout.stripe.com/test'
         mock_stripe_session.return_value = mock_session
@@ -94,6 +97,8 @@ class PaymentViewTestCase(TestCase):
     @patch('stripe.Coupon.create')
     def test_payment_process_with_coupon(self, mock_coupon, mock_stripe_session):
         """Test payment process with coupon discount"""
+        self.client.login(username='testuser', password='testpass123')
+
         from coupons.models import Coupon
         from django.utils import timezone
         from datetime import timedelta
@@ -148,6 +153,8 @@ class PaymentViewTestCase(TestCase):
 
     def test_payment_process_without_order(self):
         """Test payment process without order in session"""
+        self.client.login(username='testuser', password='testpass123')
+
         path = reverse('payment:process')
         response = self.client.get(path)
 
@@ -257,7 +264,7 @@ class StripeWebhookTestCase(TestCase):
 
         mock_construct_event.return_value = mock_event
 
-        path = reverse('payment:stripe-webhook')
+        path = reverse('stripe-webhook')
         response = self.client.post(
             path,
             data='{}',

@@ -47,8 +47,6 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
                     transaction.on_commit(lambda: payment_completed.delay(order.id))
                     transaction.on_commit(lambda: send_telegram_order_paid.delay(order.id))
 
-            except Order.DoesNotExist:
-                return HttpResponse(status=HTTPStatus.BAD_REQUEST)
             except Exception:
                 return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 

@@ -10,6 +10,7 @@ env = environ.Env(
     DEBUG=(bool),
     SECRET_KEY=(str),
     DOMAIN_NAME=(str),
+    ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1"]),
     DATABASE_NAME=(str),
     DATABASE_USER=(str),
     DATABASE_PASSWORD=(str),
@@ -60,12 +61,14 @@ SECRET_KEY: str = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG: bool = env("DEBUG")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS: list[str] = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 
 DOMAIN_NAME = env("DOMAIN_NAME")
 
 
 # Application definition
+
+_DEBUG_APPS = ["debug_toolbar"] if DEBUG else []
 
 INSTALLED_APPS: tuple[str, ...] = (
     # Local apps
@@ -77,7 +80,7 @@ INSTALLED_APPS: tuple[str, ...] = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "debug_toolbar",
+    *_DEBUG_APPS,
     "django_extensions",
     "django.contrib.humanize",
     "social_django",
@@ -123,6 +126,8 @@ PARLER_LANGUAGES = {
 }
 
 
+_DEBUG_MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] if DEBUG else []
+
 MIDDLEWARE: tuple[str, ...] = (
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -132,7 +137,7 @@ MIDDLEWARE: tuple[str, ...] = (
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    *_DEBUG_MIDDLEWARE,
 )
 
 ROOT_URLCONF: str = "micron.urls"

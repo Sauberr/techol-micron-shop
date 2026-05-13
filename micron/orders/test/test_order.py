@@ -388,7 +388,7 @@ class OrderViewTestCase(TestCase):
 
         order_id = self.order.id
         path = reverse('orders:delete_order', args=[order_id])
-        response = self.client.get(path)
+        response = self.client.post(path)
 
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertFalse(Order.objects.filter(id=order_id).exists())

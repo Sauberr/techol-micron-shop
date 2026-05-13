@@ -33,7 +33,7 @@ class ProductAdmin(SafeDeleteAdmin, TranslatableAdmin):
     """Product Admin"""
 
     def thumbnail(self, object):
-        return format_html('<img src="{}" width="40";" />'.format(object.image.url))
+        return format_html('<img src="{}" width="40" />', object.image.url)
 
     thumbnail.short_description = "Image"
     list_display = [

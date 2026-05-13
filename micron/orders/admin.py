@@ -4,7 +4,7 @@ import datetime
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import reverse
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 from safedelete.admin import SafeDeleteAdmin, SafeDeleteAdminFilter, highlight_deleted
 from orders.models.order import Order
 from orders.models.order_item import OrderItem
@@ -42,14 +42,13 @@ class OrderItemInLine(admin.TabularInline):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return OrderItem.all_objects.filter(order=self.instance) if hasattr(self, 'instance') else qs
+        return OrderItem.all_objects.filter(order=self.instance) if hasattr(self, 'instance') and self.instance.pk else qs
 
 
 def order_stripe_payment(obj):
     url = obj.get_stripe_url()
     if obj.stripe_id:
-        html = f'<a href="{url}" target="_blank">{obj.stripe_if}</a>'
-        return mark_safe(html)
+        return format_html('<a href="{}" target="_blank">{}</a>', url, obj.stripe_id)
     return ""
 
 
@@ -58,12 +57,12 @@ order_stripe_payment.short_description = "Stripe Payment"
 
 def order_detail(obj):
     url = reverse("orders:admin_order_detail", args=[obj.id])
-    return mark_safe(f'<a href="{url}">View</a>')
+    return format_html('<a href="{}">View</a>', url)
 
 
 def order_pdf(obj):
     url = reverse("orders:admin_order_pdf", args=[obj.id])
-    return mark_safe(f'<a href="{url}">PDF</a>')
+    return format_html('<a href="{}">PDF</a>', url)
 
 
 order_pdf.short_description = "Invoice"

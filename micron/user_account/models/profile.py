@@ -13,6 +13,9 @@ class Profile(TimeStampedModel):
     email = models.EmailField(null=True, blank=True)
     image = models.ImageField(upload_to="avatar", null=True, blank=True)
     is_email_verified = models.BooleanField(default=False)
+    region = models.CharField(max_length=250, blank=True, default="")
+    city = models.CharField(max_length=100, blank=True, default="")
+    post_office = models.CharField(max_length=250, blank=True, default="")
 
     class Meta:
         verbose_name = _("Profile")

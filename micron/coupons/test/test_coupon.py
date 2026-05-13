@@ -21,17 +21,15 @@ class CouponModelTestCase(BaseCouponTestCase):
         self.assertEqual(str(self.coupon), 'TESTCODE2025')
 
     def test_coupon_unique_code(self):
-        """Test that coupon code can be duplicated (no unique constraint)"""
-        duplicate_coupon = Coupon.objects.create(
-            code='TESTCODE2025',
-            valid_from=self.now,
-            valid_to=self.now + timedelta(days=30),
-            discount=30,
-            active=True
-        )
-
-        self.assertIsNotNone(duplicate_coupon.id)
-        self.assertEqual(Coupon.objects.filter(code='TESTCODE2025').count(), 2)
+        """Test that coupon code must be unique at DB level"""
+        with self.assertRaises(IntegrityError):
+            Coupon.objects.create(
+                code='TESTCODE2025',
+                valid_from=self.now,
+                valid_to=self.now + timedelta(days=30),
+                discount=30,
+                active=True
+            )
 
     def test_coupon_discount_validators(self):
         """Test discount value validators"""

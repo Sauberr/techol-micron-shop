@@ -1,8 +1,6 @@
 from django.urls import path
 from payment.views import CanceledTemplateView, SuccessTemplateView, payment_process, select_payment, paypal_process, paypal_execute, LiqPayProcessView, LiqPayCallbackView
 
-from . import webhooks
-
 app_name: str = "payment"
 
 urlpatterns = [
@@ -14,5 +12,4 @@ urlpatterns = [
     path("select/", select_payment, name="select-payment"),
     path("completed/", SuccessTemplateView.as_view(), name="completed"),
     path("canceled/", CanceledTemplateView.as_view(), name="canceled"),
-    path("webhook/", webhooks.stripe_webhook, name="stripe-webhook"),
 ]

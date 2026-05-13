@@ -1,4 +1,4 @@
-from django.http import HttpRequest, JsonResponse
+from django.http import Http404, HttpRequest, JsonResponse
 from django.views.decorators.http import require_POST
 from http import HTTPStatus
 import logging
@@ -33,7 +33,7 @@ def index(request: HttpRequest):
     """Render homepage with featured products and reviews."""
 
     products, search_query = search_products(request)
-    reviews = Review.objects.all().select_related("user", "product")
+    reviews = Review.objects.all().select_related("user", "product").order_by("-created_at")[:8]
     context = {
         "title": "| Products",
         "products": products,
@@ -99,7 +99,7 @@ def product_detail(request: HttpRequest, product_slug: str):
             translations__slug=product_slug,
             available=True,
         )
-    except Product.DoesNotExist:
+    except (Product.DoesNotExist, Product.MultipleObjectsReturned):
         try:
             product_in_other_language = Product.objects.get(
                 translations__slug=product_slug,
@@ -108,12 +108,11 @@ def product_detail(request: HttpRequest, product_slug: str):
             translation_in_current_language = product_in_other_language.translations.filter(
                 language_code=language
             ).first()
-
             if not translation_in_current_language:
-                raise Product.DoesNotExist(f"Product with slug '{product_slug}' has no translation in '{language}'")
+                raise Http404
             product = product_in_other_language
-        except Product.DoesNotExist:
-            raise Product.DoesNotExist(f"Product with slug '{product_slug}' not found")
+        except (Product.DoesNotExist, Product.MultipleObjectsReturned):
+            raise Http404
 
     cart_product_form = CartAddProductForm(product=product)
 
@@ -138,7 +137,7 @@ def product_detail(request: HttpRequest, product_slug: str):
 def tag_list(request: HttpRequest, tag_slug=None):
     """Filter and display products by tag."""
 
-    products = Product.objects.all().order_by("-id")
+    products = Product.objects.filter(available=True).order_by("-id")
 
     tag = None
     if tag_slug:
@@ -189,15 +188,12 @@ def add_to_favorite(request: HttpRequest, product_id: int):
 def favorite_products(request: HttpRequest):
     """Display list of user favorite products."""
 
-    if request.user.is_authenticated:
-        favorite_products = request.user.favorite_products.all().prefetch_related("tags").select_related("category")
-        context = {
-            "favorite_products": favorite_products,
-            "title": "| Favorite products",
-        }
-        return render(request, "products/favorite_products.html", context)
-    else:
-        return redirect("user_account:login")
+    favorite_products = request.user.favorite_products.all().prefetch_related("tags").select_related("category")
+    context = {
+        "favorite_products": favorite_products,
+        "title": "| Favorite products",
+    }
+    return render(request, "products/favorite_products.html", context)
 
 
 @login_required

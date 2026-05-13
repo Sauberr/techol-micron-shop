@@ -17,11 +17,7 @@ class UserAdmin(SafeDeleteAdmin):
 
     def thumbnail(self, object):
         if object.image and hasattr(object.image, 'url'):
-            return format_html(
-                '<img src="{}" width="40" style="border-radius: 50px;" />'.format(
-                    object.image.url
-                )
-            )
+            return format_html('<img src="{}" width="40" style="border-radius: 50px;" />', object.image.url)
         else:
             return 'No Image'
 
@@ -54,10 +50,6 @@ class ProfileAdmin(SafeDeleteAdmin):
 
     def thumbnail(self, object):
         if object.image and hasattr(object.image, 'url'):
-            return format_html(
-                '<img src="{}" width="40" style="border-radius: 50px;" />'.format(
-                    object.image.url
-                )
-            )
+            return format_html('<img src="{}" width="40" style="border-radius: 50px;" />', object.image.url)
         else:
             return 'No Image'

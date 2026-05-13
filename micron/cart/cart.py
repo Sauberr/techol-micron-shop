@@ -26,6 +26,9 @@ class Cart:
             cart[str(product.id)]["product"] = product
 
         for item in cart.values():
+            if "product" not in item:
+                continue
+
             item["price"] = Decimal(item["price"])
             if "bonus_points" in item and item["bonus_points"] is not None:
                 item["bonus_points"] = Decimal(item["bonus_points"])
@@ -59,12 +62,12 @@ class Cart:
     def get_total_price_after_discount(self) -> Decimal:
         return self.get_total_price() - self.get_discount()
 
-    def get_total_price(self) -> int:
+    def get_total_price(self) -> Decimal:
         return sum(
             Decimal(item["price"]) * item["quantity"] for item in self.cart.values()
         )
 
-    def get_total_bonus_points(self) -> int:
+    def get_total_bonus_points(self) -> Decimal:
         return sum(
             item["quantity"] * Decimal(item.get("bonus_points", "0") or "0")
             for item in self.cart.values()

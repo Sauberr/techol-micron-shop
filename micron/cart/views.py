@@ -18,6 +18,9 @@ def cart_summary(request: HttpRequest):
     cart = Cart(request)
     cart_updated = False
 
+    items_to_remove = []
+    items_to_adjust = []
+
     for item in cart:
         product = item["product"]
         quantity = item["quantity"]
@@ -26,18 +29,23 @@ def cart_summary(request: HttpRequest):
             continue
 
         if not product.available or product.quantity == 0:
-            cart.remove(product)
-            messages.warning(request, _(
-                "'{0}' has been removed from your cart as it is no longer available."
-            ).format(product.name))
-            cart_updated = True
-
+            items_to_remove.append(product)
         elif product.quantity < quantity:
-            cart.add(product=product, quantity=product.quantity, override_quantity=True)
-            messages.warning(request, _(
-                "Quantity for '{0}' has been adjusted to {1} due to limited stock."
-            ).format(product.name, product.quantity))
-            cart_updated = True
+            items_to_adjust.append((product, product.quantity))
+
+    for product in items_to_remove:
+        cart.remove(product)
+        messages.warning(request, _(
+            "'{0}' has been removed from your cart as it is no longer available."
+        ).format(product.name))
+        cart_updated = True
+
+    for product, new_qty in items_to_adjust:
+        cart.add(product=product, quantity=new_qty, override_quantity=True)
+        messages.warning(request, _(
+            "Quantity for '{0}' has been adjusted to {1} due to limited stock."
+        ).format(product.name, new_qty))
+        cart_updated = True
 
     for item in cart:
 
@@ -62,7 +70,7 @@ def cart_add(request: HttpRequest, product_id: int):
     product = get_object_or_404(Product, id=product_id)
     is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
-    if product.quantity == 0:
+    if not product.available or product.quantity == 0:
         if is_ajax:
             return JsonResponse(
                 {

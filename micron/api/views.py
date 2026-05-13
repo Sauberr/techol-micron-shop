@@ -54,10 +54,11 @@ class ProductModelViewSet(ModelViewSet):
     ordering_fields = ["translations__name", "created_at"]
 
     def get_queryset(self):
-        qs = Product.objects.all()
         if self.request.query_params.get('show_deleted') == 'true' and self.request.user.is_staff:
             qs = Product.all_objects.all()
-        return qs
+        else:
+            qs = Product.objects.all()
+        return qs.prefetch_related('review_set', 'tags')
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
     def undelete(self, request, pk=None):
@@ -117,17 +118,14 @@ class OrderModelViewSet(ModelViewSet):
         Regular users can only see their own orders.
         Admins can see all orders.
         """
-        qs = Order.objects.all()
-
-        if not self.request.user.is_staff:
-            qs = qs.filter(user=self.request.user)
-
         if self.request.query_params.get('show_deleted') == 'true' and self.request.user.is_staff:
             qs = Order.all_objects.all()
+        else:
+            qs = Order.objects.all()
             if not self.request.user.is_staff:
                 qs = qs.filter(user=self.request.user)
 
-        return qs
+        return qs.select_related('coupon', 'user').prefetch_related('items__product')
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
     def undelete(self, request, pk=None):

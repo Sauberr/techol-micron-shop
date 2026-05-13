@@ -3,7 +3,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.db.models import Count, Sum, F, DecimalField, ExpressionWrapper
 from django.db.models.functions import TruncDay
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
 import json
 from .models import Order
 
@@ -19,7 +20,7 @@ class StoreStatisticsView(TemplateView):
             filter_days = int(days_param)
         except ValueError:
             filter_days = 30
-        start_date = datetime.now() - timedelta(days=filter_days)
+        start_date = timezone.now() - timedelta(days=filter_days)
         # Base queryset for paid orders in range
         qs_paid = Order.objects.filter(created_at__gte=start_date, paid='paid')
         # Daily orders and revenue
