@@ -72,7 +72,14 @@ class Recommender:
             return
 
         try:
-            for product_id in Product.objects.values_list("id", flat=True):
-                self.r.delete(self.get_product_key(product_id))
+            keys = [
+                self.get_product_key(pid)
+                for pid in Product.objects.values_list("id", flat=True)
+            ]
+            if keys:
+                pipeline = self.r.pipeline()
+                for key in keys:
+                    pipeline.delete(key)
+                pipeline.execute()
         except Exception as e:
             logger.error(f"Failed to clear purchases: {e}")

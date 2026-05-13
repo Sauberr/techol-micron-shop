@@ -7,6 +7,7 @@ from http import HTTPStatus
 import requests
 import stripe
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.utils.decorators import method_decorator
@@ -18,11 +19,14 @@ from liqpay import LiqPay
 
 from common.views import TitleMixin
 from orders.models import Order
+from orders.tasks import send_telegram_order_paid
+from .tasks import payment_completed
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe.api_version = settings.STRIPE_API_VERSION
 
 
+@login_required
 def select_payment(request: HttpRequest):
     order_id = request.session.get("order_id", None)
     order = get_object_or_404(Order, id=order_id)
@@ -33,6 +37,7 @@ def select_payment(request: HttpRequest):
     return render(request, "payment/select_payment.html", context)
 
 
+@login_required
 def payment_process(request: HttpRequest):
     """Process payment via Stripe checkout session."""
 
@@ -83,6 +88,7 @@ def get_paypal_access_token():
         return response.json()['access_token']
     return None
 
+@login_required
 def paypal_process(request: HttpRequest):
     """Process payment via PayPal checkout session."""
     order_id = request.session.get("order_id", None)
@@ -133,46 +139,45 @@ def paypal_process(request: HttpRequest):
     return redirect("payment:select-payment")
 
 
+@login_required
 def paypal_execute(request: HttpRequest):
     """Capture PayPal payment when user is redirected back."""
     token = request.GET.get('token')
-    if not token:
+    order_id = request.session.get("order_id")
+
+    if not token or not order_id:
         return redirect("payment:canceled")
-        
+
+    order = get_object_or_404(Order, id=order_id)
+
     access_token = get_paypal_access_token()
     if not access_token:
         return redirect("payment:canceled")
-        
+
     base_url = "https://api-m.sandbox.paypal.com" if settings.DEBUG else "https://api-m.paypal.com"
     url = f"{base_url}/v2/checkout/orders/{token}/capture"
-    
+
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {access_token}'
     }
-    
+
     response = requests.post(url, headers=headers)
     if response.ok:
-        order_id = request.session.get("order_id", None)
-        if order_id:
-            order = get_object_or_404(Order, id=order_id)
-            order.paid = "paid"
-            order.save()
+        order.paid = "paid"
+        order.save()
+        payment_completed.delay(order.id)
+        send_telegram_order_paid.delay(order.id)
         return redirect("payment:completed")
-    
+
     return redirect("payment:canceled")
 
 
+@method_decorator(login_required, name='dispatch')
 class LiqPayProcessView(View):
     """Process payment via LiqPay checkout."""
 
-    def get(self, request: HttpRequest, *args, **kwargs):
-        return self._process(request)
-
-    def post(self, request: HttpRequest, *args, **kwargs):
-        return self._process(request)
-
-    def _process(self, request: HttpRequest):
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
         order_id = request.session.get("order_id", None)
         if not order_id:
             return redirect("payment:canceled")
@@ -217,8 +222,8 @@ class LiqPayCallbackView(View):
     """Webhook callback for LiqPay."""
 
     def post(self, request, *args, **kwargs):
-        data = request.POST['data']
-        signature = request.POST['signature']
+        data = request.POST.get('data')
+        signature = request.POST.get('signature')
 
         if not data or not signature:
             return HttpResponse(status=HTTPStatus.BAD_REQUEST)
@@ -241,10 +246,14 @@ class LiqPayCallbackView(View):
         if response.get('status') == 'success':
             order.paid = "paid"
             order.save()
+            payment_completed.delay(order.id)
+            send_telegram_order_paid.delay(order.id)
         elif response.get('status') in ['sandbox', 'wait_accept', 'processing', 'wait_secure']:
             if response.get('status') == 'sandbox':
                 order.paid = "paid"
                 order.save()
+                payment_completed.delay(order.id)
+                send_telegram_order_paid.delay(order.id)
 
         return HttpResponse()
 

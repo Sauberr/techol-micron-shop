@@ -1,44 +1,45 @@
 from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
+
 from user_account.models.profile import Profile
 from user_account.models.user import User
 
 
+@receiver(post_save, sender=User)
 def profile_create(sender, instance, created, **kwargs) -> None:
     if created:
         user = instance
-        profile = Profile.objects.create(
+        Profile.objects.create(
             user=user,
             first_name=user.first_name,
             last_name=user.last_name,
             username=user.username,
             email=user.email,
             is_email_verified=user.is_verified_email,
-            created_at=user.date_joined,
         )
 
 
+@receiver(post_save, sender=Profile)
 def update_profile(sender, instance, created, **kwargs) -> None:
+    if created:
+        return
     profile = instance
     user = profile.user
+    if not user:
+        return
+    user.first_name = profile.first_name
+    user.last_name = profile.last_name
+    user.username = profile.username
+    user.image = profile.image
+    user.email = profile.email
+    user.is_verified_email = profile.is_email_verified
+    user.save()
 
-    if created is False:
-        user.first_name = profile.first_name
-        user.last_name = profile.last_name
-        user.username = profile.username
-        user.image = profile.image
-        user.email = profile.email
-        user.is_verified_email = profile.is_email_verified
-        user.save()
 
-
+@receiver(post_delete, sender=Profile)
 def delete_profile(sender, instance, **kwargs) -> None:
     try:
         user = instance.user
         user.delete()
     except User.DoesNotExist:
         pass
-
-
-post_save.connect(profile_create, sender=User)
-post_save.connect(update_profile, sender=Profile)
-post_delete.connect(delete_profile, sender=Profile)

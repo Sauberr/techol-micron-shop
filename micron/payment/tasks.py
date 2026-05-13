@@ -1,3 +1,4 @@
+import os
 from io import BytesIO
 
 import weasyprint
@@ -10,13 +11,13 @@ from orders.models import Order
 
 @shared_task
 def send_order_invoice(order_id: int) -> None:
-    order = Order.objects.get(id=order_id)
+    order = Order.objects.select_related("coupon", "user").prefetch_related("items__product").get(id=order_id)
     subject = f"My Shop - Invoice no. {order.id}"
     message = "Please, find attached the invoice for your recent purchase."
     email = EmailMessage(subject, message, "admin@myshop.com", [order.email])
     html = render_to_string("orders/order/pdf.html", {"order": order})
     out = BytesIO()
-    stylesheets = [weasyprint.CSS(settings.STATIC_ROOT + "/css/pdf.css")]
+    stylesheets = [weasyprint.CSS(os.path.join(settings.STATIC_ROOT, "css", "pdf.css"))]
     weasyprint.HTML(string=html).write_pdf(out, stylesheets=stylesheets)
     email.attach(f"order_{order.id}.pdf", out.getvalue(), "application/pdf")
     email.send()
@@ -24,7 +25,7 @@ def send_order_invoice(order_id: int) -> None:
 
 @shared_task
 def add_user_bonus_points(order_id: int) -> None:
-    order = Order.objects.get(id=order_id)
+    order = Order.objects.select_related("user").get(id=order_id)
     if order.paid == "paid" and order.user and order.bonus_points > 0:
         order.user.add_bonus_points(order.bonus_points)
 

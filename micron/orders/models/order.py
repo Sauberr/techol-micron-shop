@@ -45,6 +45,9 @@ class Order(TimeStampedModel):
         verbose_name = _("order")
         verbose_name_plural = _("orders")
         ordering = ["-created_at", "-updated_at"]
+        indexes = [
+            models.Index(fields=["user", "-created_at"], name="order_user_date_idx"),
+        ]
 
 
     def __str__(self) -> str:

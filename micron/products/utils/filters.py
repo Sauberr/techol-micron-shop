@@ -21,19 +21,9 @@ def get_effective_price_expr():
 def get_price_range() -> dict:
     """Get min and max prices from all available products."""
 
-    effective_price = Case(
-        When(
-            discount=True,
-            price_with_discount__isnull=False,
-            then='price_with_discount'
-        ),
-        default='price',
-        output_field=DecimalField()
-    )
-
     result = Product.objects.filter(available=True).aggregate(
-        min_price=Min(effective_price),
-        max_price=Max(effective_price)
+        min_price=Min(get_effective_price_expr()),
+        max_price=Max(get_effective_price_expr())
     )
 
     return {
@@ -62,7 +52,7 @@ def filter_by_category(queryset: QuerySet, category_slug: str, language_code: st
             translations__language_code=language_code,
         )
         return queryset.filter(category=category)
-    except Category.DoesNotExist:
+    except (Category.DoesNotExist, Category.MultipleObjectsReturned):
         return queryset
 
 
@@ -98,7 +88,7 @@ def apply_ordering(queryset: QuerySet, order: str) -> QuerySet:
     if order not in order_map:
         return queryset
 
-    if order in ["price", "-price"]:
+    if order in ["price", "-price"] and "effective_price" not in queryset.query.annotations:
         queryset = queryset.annotate(effective_price=get_effective_price_expr())
 
     return queryset.order_by(order_map[order])

@@ -17,11 +17,10 @@ from django.shortcuts import (
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, TemplateView
-from orders.forms import OrderCreateForm
-from orders.models import Order
 from user_account.forms import (
     ContactForm,
     PasswordChangingForm,
+    ShippingProfileForm,
     UserLoginForm,
     UserProfileForm,
     UserRegistrationForm,
@@ -56,6 +55,9 @@ def profile(request: HttpRequest, profile_id: int):
     """Display and update user profile information."""
 
     profile = get_object_or_404(Profile, id=profile_id)
+    if profile.user != request.user:
+        return redirect('user_account:profile', request.user.profile.id)
+
     user = profile.user
 
     if request.method == "POST":
@@ -72,20 +74,16 @@ def profile(request: HttpRequest, profile_id: int):
 
 @login_required
 def manage_shipping(request: HttpRequest):
-    """Manage user shipping address and delivery preferences."""
+    """Manage user shipping address saved in Profile."""
 
-    try:
-        shipping = Order.objects.filter(user=request.user.id).latest("created_at")
-    except Order.DoesNotExist:
-        shipping = None
-    form = OrderCreateForm(instance=shipping)
+    profile = request.user.profile
     if request.method == "POST":
-        form = OrderCreateForm(request.POST, instance=shipping)
+        form = ShippingProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            shipping_user = form.save(commit=False)
-            shipping_user.user = request.user
-            shipping_user.save()
-            return redirect("user_account:profile", request.user.profile.id)
+            form.save()
+            return redirect("user_account:profile", profile.id)
+    else:
+        form = ShippingProfileForm(instance=profile)
 
     context = {"title": "| Manage Shipping", "form": form}
     return render(request, "user_account/manage_shipping.html", context)
@@ -165,10 +163,13 @@ class EmailVerificationView(TitleMixin, TemplateView):
         """Validate email verification code and activate user email."""
 
         code = kwargs["code"]
-        user = get_user_model().objects.get(email=kwargs["email"])
-        email_verifications = EmailVerification.objects.filter(user=user, code=code)
-        if (email_verifications.exists() and
-                not email_verifications.first().is_expired()):
+        try:
+            user = get_user_model().objects.get(email=kwargs["email"])
+        except (get_user_model().DoesNotExist, get_user_model().MultipleObjectsReturned):
+            return HttpResponseRedirect(reverse("products:products"))
+
+        email_verification = EmailVerification.objects.filter(user=user, code=code).first()
+        if email_verification and not email_verification.is_expired():
             user.is_verified_email = True
             user.profile.is_email_verified = True
             user.save()

@@ -6,7 +6,6 @@ from django_ckeditor_5.fields import CKEditor5Field
 from faker import Faker
 
 from common.model import TimeStampedModel
-from user_account.models import User
 from products.models.product import Product
 
 
