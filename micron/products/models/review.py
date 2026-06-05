@@ -42,9 +42,9 @@ class Review(TimeStampedModel):
     @classmethod
     def generate_instances(cls, count: int = 5) -> None:
         faker = Faker()
-        for _ in range(count):
+        for __ in range(count):
             cls.objects.create(
-                user=User.objects.first(),
+                user=get_user_model().objects.first(),
                 product=Product.objects.first(),
                 stars=faker.random_int(1, 5),
                 text=faker.text(),

@@ -1,5 +1,9 @@
 from django.urls import path
-from payment.views import CanceledTemplateView, SuccessTemplateView, payment_process, select_payment, paypal_process, paypal_execute, LiqPayProcessView, LiqPayCallbackView
+from payment.views import (
+    CanceledTemplateView, SuccessTemplateView, payment_process,
+    select_payment, paypal_process, paypal_execute,
+    LiqPayProcessView, LiqPayCallbackView,
+)
 
 app_name: str = "payment"
 

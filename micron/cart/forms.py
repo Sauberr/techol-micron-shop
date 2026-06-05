@@ -35,4 +35,3 @@ class CartAddProductForm(forms.Form):
 
         else:
             self.fields['quantity'].choices = [(i, str(i)) for i in range(1, 21)]
-

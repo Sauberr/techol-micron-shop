@@ -16,4 +16,3 @@ class CategoryFilter(FilterSet):
         fields = [
             "name",
         ]
-

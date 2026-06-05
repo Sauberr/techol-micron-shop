@@ -42,10 +42,16 @@ class EmailVerificationAdmin(admin.ModelAdmin):
 @admin.register(Profile)
 class ProfileAdmin(SafeDeleteAdmin):
     """Profile Admin"""
-    list_display = ("user", "first_name", "last_name", "email", "thumbnail", "is_email_verified", "created_at", "updated_at", "deleted")
+    list_display = (
+        "user", "first_name", "last_name", "email", "thumbnail",
+        "is_email_verified", "created_at", "updated_at", "deleted",
+    )
     list_display_links = ("user", "first_name", "email")
     list_filter = (SafeDeleteAdminFilter,)
-    fields = ("user", "first_name", "username", "last_name", "email", "image", "is_email_verified", "created_at", "updated_at")
+    fields = (
+        "user", "first_name", "username", "last_name", "email",
+        "image", "is_email_verified", "created_at", "updated_at",
+    )
     readonly_fields = ("created_at", "updated_at")
 
     def thumbnail(self, object):

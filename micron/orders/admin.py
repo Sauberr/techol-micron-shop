@@ -42,7 +42,9 @@ class OrderItemInLine(admin.TabularInline):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return OrderItem.all_objects.filter(order=self.instance) if hasattr(self, 'instance') and self.instance.pk else qs
+        if hasattr(self, 'instance') and self.instance.pk:
+            return OrderItem.all_objects.filter(order=self.instance)
+        return qs
 
 
 def order_stripe_payment(obj):

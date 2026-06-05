@@ -155,7 +155,7 @@ def orders(request: HttpRequest):
     paginator = Paginator(orders_list, 7)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    
+
     return render(
         request, "orders/order/orders.html", {"orders": page_obj, "page_obj": page_obj, "title": "| Orders"}
     )

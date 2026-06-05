@@ -88,28 +88,29 @@ def get_paypal_access_token():
         return response.json()['access_token']
     return None
 
+
 @login_required
 def paypal_process(request: HttpRequest):
     """Process payment via PayPal checkout session."""
     order_id = request.session.get("order_id", None)
     order = get_object_or_404(Order, id=order_id)
-    
+
     if request.method == "POST":
         access_token = get_paypal_access_token()
         if not access_token:
             return redirect("payment:canceled")
-            
+
         base_url = "https://api-m.sandbox.paypal.com" if settings.DEBUG else "https://api-m.paypal.com"
         url = f"{base_url}/v2/checkout/orders"
-        
+
         headers = {
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {access_token}'
         }
-        
+
         return_url = request.build_absolute_uri(reverse("payment:paypal-execute"))
         cancel_url = request.build_absolute_uri(reverse("payment:canceled"))
-        
+
         total_cost = order.get_total_cost()
 
         data = {
@@ -127,14 +128,14 @@ def paypal_process(request: HttpRequest):
                 "user_action": "PAY_NOW"
             }
         }
-        
+
         response = requests.post(url, headers=headers, json=data)
         if response.ok:
             order_data = response.json()
             for link in order_data.get('links', []):
                 if link['rel'] == 'approve':
                     return redirect(link['href'])
-        
+
         return redirect("payment:canceled")
     return redirect("payment:select-payment")
 

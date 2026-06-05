@@ -10,7 +10,10 @@ from common.model import TimeStampedModel
 
 class Coupon(TimeStampedModel):
     """Coupon model"""
-    code = models.CharField(max_length=50, unique=True, help_text=_("Unique coupon code (for example: SAVE20, SUMMER2024)"))
+    code = models.CharField(
+        max_length=50, unique=True,
+        help_text=_("Unique coupon code (for example: SAVE20, SUMMER2024)"),
+    )
     valid_from = models.DateTimeField(help_text=_("Start date and time when the coupon becomes valid"))
     valid_to = models.DateTimeField(help_text=_("End date and time when the coupon expires"))
     discount = models.IntegerField(
@@ -59,7 +62,7 @@ class Coupon(TimeStampedModel):
     @classmethod
     def generate_instances(cls, count: int = 5) -> None:
         faker = Faker()
-        for _ in range(count):
+        for __ in range(count):
 
             valid_from = django_timezone.make_aware(faker.date_time_this_year())
             valid_to = django_timezone.make_aware(faker.date_time_this_year())

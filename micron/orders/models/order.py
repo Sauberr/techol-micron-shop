@@ -15,6 +15,7 @@ STATUS = (
     ("unpaid", _("Unpaid")),
 )
 
+
 class Order(TimeStampedModel):
     """Order Model"""
     first_name = models.CharField(_("first_name"), max_length=50)
@@ -49,7 +50,6 @@ class Order(TimeStampedModel):
             models.Index(fields=["user", "-created_at"], name="order_user_date_idx"),
         ]
 
-
     def __str__(self) -> str:
         return f"Order {self.id}"
 
@@ -67,7 +67,7 @@ class Order(TimeStampedModel):
         result = self.items.aggregate(total=Sum(F("price") * F("quantity")))
         return result["total"] or Decimal(0)
 
-    def get_stripe_url(self)-> str:
+    def get_stripe_url(self) -> str:
         if not self.stripe_id:
             return ""
         if "_test_" in settings.STRIPE_SECRET_KEY:

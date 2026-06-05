@@ -32,7 +32,6 @@ class UserRegistrationViewTestCase(BaseViewTestCase):
         self.assertContains(response, 'A user with that username already exists.', html=True)
 
 
-
 class ResetPasswordViewTestCase(BaseViewTestCase):
     path_name = 'user_account:password_reset'
     template_name = 'user_account/password/password_reset.html'

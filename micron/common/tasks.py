@@ -27,4 +27,3 @@ def clear_expired_email_verifications() -> None:
         logger.info("Deleted %d expired email verifications.", deleted_count)
     except Exception as e:
         logger.error("Failed to clear expired email verifications: %s", e)
-

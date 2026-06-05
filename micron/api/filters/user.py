@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django_filters.rest_framework import FilterSet, filters
 
 
-
 class UserFilter(FilterSet):
     username = filters.CharFilter(field_name="username", lookup_expr="icontains", label="Username",
                                   help_text="Search users by username")
@@ -15,7 +14,7 @@ class UserFilter(FilterSet):
         help_text="Search users by last name",
     )
     email = filters.CharFilter(field_name="email", lookup_expr="icontains", label="Email",
-                                    help_text="Search users by email")
+                               help_text="Search users by email")
     is_verified_email = filters.BooleanFilter(
         field_name="is_verified_email",
         label="Verified Email",
@@ -37,4 +36,3 @@ class UserFilter(FilterSet):
             "is_verified_email",
             "is_super_user",
         ]
-

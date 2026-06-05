@@ -8,4 +8,3 @@ bot = Bot(
     token=os.environ["TELEGRAM_BOT_TOKEN"],
     default=DefaultBotProperties(parse_mode=ParseMode.HTML),
 )
-

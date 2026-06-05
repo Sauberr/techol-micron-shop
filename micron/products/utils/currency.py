@@ -32,5 +32,3 @@ def get_usd_to_uah_rate() -> Union[float, None]:
     except Exception as exc:
         logger.warning("Failed to fetch USD→UAH rate: %s", exc)
         return None
-
-

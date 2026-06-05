@@ -50,4 +50,3 @@ class ProductFilter(FilterSet):
             "discount",
             "tags",
         ]
-

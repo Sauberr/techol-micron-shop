@@ -638,4 +638,3 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 60 * 60 * 24,
     },
 }
-

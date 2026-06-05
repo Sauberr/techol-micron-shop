@@ -32,4 +32,3 @@ class CategorySerializer(TranslatableModelSerializer):
             raise serializers.ValidationError("Category with this slug already exists.")
 
         return value
-

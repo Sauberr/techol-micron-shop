@@ -16,8 +16,6 @@ def cart_summary(request: HttpRequest):
     """Display shopping cart with items, quantities and coupon form."""
 
     cart = Cart(request)
-    cart_updated = False
-
     items_to_remove = []
     items_to_adjust = []
 
@@ -38,14 +36,12 @@ def cart_summary(request: HttpRequest):
         messages.warning(request, _(
             "'{0}' has been removed from your cart as it is no longer available."
         ).format(product.name))
-        cart_updated = True
 
     for product, new_qty in items_to_adjust:
         cart.add(product=product, quantity=new_qty, override_quantity=True)
         messages.warning(request, _(
             "Quantity for '{0}' has been adjusted to {1} due to limited stock."
         ).format(product.name, new_qty))
-        cart_updated = True
 
     for item in cart:
 

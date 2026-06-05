@@ -100,14 +100,13 @@ class Product(TimeStampedModel, TranslatableModel):
                 self.bonus_points = self.price * Decimal(0.3)
         super().save(*args, **kwargs)
 
-
     def get_absolute_url(self) -> str:
         return reverse("products:product_detail", args=[self.slug])
 
     @classmethod
     def generate_instances(cls, count: int) -> None:
         faker = Faker()
-        for _ in range(count):
+        for __ in range(count):
             cls.objects.create(
                 name=faker.name(),
                 slug=faker.slug(),
@@ -116,4 +115,3 @@ class Product(TimeStampedModel, TranslatableModel):
                 image="products/default.jpg",
                 category=Category.objects.first(),
             )
-

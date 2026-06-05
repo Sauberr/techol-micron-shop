@@ -30,7 +30,7 @@ class OrderModelTestCase(TestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            
+
             region="Kyiv", post_office="Branch 1",
             city='Test City',
             user=self.user
@@ -184,7 +184,7 @@ class OrderModelTestCase(TestCase):
             first_name='Jane',
             last_name='Smith',
             email='jane@example.com',
-            
+
             region="Lviv", post_office="Branch 2",
             city='Test Town',
             user=self.user
@@ -208,7 +208,7 @@ class OrderItemModelTestCase(TestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            
+
             region="Kyiv", post_office="Branch 1",
             city='Test City',
             user=self.user
@@ -310,7 +310,7 @@ class OrderViewTestCase(TestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            
+
             region="Kyiv", post_office="Branch 1",
             city='Test City',
             user=self.user
@@ -338,7 +338,7 @@ class OrderViewTestCase(TestCase):
             'first_name': 'Test',
             'last_name': 'User',
             'email': 'test@example.com',
-            
+
             'region': 'Kyiv', 'post_office': 'Branch 1',
             'city': 'City'
         }

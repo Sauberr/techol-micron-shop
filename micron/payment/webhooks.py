@@ -51,5 +51,3 @@ def stripe_webhook(request: HttpRequest) -> HttpResponse:
                 return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
     return HttpResponse(status=HTTPStatus.OK)
-
-

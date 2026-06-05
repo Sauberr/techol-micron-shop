@@ -323,7 +323,7 @@ class APIOrderTestCase(APITestCase):
             first_name='John',
             last_name='Doe',
             email='john@example.com',
-            
+
             region="Kyiv", post_office="Branch 1",
             city='Test City',
             user=self.user
@@ -357,7 +357,7 @@ class APIOrderTestCase(APITestCase):
             password='other123'
         )
 
-        other_order = Order.objects.create(
+        Order.objects.create(
             first_name='Jane',
             last_name='Smith',
             email='jane@example.com',

@@ -74,5 +74,3 @@ class ReviewAdmin(SafeDeleteAdmin):
     list_select_related = ['user', 'product']
     fields = ("user", "product", "stars", "text")
     readonly_fields = ("created_at", "updated_at")
-
-

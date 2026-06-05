@@ -55,7 +55,7 @@ class ProductListViewTestCase(BaseViewTestCase):
 
     def test_product_list_filters_available_only(self):
         """Test that both available and unavailable products are shown"""
-        unavailable_product = Product.objects.create(
+        Product.objects.create(
             name='Unavailable Product',
             slug='unavailable',
             description='Test',
@@ -146,7 +146,7 @@ class CategoryListViewTestCase(BaseCategoryTestCase):
             slug='other-category'
         )
 
-        other_product = Product.objects.create(
+        Product.objects.create(
             name='Other Product',
             slug='other-product',
             description='Test',
@@ -230,7 +230,7 @@ class ProductReviewViewTestCase(BaseProductTestCase):
             'text': 'Great product!'
         }
 
-        response = self.client.post(path, data)
+        self.client.post(path, data)
 
         self.assertEqual(Review.objects.filter(product=self.product).count(), 1)
         review = Review.objects.first()

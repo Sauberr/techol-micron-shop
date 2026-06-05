@@ -16,4 +16,3 @@ async def cmd_start(message: Message) -> None:
         f"🛒 Welcome to <b>Micron Hardware Store</b> bot.\n\n"
         f"This bot sends order notifications to the store administrator."
     )
-

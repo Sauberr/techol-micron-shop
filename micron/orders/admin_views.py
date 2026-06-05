@@ -12,6 +12,7 @@ from .models import Order
 @method_decorator(staff_member_required, name='dispatch')
 class StoreStatisticsView(TemplateView):
     template_name = "admin/store_statistics.html"
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Determine time range
@@ -24,7 +25,7 @@ class StoreStatisticsView(TemplateView):
         # Base queryset for paid orders in range
         qs_paid = Order.objects.filter(created_at__gte=start_date, paid='paid')
         # Daily orders and revenue
-        # Revenue is sum of items__price * items__quantity (ignoring order discount for simplicity in graph, or you can calculate exact)
+        # Revenue is sum of items__price * items__quantity
         daily_stats = (
             qs_paid
             .annotate(day=TruncDay('created_at'))

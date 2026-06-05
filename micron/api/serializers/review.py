@@ -6,6 +6,7 @@ from products.models.review import Review
 
 User = get_user_model()
 
+
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         slug_field="username", queryset=User.objects.all()

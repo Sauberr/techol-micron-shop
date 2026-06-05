@@ -49,7 +49,7 @@ class Category(TimeStampedModel, TranslatableModel):
     @classmethod
     def generate_instances(cls, count: int = 5) -> None:
         faker = Faker()
-        for _ in range(count):
+        for __ in range(count):
             cls.objects.create(
                 name=faker.name(),
                 slug=faker.slug(),

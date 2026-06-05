@@ -27,4 +27,3 @@ def currency_rate(request) -> dict:
         "usd_to_uah_rate": rate,
         "current_language": language,
     }
-

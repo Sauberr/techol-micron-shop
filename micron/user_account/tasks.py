@@ -22,6 +22,3 @@ def send_email_verification(user_id: int) -> None:
         record.send_verification_email()
     except Exception as e:
         logger.error(f"Failed to send verification email for user {user_id}: {e}")
-
-
-

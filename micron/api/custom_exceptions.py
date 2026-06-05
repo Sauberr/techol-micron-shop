@@ -33,7 +33,6 @@ logger = logging.getLogger(__name__)
 def custom_exception_handler(exc, context) -> Response:
     response = drf_exception_handler(exc, context)
 
-    view = context.get('view')
     request = context.get('request')
 
     error_id = str(uuid.uuid4())[:8]
@@ -81,7 +80,7 @@ def build_error_response(exc, original_data, request, error_id):
     elif isinstance(exc, PermissionDenied):
         error_response.update({
             'error_type': _('permission_denied'),
-            'message': str(exc.detail) if hasattr(exc,'detail') else 'Access denied',
+            'message': str(exc.detail) if hasattr(exc, 'detail') else 'Access denied',
             'code': getattr(exc, 'default_code', 'permission_denied'),
             'help': _('Ensure you have the necessary permissions')
         })
@@ -97,7 +96,7 @@ def build_error_response(exc, original_data, request, error_id):
     elif isinstance(exc, AuthenticationFailed):
         error_response.update({
             'error_type': _('authentication_failed'),
-            'message': str(exc.detail) if hasattr(exc,'detail') else 'Authentication failed',
+            'message': str(exc.detail) if hasattr(exc, 'detail') else 'Authentication failed',
             'code': getattr(exc, 'default_code', 'authentication_failed'),
             'help': _('Check your authentication credentials')
         })
@@ -105,7 +104,7 @@ def build_error_response(exc, original_data, request, error_id):
     elif isinstance(exc, NotFound):
         error_response.update({
             'error_type': _('not_found'),
-            'message': str(exc.detail) if hasattr(exc,'detail') else 'Resource not found',
+            'message': str(exc.detail) if hasattr(exc, 'detail') else 'Resource not found',
             'code': getattr(exc, 'default_code', 'not_found'),
             'help': _('Check that the URL and request parameters are correct.')
         })
