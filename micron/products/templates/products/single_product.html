@@ -146,7 +146,7 @@
                             </div>
                         </div>
                         <div class="review-content">
-                            <p class="mb-0">{{ review.text }}</p>
+                            <div class="mb-0">{{ review.text|safe }}</div>
                         </div>
                         {% if user == review.user %}
                         <div class="review-actions">
